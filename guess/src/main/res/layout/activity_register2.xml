@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/back3"
+    android:orientation="vertical"
+    tools:context="com.example.asus.activity.RegisterActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/account_input_shape"
+        android:divider="@drawable/linearlayout_divider_shape"
+        android:dividerPadding="3dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:showDividers="middle"
+        >
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@mipmap/sex_icon"
+                />
+
+            <EditText
+                android:id="@+id/sex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:autoLink="email"
+                android:background="#00000000"
+                android:ems="10"
+                android:hint="@string/sex"
+                android:inputType="textEmailAddress"
+                android:textColor="#d1c0b9"
+                android:textColorHint="#d1c0b9"
+                android:textCursorDrawable="@null"
+                android:textSize="15sp"
+                android:focusable="false"
+                android:onClick="selectSex"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@mipmap/age"
+                />
+
+            <EditText
+                android:id="@+id/age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:maxLength="10"
+                android:autoLink="email"
+                android:background="#00000000"
+                android:ems="10"
+                android:hint="@string/age"
+                android:inputType="number"
+                android:textColor="#d1c0b9"
+                android:textColorHint="#d1c0b9"
+                android:textCursorDrawable="@null"
+                android:textSize="15sp"
+                android:focusable="false"
+                android:onClick="selectAge"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@mipmap/city"
+                />
+
+            <EditText
+                android:id="@+id/city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:maxLength="10"
+                android:autoLink="email"
+                android:background="#00000000"
+                android:ems="10"
+                android:hint="@string/city"
+                android:inputType="number"
+                android:textColor="#d1c0b9"
+                android:textColorHint="#d1c0b9"
+                android:textCursorDrawable="@null"
+                android:textSize="15sp"
+                android:focusable="false"
+                android:onClick="location"
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="30dp"
+        android:background="@drawable/green_bt_selector"
+        android:onClick="commit"
+        android:text="@string/bt_commit"
+        android:textColor="#e6ddda"
+        android:textSize="15sp"
+        />
+</LinearLayout>
+
+

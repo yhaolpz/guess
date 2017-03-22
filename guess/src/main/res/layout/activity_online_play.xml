@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_online_play"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/back22"
+    tools:context="com.example.asus.activity.OnlinePlayActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:gravity="center_vertical"
+        android:id="@+id/line1"
+        >
+        <com.example.asus.view.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/avatar"
+            android:id="@+id/targetAvatar"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
+            android:id="@+id/targetName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            />
+        <Button
+            android:id="@+id/targetReadyBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未准备"
+            android:textSize="16sp"
+            android:background="#00000000"
+            android:clickable="false"
+            android:textColor="#f2418125"
+            />
+
+        <ImageView
+            android:id="@+id/one"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/done"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/two"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/done"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/three"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/done"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+
+
+
+
+
+    <!--宽高必须大于 320 * 200    且宽高比 必须大于 640/400 = 1.6   = 1280/800
+            -->
+    <RelativeLayout
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/line1"
+        android:layout_marginTop="5dp"
+        android:background="#151515"
+        android:gravity="center"
+        android:padding="10dp"
+        >
+
+        <com.example.asus.view.XfermodeView
+            android:id="@+id/XfermodeView"
+            android:layout_width="320dp"
+            android:layout_height="200dp"
+            />
+
+        <TextView
+            android:id="@+id/countDownTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="17sp"
+           />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/movieNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/line"
+        android:layout_below="@+id/line"
+        android:layout_marginLeft="8dp"
+        android:text="1/3"
+        />
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/line"
+        android:layout_below="@+id/line"
+        android:layout_marginRight="8dp"
+        android:text="100"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/score"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical|right"
+        android:id="@+id/line2"
+        >
+        <Button
+            android:id="@+id/readyBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="准 备"
+            android:textSize="16sp"
+            android:background="#00000000"
+            android:onClick="ready"
+            android:textColor="#f2418125"
+            />
+        <com.example.asus.view.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/avatar"
+            android:id="@+id/myAvatar"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
+            android:id="@+id/myName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/key"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/mscTv"
+        android:layout_below="@+id/line2"
+        >
+    </RelativeLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="25dp"
+        android:background="#00000000"
+        android:onClick="forHelp"
+        android:text="求 助"/>
+
+    <TextView
+        android:id="@+id/mscTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageBt"
+        android:layout_centerHorizontal="true"
+        />
+
+    <ImageView
+        android:id="@+id/imageBt"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:background="@mipmap/msc1"
+        android:onClick="voice"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="25dp"
+        android:background="#00000000"
+        android:onClick="jump"
+        android:text="跳 过"/>
+
+
+</RelativeLayout>

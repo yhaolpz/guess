@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">myApp</string>
+    <string name="hint_username">邮箱</string>
+    <string name="hint_password">密码</string>
+    <string name="bt_find_pass">找回密码</string>
+    <string name="bt_login">登录</string>
+    <string name="bt_register">注册新用户</string>
+    <string name="tv_otherlogin">第三方账号登录</string>
+    <string name="bt_commit">提交</string>
+    <string name="bt_ok">确定</string>
+    <string name="name">昵称</string>
+    <string name="next">下一步</string>
+    <string name="validate">验证码</string>
+    <string name="reset_pass">重置密码</string>
+    <string name="sex">性别</string>
+    <string name="age">年龄</string>
+    <string name="city">城市</string>
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@mipmap/back2"
+    tools:context="com.example.asus.activity.MovieTypeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:layout_centerInParent="true"
+        android:translationY="-15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+        <com.example.asus.view.PickerView
+            android:id="@+id/movieDifficultPicker"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+        <Button
+            android:id="@+id/startGame"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:text="开 始"
+            android:textColor="@drawable/green_text_selector"
+            android:textSize="20sp"
+            android:onClick="match"
+            />
+        <com.example.asus.view.PickerView
+            android:id="@+id/movieTypePicker"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            />
+
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:top="2.0dip" android:left="2.0dip">
+        <shape
+            android:shape="rectangle">
+            <!-- 填充的颜色,渐变色 -->
+            <gradient
+                android:angle="135"
+                android:endColor="#66000000"
+                android:startColor="#66000000"/>
+            <corners android:radius="360dp"/>
+        </shape>
+    </item>
+
+    <item android:right="2dip" android:bottom="2dp">
+        <shape
+            android:shape="rectangle">
+            <!-- 填充的颜色,渐变色 -->
+            <gradient
+                android:angle="135"
+                android:endColor="#34a404"
+                android:startColor="#a9c17a"/>
+            <corners android:radius="360dp"/>
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp"
+                />
+        </shape>
+    </item>
+
+
+
+</layer-list>

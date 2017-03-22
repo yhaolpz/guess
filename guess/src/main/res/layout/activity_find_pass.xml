@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_find_pass"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/back3"
+    tools:context="com.example.asus.activity.FindPassActivity">
+
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/account_input_shape"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/usernameIcon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/usericon"
+            />
+
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/usernameIcon"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/usernameIcon"
+            android:autoLink="email"
+            android:background="#00000000"
+            android:ems="10"
+            android:hint="@string/hint_username"
+            android:inputType="textEmailAddress"
+            android:textColor="#d1c0b9"
+            android:textColorHint="#d1c0b9"
+            android:textCursorDrawable="@null"
+            android:textSize="15sp"
+            />
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/sendBt"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/relative"
+        android:layout_alignRight="@+id/relative"
+        android:layout_below="@+id/relative"
+        android:background="@drawable/green_bt_selector"
+        android:onClick="send"
+        android:text="@string/reset_pass"
+        android:textColor="#e6ddda"
+        android:textSize="15sp"
+        />
+
+</RelativeLayout>

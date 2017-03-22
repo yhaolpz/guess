@@ -1,0 +1,9 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--按钮点击时 ， 灰色-->
+    <item android:color="#afaeb1" android:state_pressed="true"/>
+
+    <!--按钮未点击时 ， 白色-->
+    <item android:color="#e6ddda" android:state_pressed="false"/>
+
+</selector>
