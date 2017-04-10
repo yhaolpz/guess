@@ -93,6 +93,8 @@
         <activity android:name=".OnlineMatchActivity"/>
         <activity android:name=".OnlinePlayActivity">
         </activity>
+        <activity android:name=".EditPersonalDataActivity">
+        </activity>
     </application>
 
 </manifest>

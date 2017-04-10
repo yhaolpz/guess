@@ -100,7 +100,9 @@ public class PersonalDataActivity extends MySwipeBackActivity {
     }
 
     public void editData(View view) {
-
+        Intent intent = new Intent(this, EditPersonalDataActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
     public void updateAvatar(View view) {

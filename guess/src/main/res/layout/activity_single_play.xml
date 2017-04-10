@@ -24,6 +24,7 @@
             android:id="@+id/XfermodeView"
             android:layout_width="320dp"
             android:layout_height="200dp"
+            android:scaleType="fitXY"
             />
     </LinearLayout>
 
