@@ -1,9 +1,11 @@
 package com.example.asus.common;
 
 import android.app.Application;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.asus.activity.R;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.UserDAO;
 import com.example.asus.util.SPUtil;
@@ -28,6 +30,7 @@ public class BaseApplication extends Application {
 
     private static final String BMOB_APPID = "6651c9bc691b3dd33c7e653179961e28";
 
+    private MediaPlayer mediaPlayer;
 
     //bmob账号
     private User user = null;
@@ -51,16 +54,15 @@ public class BaseApplication extends Application {
         this.user = null;
     }
 
+    public void startMusic() {
+        mediaPlayer.start();
+    }
 
-
-
-
-
-
-
+    public void stopMusic() {
+        mediaPlayer.pause();
+    }
 
     //QQ账号
-
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate: ");
@@ -68,6 +70,12 @@ public class BaseApplication extends Application {
         initBmob();
         initMsc();
         initSetting();
+        initMusic();
+    }
+
+    private void initMusic() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.main_titles);
+        mediaPlayer.setLooping(true);
     }
 
     private void initMsc() {
