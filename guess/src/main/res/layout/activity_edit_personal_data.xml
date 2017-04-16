@@ -6,16 +6,47 @@
     android:layout_height="match_parent"
     android:background="@mipmap/back"
     android:orientation="vertical"
-    android:paddingTop="40dp"
+    android:paddingTop="45dp"
     tools:context="com.example.asus.activity.EditPersonalDataActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="#ad352a22"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:onClick="editName"
+            android:padding="8dp"
+            android:text="账号"/>
+
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:padding="8dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="#ad352a22"
+        android:gravity="center_vertical"
+        android:onClick="editName"
+        android:orientation="horizontal"
         >
 
         <TextView
@@ -36,20 +67,21 @@
             android:padding="8dp"
             />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@mipmap/go"
-            />
+        <!--<ImageView-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:src="@mipmap/go"-->
+            <!--/>-->
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="#ad352a22"
         android:gravity="center_vertical"
+        android:onClick="editEmail"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
         >
 
         <TextView
@@ -70,19 +102,21 @@
             android:padding="8dp"
             />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@mipmap/go"
-            />
+        <!--<ImageView-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:src="@mipmap/go"-->
+            <!--/>-->
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="#ad352a22"
         android:gravity="center_vertical"
+        android:onClick="editSex"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
         >
 
         <TextView
@@ -95,12 +129,12 @@
 
 
         <TextView
+            android:id="@+id/sex"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
             android:padding="8dp"
-            android:id="@+id/sex"
             />
 
         <ImageView
@@ -109,13 +143,15 @@
             android:src="@mipmap/go"
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="#ad352a22"
         android:gravity="center_vertical"
+        android:onClick="editAge"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
         >
 
         <TextView
@@ -128,12 +164,12 @@
 
 
         <TextView
+            android:id="@+id/age"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
             android:padding="8dp"
-            android:id="@+id/age"
             />
 
         <ImageView
@@ -142,13 +178,16 @@
             android:src="@mipmap/go"
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="#ad352a22"
         android:gravity="center_vertical"
+        android:onClick="editCity"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+
         >
 
         <TextView
@@ -161,12 +200,12 @@
 
 
         <TextView
+            android:id="@+id/city"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
             android:padding="8dp"
-            android:id="@+id/city"
             />
 
         <ImageView
@@ -175,13 +214,15 @@
             android:src="@mipmap/go"
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="#ad352a22"
         android:gravity="center_vertical"
+        android:onClick="editPassword"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
         >
 
         <TextView

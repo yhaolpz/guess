@@ -5,7 +5,7 @@
     android:id="@+id/activity_find_pass"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/back3"
+    android:background="@mipmap/back"
     tools:context="com.example.asus.activity.FindPassActivity">
 
     <RelativeLayout

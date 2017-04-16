@@ -1,15 +1,10 @@
 package com.example.asus.activity;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.asus.bmobbean.movieInfo;
-import com.example.asus.common.BaseActivity;
 import com.example.asus.common.MyConstants;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
@@ -21,18 +16,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SQLQueryListener;
-
-import static android.R.id.list;
 
 public class MovieTypeActivity extends MySwipeBackActivity {
     private PickerView mMovieTypePicker;
