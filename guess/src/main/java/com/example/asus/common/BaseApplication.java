@@ -3,6 +3,7 @@ package com.example.asus.common;
 import android.app.Application;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.asus.activity.R;
@@ -21,7 +22,6 @@ import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by yhao on 2016/12/29.
- *
  */
 
 public class BaseApplication extends Application {
@@ -50,16 +50,36 @@ public class BaseApplication extends Application {
         UserDAO.saveUserAvatarToSP(this, avatar);
     }
 
-    public void clearUser(){
+    public void clearUser() {
         this.user = null;
     }
 
     public void startMusic() {
-        mediaPlayer.start();
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+        }
     }
 
-    public void stopMusic() {
-        mediaPlayer.pause();
+
+    public void changeMusic(String music) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+        if (TextUtils.equals(music, "关闭")) {
+            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 3);
+        }
+        if (TextUtils.equals(music, "喜剧之王")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.here_again);
+            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 0);
+        }
+        if (TextUtils.equals(music, "权利的游戏")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.main_titles);
+            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);
+        }
+        if (TextUtils.equals(music, "电锯惊魂")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.hello_zepp);
+            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 2);
+        }
     }
 
     //QQ账号
@@ -74,21 +94,23 @@ public class BaseApplication extends Application {
     }
 
     private void initMusic() {
-        mediaPlayer = MediaPlayer.create(this, R.raw.main_titles);
-        mediaPlayer.setLooping(true);
+        int m = (int) SPUtil.get(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);
+        changeMusic(MyConstants.musics[m]);
+        if (mediaPlayer != null) {
+            mediaPlayer.setLooping(true);
+        }
     }
 
     private void initMsc() {
-        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=586fb159");
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=586fb159");
     }
 
     private void initSetting() {
         Boolean firstIn = (Boolean) SPUtil.get(this, MyConstants.IS_FIRST_IN_APP_SET_SP_KEY, true);
         if (firstIn) {
-//            SPUtil.put(this, MyConstants.IS_FIRST_IN_APP_SET_SP_KEY, false);
+            SPUtil.put(this, MyConstants.IS_FIRST_IN_APP_SET_SP_KEY, false);
             SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3);
-            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, true);
-        } else {
+            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);//默认权利的游戏
         }
     }
 

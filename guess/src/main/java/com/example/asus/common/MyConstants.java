@@ -46,11 +46,21 @@ public interface MyConstants {
 
 
     /**
+     * 背景音乐
+     */
+    String[] musics = {
+            "喜剧之王",
+            "权利的游戏",
+            "电锯惊魂",
+            "关闭"
+    };
+
+    /**
      * 设置 sp key
      */
     String IS_FIRST_IN_APP_SET_SP_KEY = "isFirstIn";
     String MOVIE_NUM_SET_SP_KEY = "movieNum";
-    String PLAY_MUSIC_SET_SP_KEY = "playMusic";
+    String PLAY_MUSIC_SET_SP_KEY = "playMusic";   //存储 0 1 2 3 对应 musics
 
 
     /**
@@ -65,9 +75,6 @@ public interface MyConstants {
     String CITY_KEY = "city";
     String AVATAR_URL_KEY = "avatarUrl";
     String EMAIL_KEY = "email";
-
-
-    //TODO  背景音乐 alone on the way
 
 
 }
