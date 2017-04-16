@@ -26,6 +26,7 @@ import com.example.asus.service.MusicService;
 import com.example.asus.util.AnimUtil;
 import com.example.asus.view.CircleImageView;
 import com.example.asus.view.SlidingMenu;
+import com.zhy.changeskin.SkinManager;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -54,6 +55,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         mApplication = (BaseApplication) getApplication();
         logd("onCreate");
         setContentView(R.layout.activity_home);
@@ -116,6 +118,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onDestroy();
         logd("onDestroy");
         mGifDrawable.recycle();
+        SkinManager.getInstance().unregister(this);
     }
 
     @Override

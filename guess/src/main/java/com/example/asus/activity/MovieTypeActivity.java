@@ -11,6 +11,7 @@ import com.example.asus.common.MyToast;
 import com.example.asus.util.RandomUtil;
 import com.example.asus.util.SPUtil;
 import com.example.asus.view.PickerView;
+import com.zhy.changeskin.SkinManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_movie_type);
         initView();
     }
@@ -150,5 +152,9 @@ public class MovieTypeActivity extends MySwipeBackActivity {
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
+    }
 }

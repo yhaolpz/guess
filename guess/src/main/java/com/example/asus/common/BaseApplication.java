@@ -12,6 +12,7 @@ import com.example.asus.bmobbean.UserDAO;
 import com.example.asus.util.SPUtil;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.zhy.changeskin.SkinManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -82,6 +83,12 @@ public class BaseApplication extends Application {
         }
     }
 
+
+    public void changeSkin(String editSkin) {
+        SkinManager.getInstance().changeSkin(editSkin);
+        SPUtil.put(this, MyConstants.SKIN_SET_SP_KEY, editSkin);
+    }
+
     //QQ账号
     @Override
     public void onCreate() {
@@ -91,6 +98,7 @@ public class BaseApplication extends Application {
         initMsc();
         initSetting();
         initMusic();
+        SkinManager.getInstance().init(this);
     }
 
     private void initMusic() {
@@ -111,6 +119,7 @@ public class BaseApplication extends Application {
             SPUtil.put(this, MyConstants.IS_FIRST_IN_APP_SET_SP_KEY, false);
             SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3);
             SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);//默认权利的游戏
+            SPUtil.put(this, MyConstants.SKIN_SET_SP_KEY, MyConstants.skins[0]);//默认 defalt 背景
         }
     }
 
@@ -147,4 +156,5 @@ public class BaseApplication extends Application {
             activity.finish();
         }
     }
+
 }

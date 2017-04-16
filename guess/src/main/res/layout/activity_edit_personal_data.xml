@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/back"
+    android:tag="skin:skin_img:background"
+    android:background="@drawable/skin_img_default"
     android:orientation="vertical"
     android:paddingTop="45dp"
     tools:context="com.example.asus.activity.EditPersonalDataActivity">

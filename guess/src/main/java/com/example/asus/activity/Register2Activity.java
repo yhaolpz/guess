@@ -20,6 +20,7 @@ import com.example.asus.common.BaseActivity;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.view.PickerView;
+import com.zhy.changeskin.SkinManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_register2);
         mUser.setUsername(getIntent().getStringExtra("USERNAME"));
         mUser.setEmail(getIntent().getStringExtra("USERNAME"));
@@ -191,5 +193,11 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
             loge("定位失败:  ERROR CODE: " + bdLocation.getLocType());
         }
         mLocationClient.stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
     }
 }

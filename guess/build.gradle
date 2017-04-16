@@ -58,6 +58,7 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.zhy:changeskin:4.0.2'
     testCompile 'junit:junit:4.12'
 }
 

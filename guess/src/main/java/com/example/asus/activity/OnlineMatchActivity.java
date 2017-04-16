@@ -16,6 +16,7 @@ import com.example.asus.util.RandomUtil;
 import com.example.asus.util.SPUtil;
 import com.example.asus.view.PickerView;
 import com.google.gson.Gson;
+import com.zhy.changeskin.SkinManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,6 +89,7 @@ public class OnlineMatchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_movie_type);
         mCurrentUser = ((BaseApplication) getApplication()).getUser();
         initView();
@@ -392,5 +394,9 @@ public class OnlineMatchActivity extends BaseActivity {
             }
         });
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
+    }
 }

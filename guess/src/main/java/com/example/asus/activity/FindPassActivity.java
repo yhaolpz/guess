@@ -12,6 +12,7 @@ import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.util.TimeUtil;
 import com.example.asus.util.ValidateUtil;
+import com.zhy.changeskin.SkinManager;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -24,6 +25,7 @@ public class FindPassActivity extends MySwipeBackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_find_pass);
         mUsername = (EditText) findViewById(R.id.username);
         mSendButton = (Button) findViewById(R.id.sendBt);
@@ -54,5 +56,9 @@ public class FindPassActivity extends MySwipeBackActivity {
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
+    }
 }

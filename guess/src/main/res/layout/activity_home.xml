@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:scrollbars="none"
     app:rightPadding="80dp"
-    android:background="@mipmap/back"
+    android:tag="skin:skin_img:background"
+    android:background="@drawable/skin_img_default"
     tools:context="com.example.asus.activity.HomeActivity">
 
     <LinearLayout

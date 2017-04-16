@@ -15,6 +15,7 @@ import com.example.asus.common.BaseActivity;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.util.ValidateUtil;
+import com.zhy.changeskin.SkinManager;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class RegisterActivity extends MySwipeBackActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_register);
         mUsername = (EditText) findViewById(R.id.username);
         mName = (EditText) findViewById(R.id.name);

@@ -6,7 +6,8 @@
     android:id="@+id/activity_personal_data"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/back"
+    android:tag="skin:skin_img:background"
+    android:background="@drawable/skin_img_default"
     tools:context="com.example.asus.activity.PersonalDataActivity">
 
 

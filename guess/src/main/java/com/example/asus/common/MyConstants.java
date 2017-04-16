@@ -56,11 +56,20 @@ public interface MyConstants {
     };
 
     /**
+     * 皮肤
+     */
+    String[] skins = {
+            "default",
+            "black"
+    };
+
+    /**
      * 设置 sp key
      */
     String IS_FIRST_IN_APP_SET_SP_KEY = "isFirstIn";
     String MOVIE_NUM_SET_SP_KEY = "movieNum";
     String PLAY_MUSIC_SET_SP_KEY = "playMusic";   //存储 0 1 2 3 对应 musics
+    String SKIN_SET_SP_KEY = "skin";   //存储 "default", "black"
 
 
     /**

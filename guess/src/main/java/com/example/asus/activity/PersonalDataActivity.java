@@ -30,6 +30,7 @@ import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.util.BitmapUtil;
 import com.example.asus.view.CircleImageView;
+import com.zhy.changeskin.SkinManager;
 
 import java.io.File;
 import java.text.ParseException;
@@ -73,6 +74,7 @@ public class PersonalDataActivity extends MySwipeBackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_personal_data);
         mApplication = (BaseApplication) getApplication();
         mCurrentUser = mApplication.getUser();
@@ -249,8 +251,8 @@ public class PersonalDataActivity extends MySwipeBackActivity {
 
     @Override
     protected void onDestroy() {
-        logd("onDestroy");
         super.onDestroy();
+        SkinManager.getInstance().unregister(this);
     }
 
     @Override

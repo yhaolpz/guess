@@ -20,6 +20,7 @@ import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.view.PickerView;
+import com.zhy.changeskin.SkinManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_personal_data);
+        SkinManager.getInstance().register(this);
         mApplication = (BaseApplication) getApplication();
         mCurrentUser = mApplication.getUser();
         initData();
@@ -231,6 +233,10 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
             }
         });
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
+    }
 
 }

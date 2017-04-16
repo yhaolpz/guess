@@ -30,6 +30,7 @@ import com.tencent.connect.common.Constants;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.zhy.changeskin.SkinManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,6 +70,7 @@ public class LoginActivity extends MySwipeBackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_login);
         mApplication = (BaseApplication) getApplication();
         mUsername = (EditText) findViewById(R.id.username);
@@ -376,6 +378,12 @@ public class LoginActivity extends MySwipeBackActivity {
         SPUtil.put(this, "OPENID", openid.getOpenid());
         SPUtil.put(this, "ACCESS_TOKEN", openid.getAccess_token());
         SPUtil.put(this, "EXPIRES_IN", openid.getExpires_in_save());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
     }
 
 }
