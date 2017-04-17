@@ -68,6 +68,7 @@ public class BaseApplication extends Application {
         }
         if (TextUtils.equals(music, "关闭")) {
             SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 3);
+            return;
         }
         if (TextUtils.equals(music, "喜剧之王")) {
             mediaPlayer = MediaPlayer.create(this, R.raw.here_again);
@@ -81,6 +82,7 @@ public class BaseApplication extends Application {
             mediaPlayer = MediaPlayer.create(this, R.raw.hello_zepp);
             SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 2);
         }
+        mediaPlayer.setLooping(true);
     }
 
 
@@ -88,6 +90,11 @@ public class BaseApplication extends Application {
         SkinManager.getInstance().changeSkin(editSkin);
         SPUtil.put(this, MyConstants.SKIN_SET_SP_KEY, editSkin);
     }
+
+    public void changeNum(String editNum) {
+        SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, Integer.parseInt(editNum));
+    }
+
 
     //QQ账号
     @Override
@@ -104,9 +111,6 @@ public class BaseApplication extends Application {
     private void initMusic() {
         int m = (int) SPUtil.get(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);
         changeMusic(MyConstants.musics[m]);
-        if (mediaPlayer != null) {
-            mediaPlayer.setLooping(true);
-        }
     }
 
     private void initMsc() {
@@ -117,7 +121,7 @@ public class BaseApplication extends Application {
         Boolean firstIn = (Boolean) SPUtil.get(this, MyConstants.IS_FIRST_IN_APP_SET_SP_KEY, true);
         if (firstIn) {
             SPUtil.put(this, MyConstants.IS_FIRST_IN_APP_SET_SP_KEY, false);
-            SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3);
+            SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3); //默认单人关卡题数 3
             SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);//默认权利的游戏
             SPUtil.put(this, MyConstants.SKIN_SET_SP_KEY, MyConstants.skins[0]);//默认 defalt 背景
         }
@@ -156,5 +160,6 @@ public class BaseApplication extends Application {
             activity.finish();
         }
     }
+
 
 }

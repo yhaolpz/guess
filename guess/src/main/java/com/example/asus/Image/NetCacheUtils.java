@@ -128,7 +128,7 @@ public class NetCacheUtils {
                 BitmapFactory.decodeByteArray(data, 0, data.length, options);
                 Log.d("guess", "online bitmap: width:" + options.outWidth + "  height:" + options.outHeight);
                 options.inSampleSize = BitmapUtil.calculateInSampleSize(options, imageView.getWidth(), imageView.getHeight());
-                options.inPreferredConfig = Bitmap.Config.ARGB_4444;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
                 options.inJustDecodeBounds = false;
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
                 Log.d("guess", "imageView: width:" + imageView.getWidth() + "  height:" + imageView.getHeight());

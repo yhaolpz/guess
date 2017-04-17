@@ -42,8 +42,10 @@ public class BlurUtil {
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(bitmap, 0, 0, paint);
         Bitmap blurBitmap = doBlur(overlay, (int)radius, true);
+        float scaleWidth = ((float) bitmap.getWidth()) / blurBitmap.getWidth();
+        float scaleHeight = ((float) bitmap.getHeight()) / blurBitmap.getHeight();
         Matrix matrix = new Matrix();
-        matrix.postScale(scaleFactor,scaleFactor); //长和宽放大缩小的比例
+        matrix.postScale(scaleWidth,scaleHeight); //长和宽放大缩小的比例
         Bitmap resizeBmp = Bitmap.createBitmap(blurBitmap,0,0,blurBitmap.getWidth(),blurBitmap.getHeight(),matrix,true);
         Log.i("TAG", System.currentTimeMillis() - startMs + "ms");
         return resizeBmp;

@@ -33,14 +33,15 @@ import cn.bmob.v3.listener.UpdateListener;
 public class SettingActivity extends MySwipeBackActivity {
     private TextView mMusic;
     private TextView mSkin;
-
-
+    private TextView mMovieNum;
 
     private String editMusic;
     private String editSkin;
+    private String editNum;
 
     private List<String> musicItemList;
     private List<String> skinItemList;
+    private List<String> numItemList;
 
     private BaseApplication mApplication;
     private User mCurrentUser;
@@ -57,10 +58,13 @@ public class SettingActivity extends MySwipeBackActivity {
     private void initView() {
         mMusic = (TextView) findViewById(R.id.music);
         mSkin = (TextView) findViewById(R.id.skin);
+        mMovieNum = (TextView) findViewById(R.id.movieNum);
         int m = (int) SPUtil.get(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);
         String n = (String) SPUtil.get(this, MyConstants.SKIN_SET_SP_KEY, MyConstants.skins[0]);
+        int num = (int) SPUtil.get(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3);
         mMusic.setText(MyConstants.musics[m]);
         mSkin.setText(n);
+        mMovieNum.setText(num + "");
     }
 
     private void initData() {
@@ -68,8 +72,10 @@ public class SettingActivity extends MySwipeBackActivity {
         mCurrentUser = mApplication.getUser();
         musicItemList = new ArrayList<>();
         skinItemList = new ArrayList<>();
+        numItemList = new ArrayList<>();
         musicItemList.addAll(Arrays.asList(MyConstants.musics));
         skinItemList.addAll(Arrays.asList(MyConstants.skins));
+        numItemList.addAll(Arrays.asList(MyConstants.nums));
     }
 
     public void editSkin(View view) {
@@ -84,7 +90,8 @@ public class SettingActivity extends MySwipeBackActivity {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         chooseDialog.getWindow().setAttributes(lp);
         wheelView.setData(skinItemList);
-        wheelView.setSelected(mSkin.getText().toString());
+        editSkin = mSkin.getText().toString();
+        wheelView.setSelected(editSkin);
         wheelView.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
@@ -114,7 +121,8 @@ public class SettingActivity extends MySwipeBackActivity {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         chooseDialog.getWindow().setAttributes(lp);
         wheelView.setData(musicItemList);
-        wheelView.setSelected(mMusic.getText().toString());
+        editMusic = mMusic.getText().toString();
+        wheelView.setSelected(editMusic);
         wheelView.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
@@ -132,6 +140,39 @@ public class SettingActivity extends MySwipeBackActivity {
             }
         });
     }
+
+    public void editNum(View view) {
+        View dialogView = View.inflate(this, R.layout.dialog_choose_sex, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+        dialog.setView(dialogView, 10, 0, 10, 0);
+        PickerView wheelView = (PickerView) dialogView.findViewById(R.id.pickerView);
+        final Dialog chooseDialog = dialog.show();
+        WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
+        lp.gravity = Gravity.BOTTOM;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        chooseDialog.getWindow().setAttributes(lp);
+        wheelView.setData(numItemList);
+        editNum = mMovieNum.getText().toString();
+        wheelView.setSelected(editNum);
+        wheelView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                editNum = text;
+            }
+        });
+        chooseDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (!TextUtils.equals(editNum, mMovieNum.getText())) {
+                    mApplication.changeNum(editNum);
+                    mMovieNum.setText(editNum);
+                }
+            }
+        });
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

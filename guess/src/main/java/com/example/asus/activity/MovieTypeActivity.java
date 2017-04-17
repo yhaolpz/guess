@@ -144,7 +144,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
     }
 
     private void play(List<movieInfo> chooseMovies) {
-        Intent intent = new Intent(MovieTypeActivity.this, SinglePlayActivity.class);
+        Intent intent = new Intent(MovieTypeActivity.this, SinglePlayPActivity.class);
         intent.putExtra("LIST", (Serializable) chooseMovies);
         intent.putExtra("DIFFICULT", mDifficult);
         intent.putExtra("TYPE", mMovieType);

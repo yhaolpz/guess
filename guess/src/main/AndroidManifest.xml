@@ -90,6 +90,7 @@
 
         <activity android:name=".MovieTypeActivity"/>
         <activity android:name=".SinglePlayActivity"/>
+        <activity android:name=".SinglePlayPActivity"/>
         <activity android:name=".SettingActivity"/>
         <activity android:name=".OnlineMatchActivity"/>
         <activity android:name=".OnlinePlayActivity">
