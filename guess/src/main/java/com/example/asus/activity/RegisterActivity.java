@@ -91,4 +91,10 @@ public class RegisterActivity extends MySwipeBackActivity implements View.OnClic
     public void onClick(View view) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
+    }
 }

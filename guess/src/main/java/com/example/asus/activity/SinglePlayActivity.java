@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
@@ -14,7 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.asus.Image.ImageManager;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimationFactory;
+import com.bumptech.glide.request.target.Target;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
 import com.example.asus.bmobbean.record;
@@ -27,7 +30,7 @@ import com.example.asus.util.DensityUtils;
 import com.example.asus.util.JsonParser;
 import com.example.asus.util.RandomUtil;
 import com.example.asus.util.ScreenUtil;
-import com.example.asus.view.XfermodeView;
+import com.example.asus.view.XfermodeViewP;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -49,7 +52,8 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 public class SinglePlayActivity extends MySwipeBackActivity {
-    private XfermodeView mXfermodeView;
+    private XfermodeViewP mXfermodeView; //剧照模糊层
+    private ImageView mImageView; //剧照
     private RelativeLayout mKeyLayout;
     private TextView mScore;
     private TextView mMovieNumTv;
@@ -63,9 +67,6 @@ public class SinglePlayActivity extends MySwipeBackActivity {
     private static final int KEY_MARGIN_TOP = 2; //球随机分发区域距所处容器顶部之间间隔的球数
     private List<Character> mKeyChar = new ArrayList<>();
     private int chooseKeyNum;//点击key的次数-1
-    private int mKeyLayoutWidth;
-    private int mKeyLayoutHeight;
-    private int mKeyWidth;
 
     private int mRightNum;
     private int mSumScore;
@@ -76,20 +77,20 @@ public class SinglePlayActivity extends MySwipeBackActivity {
     private User mCurrentUser;
 
     // 语音听写
-    private SpeechRecognizer  mySynthesizer;
+    private SpeechRecognizer mySynthesizer;
     private ImageView mImageBt;
     private TextView mMscTv;
-    private String mMscStr="";
+    private String mMscStr = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO  语音输入/常规   设置中配置
         logd("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_play);
         mApplication = (BaseApplication) getApplication();
         mCurrentUser = mApplication.getUser();
-        mXfermodeView = (XfermodeView) findViewById(R.id.XfermodeView);
+        mXfermodeView = (XfermodeViewP) findViewById(R.id.XfermodeView);
+        mImageView = (ImageView) findViewById(R.id.image);
         mKeyLayout = (RelativeLayout) findViewById(R.id.key);
         mScore = (TextView) findViewById(R.id.score);
         mMovieNumTv = (TextView) findViewById(R.id.movieNum);
@@ -106,7 +107,7 @@ public class SinglePlayActivity extends MySwipeBackActivity {
                 blurRadius = MyConstants.blurRadius[i];
             }
         }
-        mXfermodeView.setOnScoreListener(new XfermodeView.ScoreListener() {
+        mXfermodeView.setOnScoreListener(new XfermodeViewP.ScoreListener() {
             @Override
             public void onUpdate(final int score) {
                 runOnUiThread(new Runnable() {
@@ -124,10 +125,10 @@ public class SinglePlayActivity extends MySwipeBackActivity {
 
     private void initMsc() {
         //处理语音合成关键类
-        mySynthesizer = SpeechRecognizer.createRecognizer(this,mInitListener);
-        mySynthesizer.setParameter(SpeechConstant.DOMAIN,"iat");
-        mySynthesizer.setParameter(SpeechConstant.LANGUAGE,"zh_cn");
-        mySynthesizer.setParameter(SpeechConstant.ACCENT,"mandarin ");
+        mySynthesizer = SpeechRecognizer.createRecognizer(this, mInitListener);
+        mySynthesizer.setParameter(SpeechConstant.DOMAIN, "iat");
+        mySynthesizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        mySynthesizer.setParameter(SpeechConstant.ACCENT, "mandarin ");
     }
 
     /**
@@ -199,7 +200,9 @@ public class SinglePlayActivity extends MySwipeBackActivity {
 
     public void voice(View view) {
         mySynthesizer.startListening(mRecognizerDialogListener);
-    };
+    }
+
+    ;
 
     public void forHelp(View view) {
         MyToast.getInstance().showCenterShortWarn(this, "求助");
@@ -217,7 +220,6 @@ public class SinglePlayActivity extends MySwipeBackActivity {
         }
         showKeyAnim();
     }
-
 
 
     private void updateScore() {
@@ -244,6 +246,7 @@ public class SinglePlayActivity extends MySwipeBackActivity {
                         record = new record();
                         record.setUsername(mCurrentUser.getUsername());
                         record.setType(mMovieType);
+                        record.setUser(mCurrentUser);
                         recordDAO.creatRecord(record, mDifficult, mRightNum, mMovieNum, mSumScore);
                         record.save(new SaveListener<String>() {
                             @Override
@@ -279,25 +282,25 @@ public class SinglePlayActivity extends MySwipeBackActivity {
      */
     private void showKeyAnim() {
         chooseKeyNum = -1;
-        mKeyLayoutWidth = mKeyLayout.getMeasuredWidth();
-        mKeyLayoutHeight = mKeyLayout.getMeasuredHeight();
-        mKeyWidth = mKeyLayoutWidth / SCALE_KEY_SCREEN;
-        logd("mKeyLayoutWidth=" + mKeyLayoutWidth + " mKeyLayoutHeight=" + mKeyLayoutHeight);
-        int xListSize = mKeyLayoutWidth / mKeyWidth;
+        int keyLayoutWidth = mKeyLayout.getMeasuredWidth();
+        int keyLayoutHeight = mKeyLayout.getMeasuredHeight();
+        int keyWidth = keyLayoutWidth / SCALE_KEY_SCREEN;
+        logd("mKeyLayoutWidth=" + keyLayoutWidth + " mKeyLayoutHeight=" + keyLayoutHeight);
+        int xListSize = keyLayoutWidth / keyWidth;
         List<Integer> xList = new ArrayList<Integer>();
-        xList.add(0, mKeyWidth / 2);
+        xList.add(0, keyWidth / 2);
         for (int i = 1; i < xListSize / 2; i++) {
-            xList.add(i, xList.get(0) + mKeyWidth * i);
+            xList.add(i, xList.get(0) + keyWidth * i);
         }
         xList.add(xListSize / 2, -xList.get(0));
         for (int i = xListSize / 2 + 1; i < xListSize; i++) {
             xList.add(i, -xList.get(i - 5));
         }
-        int yListSize = (mKeyLayoutHeight - KEY_MARGIN_TOP * mKeyWidth) / mKeyWidth;
+        int yListSize = (keyLayoutHeight - KEY_MARGIN_TOP * keyWidth) / keyWidth;
         List<Integer> yList = new ArrayList<Integer>();
-        yList.add(0, mKeyWidth * KEY_MARGIN_TOP);
+        yList.add(0, keyWidth * KEY_MARGIN_TOP);
         for (int i = 1; i < yListSize; i++) {
-            yList.add(i, yList.get(0) + mKeyWidth * i);
+            yList.add(i, yList.get(0) + keyWidth * i);
         }
         Collections.shuffle(xList);
         Collections.shuffle(yList);
@@ -332,7 +335,19 @@ public class SinglePlayActivity extends MySwipeBackActivity {
         }
         mMovieNumTv.setText(mMovieNum - mMovieList.size() + "/" + mMovieNum);
         mScore.setText("100");
-        ImageManager.getInstance().disPlay(mXfermodeView, mMovieInfo.getImage(), blurRadius);
+        Glide.with(this).load(mMovieInfo.getImage().getUrl()).listener(new RequestListener<String, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                //获取的bitmap比mImageView小
+                mXfermodeView.setmBgBitmap(((GlideBitmapDrawable) resource).getBitmap(), blurRadius);
+                return false;
+            }
+        }).placeholder(R.drawable.placeholder).into(mImageView);
         char[] chars = mMovieInfo.getKey().toCharArray();
         for (char c : chars) {
             mKeyChar.add(c);
@@ -377,9 +392,6 @@ public class SinglePlayActivity extends MySwipeBackActivity {
         chooseDialog.getWindow().setAttributes(lp);
         ObjectAnimator.ofFloat(dialogView, "alpha", 0, 1).setDuration(500).start();
     }
-
-
-
 
 
     /**

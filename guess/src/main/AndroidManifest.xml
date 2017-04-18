@@ -30,10 +30,11 @@
     <!-- 允许程序改变网络连接状态 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <application
         android:name="com.example.asus.common.BaseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/guess"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -45,7 +46,6 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote"/>
-
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -90,13 +90,17 @@
 
         <activity android:name=".MovieTypeActivity"/>
         <activity android:name=".SinglePlayActivity"/>
-        <activity android:name=".SinglePlayPActivity"/>
         <activity android:name=".SettingActivity"/>
         <activity android:name=".OnlineMatchActivity"/>
         <activity android:name=".OnlinePlayActivity">
         </activity>
         <activity android:name=".EditPersonalDataActivity">
         </activity>
+        <activity android:name=".RankActivity">
+        </activity>
+        <activity android:name=".RankTypeActivity">
+        </activity>
+
     </application>
 
 </manifest>

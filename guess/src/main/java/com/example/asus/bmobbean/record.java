@@ -12,6 +12,10 @@ public class record extends BmobObject {
     //用户账号
     private String username;
 
+    private User user;
+
+
+
     //电影类型
     private String type;
 
@@ -40,6 +44,7 @@ public class record extends BmobObject {
     public String toString() {
         return "record{" +
                 "username='" + username + '\'' +
+                ", user=" + user +
                 ", type='" + type + '\'' +
                 ", sum1=" + sum1 +
                 ", sum2=" + sum2 +
@@ -56,6 +61,13 @@ public class record extends BmobObject {
                 '}';
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     public String getUsername() {
         return username;
     }

@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#fff</color>
+    <color name="whitelight">#aeaeae</color>
     <color name="transparent">#00000000</color>
     <color name="menuItemPressed">#1ea46eda</color>
     <color name="inputShapeColor">#1ea46eda</color>

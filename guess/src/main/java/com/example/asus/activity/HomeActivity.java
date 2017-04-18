@@ -1,19 +1,12 @@
 package com.example.asus.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,17 +15,13 @@ import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.UserDAO;
 import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
-import com.example.asus.service.MusicService;
 import com.example.asus.util.AnimUtil;
 import com.example.asus.view.CircleImageView;
 import com.example.asus.view.SlidingMenu;
 import com.zhy.changeskin.SkinManager;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import cn.bmob.v3.BmobUser;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
@@ -194,6 +183,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     public void ranking(View view) {
         AnimUtil.playScaleAnim(view);
+        Intent intent = new Intent(this, RankActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
     public void personal_data(View view) {

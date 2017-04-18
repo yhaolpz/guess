@@ -6,7 +6,9 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-
+        // 引入greenDAO插件
+        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -19,6 +21,8 @@ allprojects {
         maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
 
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+
     }
 }
 

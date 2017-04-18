@@ -1,60 +1,70 @@
 package com.example.asus.util;
 
-import android.annotation.TargetApi;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.util.Log;
-import android.view.View;
 
 
 public class BlurUtil {
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public static void blur(Resources res, Bitmap bitmap, View view) {
+
+    /**
+     * 先将bitmap缩小scaleFactor倍，大幅增快模糊处理，然后放大还原
+     * @param bitmap
+     * @param radius
+     * @return
+     */
+    public static Bitmap getBlurBitmap(Bitmap bitmap, float radius) {
         long startMs = System.currentTimeMillis();
         float scaleFactor = 8;
-        float radius = 18;
-        Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() / scaleFactor),
-                (int) (view.getMeasuredHeight() / scaleFactor), Bitmap.Config.ARGB_4444);
+        Bitmap overlay = Bitmap.createBitmap((int) (bitmap.getWidth() / scaleFactor),
+                (int) (bitmap.getHeight() / scaleFactor), Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(overlay);
-        canvas.translate(-view.getLeft() / scaleFactor, -view.getTop() / scaleFactor);
         canvas.scale(1 / scaleFactor, 1 / scaleFactor);
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(bitmap, 0, 0, paint);
-        overlay = doBlur(overlay, (int) radius, true);
-        view.setBackground(new BitmapDrawable(res, overlay));
-        Log.i("TAG", System.currentTimeMillis() - startMs + "ms");
-    }
-
-    public static Bitmap getBlurBitmap(Bitmap bitmap, float radius) {
-        long startMs = System.currentTimeMillis();
-        float scaleFactor = 8;
-        Bitmap overlay = Bitmap.createBitmap((int)(bitmap.getWidth()/scaleFactor),
-                (int)(bitmap.getHeight()/scaleFactor), Bitmap.Config.ARGB_4444);
-        Canvas canvas = new Canvas(overlay);
-        canvas.scale(1/scaleFactor, 1/scaleFactor);
-        Paint paint = new Paint();
-        paint.setFlags(Paint.FILTER_BITMAP_FLAG);
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-        Bitmap blurBitmap = doBlur(overlay, (int)radius, true);
+        Bitmap blurBitmap = doBlur(overlay, (int) radius, true);
         float scaleWidth = ((float) bitmap.getWidth()) / blurBitmap.getWidth();
         float scaleHeight = ((float) bitmap.getHeight()) / blurBitmap.getHeight();
         Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth,scaleHeight); //长和宽放大缩小的比例
-        Bitmap resizeBmp = Bitmap.createBitmap(blurBitmap,0,0,blurBitmap.getWidth(),blurBitmap.getHeight(),matrix,true);
+        matrix.postScale(scaleWidth, scaleHeight); //长和宽放大缩小的比例
+        Bitmap resizeBmp = Bitmap.createBitmap(blurBitmap, 0, 0, blurBitmap.getWidth(), blurBitmap.getHeight(), matrix, true);
+        Log.i("TAG", System.currentTimeMillis() - startMs + "ms");
+        return resizeBmp;
+    }
+    /**
+     *
+     * @param bitmap    原bitmap
+     * @param radius    模糊半径
+     * @param width     返回指定宽高的bitmap
+     * @param height
+     * @return
+     */
+    public static Bitmap getBlurBitmap(Bitmap bitmap, float radius, int width, int height) {
+        long startMs = System.currentTimeMillis();
+        float scaleFactor = 8;
+        Bitmap overlay = Bitmap.createBitmap((int) (bitmap.getWidth() / scaleFactor),
+                (int) (bitmap.getHeight() / scaleFactor), Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(overlay);
+        canvas.scale(1 / scaleFactor, 1 / scaleFactor);
+        Paint paint = new Paint();
+        paint.setFlags(Paint.FILTER_BITMAP_FLAG);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        Bitmap blurBitmap = doBlur(overlay, (int) radius, true);
+        float scaleWidth = ((float) width) / blurBitmap.getWidth();
+        float scaleHeight = ((float) height) / blurBitmap.getHeight();
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight); //长和宽放大缩小的比例
+        Bitmap resizeBmp = Bitmap.createBitmap(blurBitmap, 0, 0, blurBitmap.getWidth(), blurBitmap.getHeight(), matrix, true);
         Log.i("TAG", System.currentTimeMillis() - startMs + "ms");
         return resizeBmp;
     }
 
 
-    public static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
+    private static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
 
-        // http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
         Bitmap bitmap;
         if (canReuseInBitmap) {
             bitmap = sentBitmap;

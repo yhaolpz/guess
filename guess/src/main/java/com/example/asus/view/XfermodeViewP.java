@@ -18,7 +18,7 @@ import com.example.asus.util.BlurUtil;
  * Created by Ahab on 2016/10/18.
  */
 public class XfermodeViewP extends ImageView {
-    private Bitmap mBgBitmap, mFgBitmap;
+    private Bitmap mFgBitmap;
     private Paint mPaint;
     private Canvas mCanvas;
     private Path mPath;
@@ -54,7 +54,6 @@ public class XfermodeViewP extends ImageView {
     }
 
     public void setmBgBitmap(Bitmap bitmap, int blurRadius) {
-        this.mBgBitmap = bitmap;
         this.mBlurRadius = blurRadius;
         if (blurRadius == 0) {
             invalidate();
@@ -62,7 +61,7 @@ public class XfermodeViewP extends ImageView {
         }
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
-        mFgBitmap = BlurUtil.getBlurBitmap(bitmap, blurRadius);
+        mFgBitmap = BlurUtil.getBlurBitmap(bitmap, blurRadius, getWidth(), getHeight());
         mCanvas = new Canvas(mFgBitmap);
         mCanvas.drawBitmap(mFgBitmap, 0, 0, paint);
         invalidate();
@@ -71,12 +70,7 @@ public class XfermodeViewP extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mBgBitmap != null) {
-            Log.d("guess", "onDraw: mBgBitmap w=" + mBgBitmap.getWidth() + " h=" + mBgBitmap.getHeight());
-            canvas.drawBitmap(mBgBitmap, 0, 0, null);
-        }
         if (mFgBitmap != null) {
-            Log.d("guess", "onDraw: mFgBitmap w=" + mFgBitmap.getWidth() + " h=" + mFgBitmap.getHeight());
             if (mBlurRadius > 0) {
                 canvas.drawBitmap(mFgBitmap, 0, 0, null);
             }
@@ -113,10 +107,8 @@ public class XfermodeViewP extends ImageView {
         @Override
         public void run() {
             try {
-                //TODO 出错
-
-                int w = getWidth();
-                int h = getHeight();
+                int w = mFgBitmap.getWidth();
+                int h = mFgBitmap.getHeight();
                 float wipeArea = 0;
                 float totalArea = w * h;
                 mPixels = new int[w * h];

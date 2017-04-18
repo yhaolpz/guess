@@ -1,8 +1,17 @@
 package com.example.asus.common;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,9 +24,12 @@ import com.example.asus.activity.LoginActivity;
 import com.example.asus.activity.R;
 import com.example.asus.bmobbean.User;
 
+import java.util.Arrays;
+
 import cn.bmob.v3.exception.BmobException;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
+import static android.R.attr.permission;
 import static cn.bmob.v3.Bmob.getApplicationContext;
 
 /**
@@ -68,19 +80,59 @@ public class BaseActivity extends FragmentActivity {
         Log.e("guess", getClass().getSimpleName() + " : " + s);
     }
 
-    public void showProgressbar() {
-        waitViewDisplaying = MyProgressbar.getInstance().show();
-        hideSoftInput();
+    public boolean showProgressbar() {
+        if (checkDrawOverlayPermission()) {
+            waitViewDisplaying = MyProgressbar.getInstance().show();
+            hideSoftInput();
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    public void showProgressbarWithText(String text) {
-        waitViewDisplaying = MyProgressbar.getInstance().showWithText(text);
-        hideSoftInput();
+
+    public boolean showProgressbarWithText(String text) {
+        if (checkDrawOverlayPermission()) {
+            waitViewDisplaying = MyProgressbar.getInstance().showWithText(text);
+            hideSoftInput();
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void hideProgressbar() {
         waitViewDisplaying = MyProgressbar.getInstance().hide();
     }
+
+    public final static int REQUEST_CODE = 1;
+
+    public boolean checkDrawOverlayPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, REQUEST_CODE);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Settings.canDrawOverlays(this)) {
+
+                }
+            }
+        }
+    }
+
 
     public boolean checkCommonException(BmobException e, Context context) {
         if (e == null) {

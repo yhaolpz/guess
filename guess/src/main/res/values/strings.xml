@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">myApp</string>
+    <string name="app_name">各种猜</string>
     <string name="hint_username">邮箱</string>
     <string name="hint_password">密码</string>
     <string name="bt_find_pass">找回密码</string>

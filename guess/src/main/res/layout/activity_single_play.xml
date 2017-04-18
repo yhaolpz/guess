@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.percent.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
     android:layout_width="match_parent"
@@ -8,25 +9,30 @@
     android:background="@mipmap/back22"
     tools:context="com.example.asus.activity.SinglePlayActivity">
 
-    <!--宽高必须大于 320 * 200    且宽高比 必须大于 640/400 = 1.6   = 1280/800
-             -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="30dp"
         android:background="#151515"
-        android:gravity="center_horizontal"
-        android:padding="10dp"
+        android:gravity="center"
+        app:layout_heightPercent="35%"
+        app:layout_widthPercent="100%"
         >
 
-        <com.example.asus.view.XfermodeView
-            android:id="@+id/XfermodeView"
-            android:layout_width="320dp"
-            android:layout_height="200dp"
-            android:scaleType="fitXY"
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             />
-    </LinearLayout>
+
+        <com.example.asus.view.XfermodeViewP
+            android:id="@+id/XfermodeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/movieNum"
@@ -91,12 +97,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"
         android:layout_marginRight="25dp"
         android:background="#00000000"
         android:onClick="jump"
-        android:layout_alignParentRight="true"
         android:text="跳 过"/>
 
 
-</RelativeLayout>
+</android.support.percent.PercentRelativeLayout>

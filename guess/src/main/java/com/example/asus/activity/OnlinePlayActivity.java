@@ -15,6 +15,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.asus.Image.ImageManager;
 import com.example.asus.bmobbean.MatchItem;
 import com.example.asus.bmobbean.User;
@@ -29,6 +34,7 @@ import com.example.asus.util.RandomUtil;
 import com.example.asus.util.ScreenUtil;
 import com.example.asus.view.CircleImageView;
 import com.example.asus.view.XfermodeView;
+import com.example.asus.view.XfermodeViewP;
 import com.google.gson.Gson;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -64,7 +70,8 @@ public class OnlinePlayActivity extends BaseActivity {
     private CircleImageView mMyAvatar;
     private TextView mTargetName;
     private TextView mMyName;
-    private XfermodeView mXfermodeView;
+    private XfermodeViewP mXfermodeView;
+    private ImageView mImageView; //剧照
     private TextView mMovieNum;
     private TextView mScore;
     private RelativeLayout mKeyLayout;
@@ -266,7 +273,21 @@ public class OnlinePlayActivity extends BaseActivity {
         }
         mMovieNum.setText(movieNum - mMovieList.size() + "/" + movieNum);
         mScore.setText("100");
-        ImageManager.getInstance().disPlay(mXfermodeView, mMovieInfo.getImage(), blurRadius);
+
+        Glide.with(this).load(mMovieInfo.getImage().getUrl()).listener(new RequestListener<String, GlideDrawable>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                //获取的bitmap比mImageView小
+                mXfermodeView.setmBgBitmap(((GlideBitmapDrawable) resource).getBitmap(), blurRadius);
+                return false;
+            }
+        }).placeholder(R.drawable.placeholder).into(mImageView);
+
         char[] chars = mMovieInfo.getKey().toCharArray();
         for (char c : chars) {
             mKeyChar.add(c);
@@ -366,7 +387,8 @@ public class OnlinePlayActivity extends BaseActivity {
         mTargetScoreViewList.add(1, mTwo);
         mTargetScoreViewList.add(2, mThree);
         mTargetAvatar = (CircleImageView) findViewById(R.id.targetAvatar);
-        mXfermodeView = (XfermodeView) findViewById(R.id.XfermodeView);
+        mXfermodeView = (XfermodeViewP) findViewById(R.id.XfermodeView);
+        mImageView = (ImageView) findViewById(R.id.image);
         mMovieNum = (TextView) findViewById(R.id.movieNum);
         mScore = (TextView) findViewById(R.id.score);
         mMyAvatar = (CircleImageView) findViewById(R.id.myAvatar);
@@ -378,7 +400,7 @@ public class OnlinePlayActivity extends BaseActivity {
         mTargetReadyBt = (Button) findViewById(R.id.targetReadyBt);
         mReadyBt = (Button) findViewById(R.id.readyBt);
         mCountDownTv = (TextView) findViewById(R.id.countDownTv);
-        mXfermodeView.setOnScoreListener(new XfermodeView.ScoreListener() {
+        mXfermodeView.setOnScoreListener(new XfermodeViewP.ScoreListener() {
             @Override
             public void onUpdate(final int score) {
                 runOnUiThread(new Runnable() {

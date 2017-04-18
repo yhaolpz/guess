@@ -2,21 +2,16 @@ package com.example.asus.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.example.asus.activity.R;
-import com.example.asus.activity.SinglePlayActivity;
 import com.example.asus.util.BlurUtil;
 
 /**
