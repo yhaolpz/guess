@@ -69,5 +69,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+greendao {
+    schemaVersion 1
+    daoPackage 'com.example.asus.greendao'
+    targetGenDir 'src/main/java'
+}
+
 
 

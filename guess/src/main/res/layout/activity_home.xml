@@ -28,7 +28,9 @@
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/homeGif"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:clickable="false"
+                />
 
             <com.example.asus.view.CircleImageView
                 android:id="@+id/avatar"

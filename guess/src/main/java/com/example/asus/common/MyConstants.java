@@ -34,7 +34,13 @@ public interface MyConstants {
             "随意", "剧情", "漫威",
             "科幻", "惊悚", "犯罪",
             "爱情", "喜剧", "动作",
-            "美剧", "韩剧", "英剧"
+            "英剧", "美剧", "韩剧"
+    };
+    int[] movieTypesImg = {
+            R.drawable.place1, R.drawable.place2, R.drawable.place3,
+            R.drawable.place4, R.drawable.place5, R.drawable.place6,
+            R.drawable.place7, R.drawable.place8, R.drawable.place9,
+            R.drawable.place10, R.drawable.place11, R.drawable.place12,
     };
     String[] difficults = {"简单", "一般", "困难"};
     int[] blurRadius = {0, 5, 25};

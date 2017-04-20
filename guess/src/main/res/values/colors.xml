@@ -9,4 +9,7 @@
     <color name="menuItemPressed">#1ea46eda</color>
     <color name="inputShapeColor">#1ea46eda</color>
     <color name="ageDialogColor">#0ddec3fa</color>
+
+    <color name="lineBackColor">#ad352a22</color>
+
 </resources>

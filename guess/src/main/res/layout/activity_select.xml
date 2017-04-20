@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/skin_img_default"
+    android:tag="skin:skin_img:background"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.asus.activity.SelectActivity">
+
+
+    <LinearLayout
+        android:id="@+id/line1"
+        android:layout_marginTop="45dp"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="100%"
+        android:background="#ad352a22"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:padding="8dp"
+            android:text="单人模式"
+            />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/go"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line2"
+        android:layout_marginTop="20dp"
+        app:layout_heightPercent="10%"
+        app:layout_widthPercent="100%"
+        android:background="#ad352a22"
+        android:gravity="center_vertical"
+        android:layout_below="@+id/line1"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:padding="8dp"
+            android:text="双人模式"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/go"
+            />
+    </LinearLayout>
+
+
+</android.support.percent.PercentRelativeLayout>

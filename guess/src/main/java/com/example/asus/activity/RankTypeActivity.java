@@ -3,6 +3,8 @@ package com.example.asus.activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.asus.adapter.RankPageAdapter;
 import com.example.asus.bmobbean.record;
+import com.example.asus.common.MyConstants;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.view.CircleImageView;
 import com.zhy.changeskin.SkinManager;
@@ -29,7 +32,7 @@ import cn.bmob.v3.listener.FindListener;
 
 public class RankTypeActivity extends MySwipeBackActivity {
 
-    private String type;
+    private String mType;
     private ImageView mTopImg;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -46,7 +49,8 @@ public class RankTypeActivity extends MySwipeBackActivity {
         super.onCreate(savedInstanceState);
         SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_rank_type);
-        type = getIntent().getStringExtra("TYPE");
+        mType = getIntent().getStringExtra("TYPE");
+        Log.e("TAG", "onCreate:mType " + mType);
         initView();
         initEvent();
     }
@@ -81,7 +85,7 @@ public class RankTypeActivity extends MySwipeBackActivity {
         //按答对题数排序
         String order = "-rsum" + (n + 1);
         BmobQuery<record> query = new BmobQuery<>();
-        query.addWhereEqualTo("type", type);
+        query.addWhereEqualTo("type", mType);
         query.setLimit(5);
         query.order(order);
         query.include("user");
@@ -94,7 +98,7 @@ public class RankTypeActivity extends MySwipeBackActivity {
                 }
                 if (list.size() == 0) {
                     mTipList.get(n).setText("这里没有数据~");
-                }else{
+                } else {
                     mTipList.get(n).setText("");
                     mListRankList.get(n).clear();
                     mListRankList.get(n).addAll(list);
@@ -109,6 +113,11 @@ public class RankTypeActivity extends MySwipeBackActivity {
         mTopImg = (ImageView) findViewById(R.id.topImg);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        for (int i = 0; i < MyConstants.movieTypes.length; i++) {
+            if (TextUtils.equals(MyConstants.movieTypes[i], mType)) {
+                Glide.with(this).load(MyConstants.movieTypesImg[i]).placeholder(R.drawable.placeholder).into(mTopImg);
+            }
+        }
         mListViewList = new ArrayList<>();
         mListRankList = new ArrayList<>();
         mAdapterList = new ArrayList<>();

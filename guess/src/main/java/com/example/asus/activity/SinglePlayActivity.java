@@ -22,10 +22,13 @@ import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
 import com.example.asus.bmobbean.record;
 import com.example.asus.bmobbean.recordDAO;
+import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MyConstants;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
+import com.example.asus.greendao.SingleRecordDao;
+import com.example.asus.greendao.entity.SingleRecord;
 import com.example.asus.util.DensityUtils;
 import com.example.asus.util.JsonParser;
 import com.example.asus.util.RandomUtil;
@@ -38,6 +41,7 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.zhy.changeskin.SkinManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +55,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-public class SinglePlayActivity extends MySwipeBackActivity {
+public class SinglePlayActivity extends BaseActivity {
     private XfermodeViewP mXfermodeView; //剧照模糊层
     private ImageView mImageView; //剧照
     private RelativeLayout mKeyLayout;
@@ -86,6 +90,7 @@ public class SinglePlayActivity extends MySwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         logd("onCreate");
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_single_play);
         mApplication = (BaseApplication) getApplication();
         mCurrentUser = mApplication.getUser();
@@ -215,10 +220,36 @@ public class SinglePlayActivity extends MySwipeBackActivity {
             showPlayDoneDialog();
             if (mCurrentUser != null) {
                 updateScore();
+                updateLocalScore(mCurrentUser.getObjectId());
+            } else {
+                updateLocalScore("0");
             }
             return;
         }
         showKeyAnim();
+    }
+
+    private void updateLocalScore(String userId) {
+        SingleRecordDao dao = mApplication.getDaoSession().getSingleRecordDao();
+        List list = dao.queryBuilder()
+                .where(SingleRecordDao.Properties.UserId.eq(userId))
+                .where(SingleRecordDao.Properties.Type.eq(mMovieType))
+                .list();
+        loge("UserId=" + userId + " type=" + mMovieType + " count = " + list.size());
+        if (list.size() == 0) {
+            //insert
+            SingleRecord record = new SingleRecord();
+            record.setId(null);
+            record.setUserId(userId);
+            record.setType(mMovieType);
+            recordDAO.creatRecord(record, mDifficult, mRightNum, mMovieNum, mSumScore);
+            dao.insert(record);
+        } else {
+            //update
+            recordDAO.updateRecord((SingleRecord) list.get(0), mDifficult, mRightNum, mMovieNum, mSumScore);
+            dao.update((SingleRecord) list.get(0));
+        }
+
     }
 
 
@@ -428,4 +459,9 @@ public class SinglePlayActivity extends MySwipeBackActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SkinManager.getInstance().unregister(this);
+    }
 }

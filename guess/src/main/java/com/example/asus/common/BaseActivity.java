@@ -64,7 +64,9 @@ public class BaseActivity extends FragmentActivity {
                 hideProgressbar();
                 return true;
             }
-            if (getClass().getSimpleName().equals("HomeActivity")) {
+            if (getClass().getSimpleName().equals("HomeActivity") ||
+                    getClass().getSimpleName().equals("SinglePlayActivity") ||
+                    getClass().getSimpleName().equals("OnlinePlayActivity")) {
                 return true;
             }
             finish();
@@ -85,7 +87,7 @@ public class BaseActivity extends FragmentActivity {
             waitViewDisplaying = MyProgressbar.getInstance().show();
             hideSoftInput();
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -96,7 +98,7 @@ public class BaseActivity extends FragmentActivity {
             waitViewDisplaying = MyProgressbar.getInstance().showWithText(text);
             hideSoftInput();
             return true;
-        }else{
+        } else {
             return false;
         }
     }

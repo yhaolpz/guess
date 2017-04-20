@@ -61,8 +61,8 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     }
 
     private void initData() {
-        ageItemList = new ArrayList<String>();
-        sexItemList = new ArrayList<String>();
+        ageItemList = new ArrayList<>();
+        sexItemList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             ageItemList.add("" + i);
         }

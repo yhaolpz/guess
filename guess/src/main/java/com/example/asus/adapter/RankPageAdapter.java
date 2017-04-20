@@ -9,6 +9,10 @@ import java.util.List;
 
 /**
  * Created by yhao on 2017/4/18.
+ *
+ * rank  和  score 公用
+ *
+ *
  */
 
 public class RankPageAdapter extends PagerAdapter {

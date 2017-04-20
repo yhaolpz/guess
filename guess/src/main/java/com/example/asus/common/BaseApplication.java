@@ -1,6 +1,7 @@
 package com.example.asus.common;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -9,6 +10,8 @@ import android.util.Log;
 import com.example.asus.activity.R;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.UserDAO;
+import com.example.asus.greendao.DaoMaster;
+import com.example.asus.greendao.DaoSession;
 import com.example.asus.util.SPUtil;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
@@ -94,18 +97,21 @@ public class BaseApplication extends Application {
     public void changeNum(String editNum) {
         SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, Integer.parseInt(editNum));
     }
-
-
-    //QQ账号
+    public static BaseApplication instances;
+    public static BaseApplication getInstances(){
+        return instances;
+    }
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate: ");
         super.onCreate();
+        instances = this;
         initBmob();
         initMsc();
         initSetting();
         initMusic();
         SkinManager.getInstance().init(this);
+        setDatabase();
     }
 
     private void initMusic() {
@@ -146,6 +152,38 @@ public class BaseApplication extends Application {
                 .build();
         Bmob.initialize(config);
     }
+
+
+
+    /**
+     * 设置greenDao
+     */
+    private DaoMaster.DevOpenHelper mHelper;
+    private SQLiteDatabase db;
+    private DaoMaster mDaoMaster;
+    private DaoSession mDaoSession;
+
+    private void setDatabase() {
+        // 通过 DaoMaster 的内部类 DevOpenHelper，你可以得到一个便利的 SQLiteOpenHelper 对象。
+        // 可能你已经注意到了，你并不需要去编写「CREATE TABLE」这样的 SQL 语句，因为 greenDAO 已经帮你做了。
+        // 注意：默认的 DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。
+        // 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。
+        mHelper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+        db = mHelper.getWritableDatabase();
+        // 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。
+        mDaoMaster = new DaoMaster(db);
+        mDaoSession = mDaoMaster.newSession();
+    }
+
+    public DaoSession getDaoSession() {
+        return mDaoSession;
+    }
+
+    public SQLiteDatabase getDb() {
+        return db;
+    }
+
+
 
 
     private List<AppCompatActivity> activityList = new LinkedList<AppCompatActivity>();

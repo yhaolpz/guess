@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.asus.Image.ImageManager;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.UserDAO;
@@ -45,9 +46,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SkinManager.getInstance().register(this);
-        mApplication = (BaseApplication) getApplication();
-        logd("onCreate");
         setContentView(R.layout.activity_home);
+        mApplication = (BaseApplication) getApplication();
         initUser();
         initContentView();
         initMenuView();
@@ -68,8 +68,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == requestCode_login && resultCode == LoginActivity.resultCode_login) {
             mCurrentUser = mApplication.getUser();
-            ImageManager.getInstance().disPlay(mAvatarBigger, mCurrentUser.getAvatar());
-            ImageManager.getInstance().disPlay(mAvatar, mCurrentUser.getAvatar());
+            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
+            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
             mName.setText(mCurrentUser.getName());
             mLogoutBt.setText("退出");
         }
@@ -96,8 +96,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         logd("IS_UPDATE_AVATAR_FLAG:" + IS_UPDATE_AVATAR_FLAG);
         if (IS_UPDATE_AVATAR_FLAG) {
-            ImageManager.getInstance().disPlay(mAvatar, mApplication.getUser().getAvatar());
-            ImageManager.getInstance().disPlay(mAvatarBigger, mApplication.getUser().getAvatar());
+            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
+            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
             IS_UPDATE_AVATAR_FLAG = false;
         }
     }
@@ -133,10 +133,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mLogoutBt = (Button) findViewById(R.id.logoutBt);
         mName.setOnClickListener(this);
         if (mCurrentUser != null) {
-            ImageManager.getInstance().disPlay(mAvatarBigger, mCurrentUser.getAvatar());
+            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
             mName.setText(mCurrentUser.getName());
         } else {
-            mAvatarBigger.setImageResource(R.mipmap.avatar);
+            Glide.with(this).load(R.mipmap.avatar).into(mAvatarBigger);
             mName.setText("未登录");
             mLogoutBt.setText("登录");
         }
@@ -158,9 +158,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mSlidingMenu.setOnTouchListener(this);
         mSlidingMenu.setOnMenuToggleListener(this);
         if (mCurrentUser != null) {
-            ImageManager.getInstance().disPlay(mAvatar, mCurrentUser.getAvatar());
+            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
         } else {
-            mAvatar.setImageResource(R.mipmap.avatar);
+            Glide.with(this).load(R.mipmap.avatar).into(mAvatar);
         }
         playWalkGifAnim();
     }
@@ -183,7 +183,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     public void ranking(View view) {
         AnimUtil.playScaleAnim(view);
-        Intent intent = new Intent(this, RankActivity.class);
+        Intent intent = new Intent(this, SelectActivity.class);
+        intent.putExtra(SelectActivity.MODE, SelectActivity.MODE_RANK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+    public void my_score(View view) {
+        Intent intent = new Intent(this, SelectActivity.class);
+        intent.putExtra(SelectActivity.MODE, SelectActivity.MODE_SCORE);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
@@ -196,9 +203,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    public void my_score(View view) {
 
-    }
 
     public void setting(View view) {
         Intent intent = new Intent(this, SettingActivity.class);

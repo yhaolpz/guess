@@ -29,8 +29,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- 允许程序改变网络连接状态 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <application
         android:name="com.example.asus.common.BaseApplication"
         android:allowBackup="true"
@@ -46,6 +46,7 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote"/>
+
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -100,7 +101,10 @@
         </activity>
         <activity android:name=".RankTypeActivity">
         </activity>
-
+        <activity android:name=".SelectActivity">
+        </activity>
+        <activity android:name=".ScoreTypeActivity">
+        </activity>
     </application>
 
 </manifest>

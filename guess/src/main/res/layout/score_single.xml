@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 答题数   答对题数  总得分  平均分   -->
+
+    <LinearLayout
+        android:id="@+id/sumLine"
+        android:layout_width="match_parent"
+        app:layout_heightPercent="10%"
+        android:layout_marginTop="20dp"
+        android:background="@color/lineBackColor"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/nameicon"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="#00000000"
+            android:gravity="left|center_vertical"
+            android:text="答题数"
+            android:textSize="15sp"
+            />
+
+        <TextView
+            android:id="@+id/sum"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:textSize="15sp"
+            android:text="0"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rsumLine"
+        app:layout_heightPercent="10%"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sumLine"
+        android:layout_marginTop="10dp"
+        android:background="@color/lineBackColor"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/score_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="#00000000"
+            android:gravity="left|center_vertical"
+            android:text="答对数"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/rsum"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:textSize="15sp"
+            android:text="0"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sumScoreLine"
+        app:layout_heightPercent="10%"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rsumLine"
+        android:layout_marginTop="10dp"
+        android:background="@color/lineBackColor"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/setting_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="#00000000"
+            android:gravity="left|center_vertical"
+            android:text="总得分"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/sumScore"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:textSize="15sp"
+            android:text="0"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        app:layout_heightPercent="10%"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sumScoreLine"
+        android:layout_marginTop="10dp"
+        android:background="@color/lineBackColor"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/logout_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="#00000000"
+            android:gravity="left|center_vertical"
+            android:text="平均分"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/average"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:textSize="15sp"
+            android:text="0"
+            />
+    </LinearLayout>
+</android.support.percent.PercentRelativeLayout>

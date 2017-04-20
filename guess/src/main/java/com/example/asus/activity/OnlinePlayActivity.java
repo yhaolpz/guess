@@ -43,6 +43,7 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.zhy.changeskin.SkinManager;
 
 import org.json.JSONObject;
 
@@ -65,7 +66,7 @@ public class OnlinePlayActivity extends BaseActivity {
     private ImageView mOne;
     private ImageView mTwo;
     private ImageView mThree;
-    private List<ImageView> mTargetScoreViewList=new ArrayList<>();
+    private List<ImageView> mTargetScoreViewList = new ArrayList<>();
     private CircleImageView mTargetAvatar;
     private CircleImageView mMyAvatar;
     private TextView mTargetName;
@@ -159,6 +160,7 @@ public class OnlinePlayActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_online_play);
         mApplication = (BaseApplication) getApplication();
         mCurrentUser = mApplication.getUser();
@@ -198,12 +200,12 @@ public class OnlinePlayActivity extends BaseActivity {
                         start();
                     }
                     handler.postDelayed(runnable, 1000);
-                } else if (item.getScores()!=null) {
+                } else if (item.getScores() != null) {
                     List<Integer> scoreList = item.getScores();
                     for (int i = 0; i < scoreList.size(); i++) {
                         if (scoreList.get(i) < 0) {
                             mTargetScoreViewList.get(i).setImageResource(R.mipmap.wrong);
-                        }else{
+                        } else {
                             mTargetScoreViewList.get(i).setImageResource(R.mipmap.done);
                         }
                         mTargetScoreViewList.get(i).setVisibility(View.VISIBLE);
@@ -580,6 +582,7 @@ public class OnlinePlayActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        SkinManager.getInstance().unregister(this);
         new MatchItem().delete(my_objectId, new UpdateListener() {
             @Override
             public void done(BmobException e) {

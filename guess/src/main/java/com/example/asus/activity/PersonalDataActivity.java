@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.asus.Image.ImageManager;
 import com.example.asus.Image.LocalCacheUtils;
 import com.example.asus.bmobbean.User;
@@ -85,7 +86,7 @@ public class PersonalDataActivity extends MySwipeBackActivity {
         mAge = (TextView) findViewById(R.id.age);
         mCity = (TextView) findViewById(R.id.city);
         mEmail = (TextView) findViewById(R.id.email);
-        ImageManager.getInstance().disPlay(mAvatar, mCurrentUser.getAvatar());
+        Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
         mName.setText(mCurrentUser.getName());
         mCity.setText(mCurrentUser.getCity());
         mAge.setText(mCurrentUser.getAge() == null ? "" : mCurrentUser.getAge() + "岁");
