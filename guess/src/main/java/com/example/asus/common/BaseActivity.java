@@ -23,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.asus.activity.LoginActivity;
 import com.example.asus.activity.R;
 import com.example.asus.bmobbean.User;
+import com.orhanobut.logger.Logger;
 
 import java.util.Arrays;
 
@@ -64,9 +65,11 @@ public class BaseActivity extends FragmentActivity {
                 hideProgressbar();
                 return true;
             }
-            if (getClass().getSimpleName().equals("HomeActivity") ||
-                    getClass().getSimpleName().equals("SinglePlayActivity") ||
-                    getClass().getSimpleName().equals("OnlinePlayActivity")) {
+            if (getClass().getSimpleName().equals("HomeActivity")
+                    ||getClass().getSimpleName().equals("SinglePlayActivity")
+                    //TODO 方便测试
+//                    ||getClass().getSimpleName().equals("OnlinePlayActivity")
+                    ) {
                 return true;
             }
             finish();
@@ -76,10 +79,13 @@ public class BaseActivity extends FragmentActivity {
 
     public void logd(String s) {
         Log.d("guess", getClass().getSimpleName() + " : " + s);
+        Logger.d(s);
     }
 
     public void loge(String s) {
         Log.e("guess", getClass().getSimpleName() + " : " + s);
+        Logger.e(s);
+
     }
 
     public boolean showProgressbar() {

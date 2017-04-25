@@ -6,11 +6,14 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 
 public class BlurUtil {
 
     /**
      * 先将bitmap缩小scaleFactor倍，大幅增快模糊处理，然后放大还原
+     *
      * @param bitmap
      * @param radius
      * @return
@@ -25,7 +28,12 @@ public class BlurUtil {
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(bitmap, 0, 0, paint);
-        Bitmap blurBitmap = doBlur(overlay, (int) radius, true);
+        Bitmap blurBitmap = null;
+        try {
+            blurBitmap = doBlur(overlay, (int) radius, true);
+        } catch (Exception e) {
+            Logger.e("doBlur exception " + e.getMessage());
+        }
         float scaleWidth = ((float) bitmap.getWidth()) / blurBitmap.getWidth();
         float scaleHeight = ((float) bitmap.getHeight()) / blurBitmap.getHeight();
         Matrix matrix = new Matrix();
@@ -34,11 +42,11 @@ public class BlurUtil {
         Log.i("TAG", System.currentTimeMillis() - startMs + "ms");
         return resizeBmp;
     }
+
     /**
-     *
-     * @param bitmap    原bitmap
-     * @param radius    模糊半径
-     * @param width     返回指定宽高的bitmap
+     * @param bitmap 原bitmap
+     * @param radius 模糊半径
+     * @param width  返回指定宽高的bitmap
      * @param height
      * @return
      */
@@ -52,7 +60,12 @@ public class BlurUtil {
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(bitmap, 0, 0, paint);
-        Bitmap blurBitmap = doBlur(overlay, (int) radius, true);
+        Bitmap blurBitmap = null;
+        try {
+            blurBitmap = doBlur(overlay, (int) radius, true);
+        } catch (Exception e) {
+            Logger.e("doBlur exception " + e.getMessage());
+        }
         float scaleWidth = ((float) width) / blurBitmap.getWidth();
         float scaleHeight = ((float) height) / blurBitmap.getHeight();
         Matrix matrix = new Matrix();
@@ -63,7 +76,7 @@ public class BlurUtil {
     }
 
 
-    private static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
+    private static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) throws Exception {
 
         Bitmap bitmap;
         if (canReuseInBitmap) {

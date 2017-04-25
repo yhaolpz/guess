@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -57,6 +58,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobRealTimeData;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
@@ -99,7 +101,8 @@ public class OnlinePlayActivity extends BaseActivity {
     private int mKeyLayoutHeight;
     private int mKeyWidth;
 
-    private List<Integer> scoreList = new ArrayList<>();
+    private List<Integer> myScoreList = new ArrayList<>();
+    private List<Integer> targetScoreList;
 
     private int mRightNum;
     private int mSumScore;
@@ -107,8 +110,8 @@ public class OnlinePlayActivity extends BaseActivity {
     private String mMovieType;
 
     private String my_objectId;
-    private String target_objectId;//监听用
-    private String target_username;//查询用户信息用
+    private String target_objectId;//监听用,item id
+    private String target_userId;//查询用户信息用  user id
 
     private BmobRealTimeData rtd;
 
@@ -126,18 +129,9 @@ public class OnlinePlayActivity extends BaseActivity {
         @Override
         public void run() {
             t--;
-            if (t < 0) {
-                new MatchItem().delete(my_objectId, new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if (checkCommonException(e, OnlinePlayActivity.this)) {
-                            return;
-                        }
-                        finish();
-                    }
-                });
+            if (t == 0) {
+                start();
             }
-            mCountDownTv.setText("");
             if (!cancel_flag) {
                 mCountDownTv.setText("" + t);
                 handler.postDelayed(this, 1000);
@@ -172,7 +166,7 @@ public class OnlinePlayActivity extends BaseActivity {
         mMovieType = intent.getStringExtra("TYPE");
         target_objectId = intent.getStringExtra("TARGET_ID");
         my_objectId = intent.getStringExtra("MY_ID");
-        target_username = intent.getStringExtra("TARGET_USERNAME");
+        target_userId = intent.getStringExtra("TARGET_USEID");
         for (int i = 0; i < 3; i++) {
             if (mDifficult.equals(MyConstants.difficults[i])) {
                 blurRadius = MyConstants.blurRadius[i];
@@ -192,31 +186,44 @@ public class OnlinePlayActivity extends BaseActivity {
             public void onDataChange(JSONObject data) {
                 Gson gson = new Gson();
                 MatchItem item = gson.fromJson(data.optString("data"), MatchItem.class);
-                logd("onDataChange item ：" + item.toString());
-                if (item.getState().equals(MyConstants.READY_STATE)) {
-                    mTargetReadyBt.setText("已准备");
-                    target_ready_flag = true;
-                    if (my_ready_flag) {
-                        start();
-                    }
-                    handler.postDelayed(runnable, 1000);
-                } else if (item.getScores() != null) {
-                    List<Integer> scoreList = item.getScores();
-                    for (int i = 0; i < scoreList.size(); i++) {
-                        if (scoreList.get(i) < 0) {
-                            mTargetScoreViewList.get(i).setImageResource(R.mipmap.wrong);
-                        } else {
-                            mTargetScoreViewList.get(i).setImageResource(R.mipmap.done);
+//                logd("onDataChange item ：" + item.toString());
+                //data中数据可能不是最新数据，故重新查询
+                BmobQuery<MatchItem> query = new BmobQuery<MatchItem>();
+                query.getObject(item.getObjectId(), new QueryListener<MatchItem>() {
+                    @Override
+                    public void done(MatchItem matchItem, BmobException e) {
+                        if (checkCommonException(e, OnlinePlayActivity.this)) {
+                            return;
                         }
-                        mTargetScoreViewList.get(i).setVisibility(View.VISIBLE);
+                        if (matchItem.getState().equals(MyConstants.READY_STATE)) {
+                            mTargetReadyBt.setText("已准备");
+                            target_ready_flag = true;
+                            if (my_ready_flag) {
+                                start();
+                            } else {
+                                handler.postDelayed(runnable, 1000);
+                            }
+                        } else if (matchItem.getScores() != null) {
+                            targetScoreList = matchItem.getScores();
+                            for (int i = 0; i < targetScoreList.size(); i++) {
+                                if (targetScoreList.get(i) < 0) {
+                                    mTargetScoreViewList.get(i).setImageResource(R.mipmap.wrong);
+                                } else {
+                                    mTargetScoreViewList.get(i).setImageResource(R.mipmap.done);
+                                }
+                                mTargetScoreViewList.get(i).setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
-                }
+                });
             }
 
             @Override
             public void onConnectCompleted(Exception ex) {
-                logd("initBmobRealTimeData  连接成功? " + rtd.isConnected());
-                rtd.subRowUpdate("MatchItem", target_objectId);
+                if (rtd.isConnected()) {
+                    rtd.subRowUpdate("MatchItem", target_objectId);
+                    logd("成功监听： " + target_objectId);
+                }
             }
         });
     }
@@ -224,6 +231,7 @@ public class OnlinePlayActivity extends BaseActivity {
     //双方都已准备，开始游戏
     private void start() {
         logd("start*************************");
+        cancel_flag = true;
         MatchItem matchItem = new MatchItem();
         matchItem.setState(MyConstants.PLAYING_STATE);
         matchItem.update(my_objectId, new UpdateListener() {
@@ -232,37 +240,41 @@ public class OnlinePlayActivity extends BaseActivity {
                 if (checkCommonException(e, OnlinePlayActivity.this)) {
                     return;
                 }
-                logd("playing");
             }
         });
-        cancel_flag = true;
         mTargetReadyBt.setVisibility(View.GONE);
         mReadyBt.setVisibility(View.GONE);
+        mCountDownTv.setVisibility(View.GONE);
         initNextMovie();
         showKeyAnim();
     }
 
     private void initData() {
         mMyName.setText(mCurrentUser.getName());
-        ImageManager.getInstance().disPlay(mMyAvatar, mCurrentUser.getAvatar());
+        Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mMyAvatar);
         int borderColor = mCurrentUser.getSex().equals("男") ? Color.parseColor("#36d8ea") :
                 mCurrentUser.getSex().equals("女") ? Color.parseColor("#ea665c") : Color.parseColor("#fafafa");
         mMyAvatar.setBorderColor(borderColor);
         mMyAvatar.setBorderWidth(2);
         BmobQuery<User> query = new BmobQuery<User>();
-        query.addWhereEqualTo("username", target_username);
-        query.findObjects(new FindListener<User>() {
+        query.getObject(target_userId, new QueryListener<User>() {
             @Override
-            public void done(List<User> list, BmobException e) {
-                ImageManager.getInstance().disPlay(mTargetAvatar, list.get(0).getAvatar());
-                mTargetName.setText(list.get(0).getName());
-                int borderColor = list.get(0).getSex().equals("男") ? Color.parseColor("#36d8ea") :
-                        list.get(0).getSex().equals("女") ? Color.parseColor("#ea665c") : Color.parseColor("#fafafa");
-                mTargetAvatar.setBorderColor(borderColor);
-                mTargetAvatar.setBorderWidth(2);
+            public void done(User user, BmobException e) {
+                if (checkCommonException(e, OnlinePlayActivity.this)) {
+                    return;
+                }
+                if (user != null) {
+                    Glide.with(OnlinePlayActivity.this).load(user.getAvatar().getUrl()).into(mTargetAvatar);
+                    mTargetName.setText(user.getName());
+                    int borderColor = user.getSex().equals("男") ? Color.parseColor("#36d8ea") :
+                            user.getSex().equals("女") ? Color.parseColor("#ea665c") : Color.parseColor("#fafafa");
+                    mTargetAvatar.setBorderColor(borderColor);
+                    mTargetAvatar.setBorderWidth(2);
+                } else {
+                    loge("target user == null");
+                }
             }
         });
-
     }
 
     private boolean initNextMovie() {
@@ -566,17 +578,27 @@ public class OnlinePlayActivity extends BaseActivity {
 
     private void updateScores(int score) {
         MatchItem matchItem = new MatchItem();
-        scoreList.add(score);
-        matchItem.setScores(scoreList);
+        myScoreList.add(score);
+        matchItem.setScores(myScoreList);
         matchItem.update(my_objectId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (checkCommonException(e, OnlinePlayActivity.this)) {
                     return;
                 }
-                logd("更新分数");
+                logd("更新自己分数");
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //退出确认框
+
+
+        }
+        return false;
     }
 
     @Override

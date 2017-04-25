@@ -9,10 +9,10 @@ import cn.bmob.v3.BmobObject;
  */
 
 public class MatchItem extends BmobObject {
-    private String username;
+    private String userId;
     private String state;
     private String targetID;
-    private String targetUsername;
+    private String targetUserId;
     private String movieType;
     private String difficult;
     private List<Integer> skips;
@@ -22,10 +22,10 @@ public class MatchItem extends BmobObject {
     @Override
     public String toString() {
         return "MatchItem{" +
-                "username='" + username + '\'' +
+                "userId='" + userId + '\'' +
                 ", state='" + state + '\'' +
                 ", targetID='" + targetID + '\'' +
-                ", targetUsername='" + targetUsername + '\'' +
+                ", targetUserId='" + targetUserId + '\'' +
                 ", movieType='" + movieType + '\'' +
                 ", difficult='" + difficult + '\'' +
                 ", skips=" + skips +
@@ -33,12 +33,12 @@ public class MatchItem extends BmobObject {
                 '}';
     }
 
-    public String getTargetUsername() {
-        return targetUsername;
+    public String getTargetUserId() {
+        return targetUserId;
     }
 
-    public void setTargetUsername(String targetUsername) {
-        this.targetUsername = targetUsername;
+    public void setTargetUserId(String targetUserId) {
+        this.targetUserId = targetUserId;
     }
 
     public String getMovieType() {
@@ -57,12 +57,12 @@ public class MatchItem extends BmobObject {
         this.difficult = difficult;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getState() {

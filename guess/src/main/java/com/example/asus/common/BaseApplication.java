@@ -15,6 +15,8 @@ import com.example.asus.greendao.DaoSession;
 import com.example.asus.util.SPUtil;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.Logger;
 import com.zhy.changeskin.SkinManager;
 
 import java.util.LinkedList;
@@ -97,10 +99,13 @@ public class BaseApplication extends Application {
     public void changeNum(String editNum) {
         SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, Integer.parseInt(editNum));
     }
+
     public static BaseApplication instances;
-    public static BaseApplication getInstances(){
+
+    public static BaseApplication getInstances() {
         return instances;
     }
+
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate: ");
@@ -110,8 +115,17 @@ public class BaseApplication extends Application {
         initMsc();
         initSetting();
         initMusic();
+        initLogger();
         SkinManager.getInstance().init(this);
         setDatabase();
+    }
+
+    private void initLogger() {
+        Logger
+                .init("guess")                 // default PRETTYLOGGER or use just init()
+                .methodCount(3)                 // default 2
+                .hideThreadInfo()               // default shown
+                .methodOffset(2);             // default 0
     }
 
     private void initMusic() {
@@ -154,7 +168,6 @@ public class BaseApplication extends Application {
     }
 
 
-
     /**
      * 设置greenDao
      */
@@ -182,8 +195,6 @@ public class BaseApplication extends Application {
     public SQLiteDatabase getDb() {
         return db;
     }
-
-
 
 
     private List<AppCompatActivity> activityList = new LinkedList<AppCompatActivity>();

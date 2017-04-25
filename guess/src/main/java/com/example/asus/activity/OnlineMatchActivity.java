@@ -33,6 +33,7 @@ import cn.bmob.v3.BmobRealTimeData;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
@@ -79,7 +80,7 @@ public class OnlineMatchActivity extends BaseActivity {
     private BmobRealTimeData rtd;
     private String my_objectId;
     private String target_objectId;
-    private String target_username;
+    private String target_userId;
     final int num = 3;
     List<Integer> mSkips = new ArrayList<Integer>();
     List<movieInfo> mMovieInfoList = new ArrayList<movieInfo>();
@@ -93,7 +94,6 @@ public class OnlineMatchActivity extends BaseActivity {
         setContentView(R.layout.activity_movie_type);
         mCurrentUser = ((BaseApplication) getApplication()).getUser();
         initView();
-        initBmobRealTimeData();
     }
 
     private void initBmobRealTimeData() {
@@ -106,23 +106,35 @@ public class OnlineMatchActivity extends BaseActivity {
                 //第二次被更新targetId targetUsername
                 Gson gson = new Gson();
                 MatchItem item = gson.fromJson(data.optString("data"), MatchItem.class);
-                logd("item ：" + item.toString());
-                if (item.getTargetID() == null) {
-                    showProgressbarWithText("找到对手...");
-                    cancelFlag = false;
-                } else {
-                    rtd.unsubRowUpdate("MatchItem", my_objectId);
-                    target_objectId = item.getTargetID();
-                    target_username = item.getTargetUsername();
-                    if (mMovieType.equals("随意")) {
-                        addRandomMovieInfo();
+                //data中数据可能不是最新数据，故重新查询
+                BmobQuery<MatchItem> query = new BmobQuery();
+                query.getObject(item.getObjectId(), new QueryListener<MatchItem>() {
+                    @Override
+                    public void done(MatchItem matchItem, BmobException e) {
+                        if (checkCommonException(e, OnlineMatchActivity.this)) {
+                            return;
+                        }
+                        logd("数据被更新后，重新获取为：" + matchItem.toString());
+                        if (matchItem.getTargetID() == null) {
+                            showProgressbarWithText("找到对手...");
+                            cancelFlag = false;
+                        } else {
+                            logd("取消监听自己：" + my_objectId);
+                            rtd.unsubRowUpdate("MatchItem", my_objectId);
+                            target_objectId = matchItem.getTargetID();
+                            target_userId = matchItem.getTargetUserId();
+                            if (mMovieType.equals("随意")) {
+                                addRandomMovieInfo();
+                            }
+                        }
                     }
-                }
+                });
             }
 
             @Override
             public void onConnectCompleted(Exception ex) {
                 logd("onConnectCompleted:" + rtd.isConnected());
+                rtd.subRowUpdate("MatchItem", my_objectId);
             }
         });
     }
@@ -188,9 +200,10 @@ public class OnlineMatchActivity extends BaseActivity {
                 showProgressbarWithText("找到对手...");
                 final MatchItem matchItem = list.get(0);
                 mSkips.clear();
+                //获取Skips
                 mSkips.addAll(matchItem.getSkips());
                 target_objectId = matchItem.getObjectId();
-                target_username = matchItem.getUsername();
+                target_userId = matchItem.getUserId();
                 matchItem.setState(MyConstants.SAW_STATE);
                 matchItem.update(mUpdateStateListener);
             }
@@ -200,17 +213,18 @@ public class OnlineMatchActivity extends BaseActivity {
     private void addMyLookItem() {
         MatchItem matchItem = new MatchItem();
         matchItem.setState(MyConstants.LOOK_STATE);
-        matchItem.setUsername(mCurrentUser.getUsername());
+        matchItem.setUserId(mCurrentUser.getObjectId());
         matchItem.setMovieType(mMovieType);
         matchItem.setDifficult(mDifficult);
         matchItem.setSkips(mSkips);
         matchItem.save(mSaveLookListener);
     }
 
+    //添加自己saw item
     private void addMySawItem() {
         MatchItem matchItem = new MatchItem();
         matchItem.setState(MyConstants.SAW_STATE);
-        matchItem.setUsername(mCurrentUser.getUsername());
+        matchItem.setUserId(mCurrentUser.getObjectId());
         matchItem.setMovieType(mMovieType);
         matchItem.setDifficult(mDifficult);
         matchItem.save(mSaveSawListener);
@@ -218,12 +232,15 @@ public class OnlineMatchActivity extends BaseActivity {
 
     private void addRandomMovieInfo() {
         mMovieInfoList.clear();
-        for (int skipNum : mSkips) {
+        final int[] index = {0};
+        for (int i = 0; i < mSkips.size(); i++) {
+            mMovieInfoList.add(i, new movieInfo());
             BmobQuery<movieInfo> query = new BmobQuery<movieInfo>();
             query.setLimit(1);
-            query.setSkip(skipNum);
+            query.setSkip(mSkips.get(i));
             query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
             query.setMaxCacheAge(TimeUnit.MINUTES.toMillis(30));
+            final int finalI = i;
             query.findObjects(new FindListener<movieInfo>() {
                 @Override
                 public void done(List<movieInfo> list, BmobException e) {
@@ -231,8 +248,9 @@ public class OnlineMatchActivity extends BaseActivity {
                         return;
                     }
                     logd(list.get(0).toString());
-                    mMovieInfoList.add(list.get(0));
-                    if (mMovieInfoList.size() == mSkips.size()) {
+                    mMovieInfoList.set(finalI, list.get(0));
+                    index[0]++;
+                    if (index[0] == mSkips.size()) {
                         start();
                     }
                 }
@@ -253,7 +271,7 @@ public class OnlineMatchActivity extends BaseActivity {
         }
     };
     /**
-     * 保存自己saw item, 更新对手targetId、targetUsername
+     * 保存自己saw item, 更新对手targetId、target_userId
      */
     private SaveListener<String> mSaveSawListener = new SaveListener<String>() {
         @Override
@@ -264,7 +282,7 @@ public class OnlineMatchActivity extends BaseActivity {
             my_objectId = objectId;
             MatchItem matchItem = new MatchItem();
             matchItem.setTargetID(my_objectId);
-            matchItem.setTargetUsername(mCurrentUser.getUsername());
+            matchItem.setTargetUserId(mCurrentUser.getObjectId());
             matchItem.update(target_objectId, mUpdateTargetListener);
         }
     };
@@ -313,7 +331,9 @@ public class OnlineMatchActivity extends BaseActivity {
         @Override
         public void done(final String objectId, BmobException e) {
             my_objectId = objectId;
-            rtd.subRowUpdate("MatchItem", my_objectId);
+            //监听时机较晚，可能监听不到数据更新
+            logd("监听自己=" + my_objectId);
+            initBmobRealTimeData();
             cancelFlag = true;
         }
     };
@@ -327,7 +347,6 @@ public class OnlineMatchActivity extends BaseActivity {
             if (checkCommonException(e, OnlineMatchActivity.this)) {
                 return;
             }
-            logd(mMovieType + "  count = " + count);
             mSkips.clear();
             mSkips.addAll(RandomUtil.getRandomNums(num, count));
             addMyLookItem();
@@ -364,7 +383,7 @@ public class OnlineMatchActivity extends BaseActivity {
         intent.putExtra("TYPE", mMovieType);
         intent.putExtra("MY_ID", my_objectId);
         intent.putExtra("TARGET_ID", target_objectId);
-        intent.putExtra("TARGET_USERNAME", target_username);
+        intent.putExtra("TARGET_USEID", target_userId);
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
@@ -372,6 +391,7 @@ public class OnlineMatchActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            logd("waitViewDisplaying=" + waitViewDisplaying + " cancelFlag=" + cancelFlag);
             if (waitViewDisplaying) {
                 if (cancelFlag) {
                     showProgressbarWithText("正在取消...");
@@ -396,6 +416,7 @@ public class OnlineMatchActivity extends BaseActivity {
             }
         });
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
