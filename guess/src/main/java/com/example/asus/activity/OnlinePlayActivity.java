@@ -7,12 +7,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,8 +23,6 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.asus.Image.ImageManager;
-import com.example.asus.bmobbean.DoubleRecord;
 import com.example.asus.bmobbean.MatchItem;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
@@ -31,12 +30,13 @@ import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MyConstants;
 import com.example.asus.common.MyToast;
+import com.example.asus.greendao.DoubleRecordDao;
+import com.example.asus.greendao.entity.DoubleRecord;
 import com.example.asus.util.DensityUtils;
 import com.example.asus.util.JsonParser;
 import com.example.asus.util.RandomUtil;
 import com.example.asus.util.ScreenUtil;
 import com.example.asus.view.CircleImageView;
-import com.example.asus.view.XfermodeView;
 import com.example.asus.view.XfermodeViewP;
 import com.google.gson.Gson;
 import com.iflytek.cloud.ErrorCode;
@@ -52,8 +52,8 @@ import com.zhy.changeskin.SkinManager;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -61,9 +61,7 @@ import java.util.NoSuchElementException;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobRealTimeData;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
 
@@ -128,6 +126,11 @@ public class OnlinePlayActivity extends BaseActivity {
 
     private Button mHelp;
     private Button mJump;
+
+    private EditText mEditMessage;
+    private String message="";
+
+
 
     //倒计时
     private int t = 10;
@@ -220,15 +223,20 @@ public class OnlinePlayActivity extends BaseActivity {
                             } else {
                                 handler.postDelayed(runnable, 1000);
                             }
-                        } else if (matchItem.getScores() != null) {
-                            targetScoreList = matchItem.getScores();
-                            for (int i = 0; i < targetScoreList.size(); i++) {
-                                if (targetScoreList.get(i) < 0) {
-                                    mTargetScoreViewList.get(i).setImageResource(R.mipmap.wrong);
-                                } else {
-                                    mTargetScoreViewList.get(i).setImageResource(R.mipmap.done);
+                        } else if (!TextUtils.isEmpty(matchItem.getMessage()) && !TextUtils.equals(message, matchItem.getMessage())) {
+                            message = matchItem.getMessage();
+                            MyToast.getInstance().showLongMessage(OnlinePlayActivity.this,message);
+                        } else {
+                            if (matchItem.getScores() != null) {
+                                targetScoreList = matchItem.getScores();
+                                for (int i = 0; i < targetScoreList.size(); i++) {
+                                    if (targetScoreList.get(i) < 0) {
+                                        mTargetScoreViewList.get(i).setImageResource(R.mipmap.wrong);
+                                    } else {
+                                        mTargetScoreViewList.get(i).setImageResource(R.mipmap.done);
+                                    }
+                                    mTargetScoreViewList.get(i).setVisibility(View.VISIBLE);
                                 }
-                                mTargetScoreViewList.get(i).setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -263,7 +271,28 @@ public class OnlinePlayActivity extends BaseActivity {
             }
         });
         mTargetReadyBt.setVisibility(View.GONE);
-        mReadyBt.setVisibility(View.GONE);
+//        mReadyBt.setVisibility(View.GONE);
+        mEditMessage.setVisibility(View.VISIBLE);
+        mReadyBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(mEditMessage.getText())) {
+                    return;
+                }
+                MatchItem matchItem = new MatchItem();
+                matchItem.setMessage(mEditMessage.getText().toString());
+                matchItem.update(my_objectId, new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (checkCommonException(e, OnlinePlayActivity.this)) {
+                            return;
+                        }
+                        logd("更新消息");
+                    }
+                });
+            }
+        });
+        mReadyBt.setText("发送");
         mCountDownTv.setVisibility(View.GONE);
         initNextMovie();
         showKeyAnim();
@@ -432,6 +461,8 @@ public class OnlinePlayActivity extends BaseActivity {
         mTargetReadyBt = (Button) findViewById(R.id.targetReadyBt);
         mReadyBt = (Button) findViewById(R.id.readyBt);
         mCountDownTv = (TextView) findViewById(R.id.countDownTv);
+        mEditMessage = (EditText) findViewById(R.id.editMessage);
+        mEditMessage.setVisibility(View.GONE);
         mHelp = (Button) findViewById(R.id.help);
         mJump = (Button) findViewById(R.id.jump);
         mHelp.setClickable(false);
@@ -558,29 +589,57 @@ public class OnlinePlayActivity extends BaseActivity {
     }
 
     /**
-     * 更新服务端数据
+     * 更新服务端数据，
+     *
+     *   更新：    直接在此方法更新本地数据库
      */
     private void updateNetScore(final int scoreChange, final boolean exit) {
-        if (mDifficult.equals(MyConstants.difficults[0])) {
-            mCurrentUser.setScore1(mCurrentUser.getScore1() + scoreChange);
-        }
-        if (mDifficult.equals(MyConstants.difficults[1])) {
-            mCurrentUser.setScore2(mCurrentUser.getScore2() + scoreChange);
-        }
-        if (mDifficult.equals(MyConstants.difficults[2])) {
-            mCurrentUser.setScore3(mCurrentUser.getScore3() + scoreChange);
-        }
-        mCurrentUser.update(new UpdateListener() {
+
+        //更新本地数据库
+        DoubleRecordDao dao = mApplication.getDaoSession().getDoubleRecordDao();
+        DoubleRecord record = new DoubleRecord();
+        record.setId(null);
+        record.setUserId(mCurrentUser.getObjectId());
+        record.setTargetId(target_userId);
+        record.setScore(scoreChange);
+        record.setDiffcult(mDifficult);
+        record.setTime(new Date());
+        dao.insert(record);
+
+
+        //更新服务端
+        BmobQuery<User> query = new BmobQuery<>();
+        query.getObject(mCurrentUser.getObjectId(), new QueryListener<User>() {
             @Override
-            public void done(BmobException e) {
+            public void done(User user, BmobException e) {
                 if (checkCommonException(e, OnlinePlayActivity.this)) {
                     return;
                 }
-                if (exit) {
-                    finish();
+                mApplication.setUser(user);
+                mCurrentUser = user;
+                if (mDifficult.equals(MyConstants.difficults[0])) {
+                    user.setScore1(mCurrentUser.getScore1() + scoreChange);
                 }
+                if (mDifficult.equals(MyConstants.difficults[1])) {
+                    user.setScore2(user.getScore2() + scoreChange);
+                }
+                if (mDifficult.equals(MyConstants.difficults[2])) {
+                    user.setScore3(mCurrentUser.getScore3() + scoreChange);
+                }
+                user.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (checkCommonException(e, OnlinePlayActivity.this)) {
+                            return;
+                        }
+                        if (exit) {
+                            finish();
+                        }
+                    }
+                });
             }
         });
+
     }
 
     private void showKeyAnim() {
@@ -676,8 +735,6 @@ public class OnlinePlayActivity extends BaseActivity {
             mExit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //更新本地数据库
-
                     //更新服务端数据,更新完后退出
                     updateNetScore(-100, true);
 

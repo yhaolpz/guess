@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_online_play"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="skin:skin_img:background"
     android:background="@drawable/skin_img_default"
+    android:tag="skin:skin_img:background"
     tools:context="com.example.asus.activity.OnlinePlayActivity">
 
 
-
     <LinearLayout
+        android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="31dp"
         android:gravity="center_vertical"
-        android:id="@+id/line1"
-        >
+        android:orientation="horizontal">
+
         <com.example.asus.view.CircleImageView
+            android:id="@+id/targetAvatar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/avatar"
-            android:id="@+id/targetAvatar"
             android:layout_marginLeft="10dp"
+            android:src="@mipmap/avatar"
             />
 
         <TextView
@@ -34,15 +36,16 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             />
+
         <Button
             android:id="@+id/targetReadyBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="未准备"
-            android:textSize="16sp"
             android:background="#00000000"
             android:clickable="false"
+            android:text="未准备"
             android:textColor="#f2418125"
+            android:textSize="16sp"
             />
 
         <ImageView
@@ -72,9 +75,6 @@
             android:visibility="gone"
             />
     </LinearLayout>
-
-
-
 
 
     <!--宽高必须大于 320 * 200    且宽高比 必须大于 640/400 = 1.6   = 1280/800
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textSize="17sp"
-           />
+            />
     </RelativeLayout>
 
     <TextView
@@ -133,30 +133,38 @@
         />
 
     <LinearLayout
+        android:id="@+id/line2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/score"
-        android:orientation="horizontal"
         android:layout_marginTop="5dp"
         android:gravity="center_vertical|right"
-        android:id="@+id/line2"
+        android:orientation="horizontal"
         >
+
+        <EditText
+            android:id="@+id/editMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/readyBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="准 备"
-            android:textSize="16sp"
             android:background="#00000000"
             android:onClick="ready"
+            android:text="准 备"
             android:textColor="#f2418125"
+            android:textSize="16sp"
             />
+
         <com.example.asus.view.CircleImageView
+            android:id="@+id/myAvatar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/avatar"
-            android:id="@+id/myAvatar"
             android:layout_marginLeft="10dp"
+            android:src="@mipmap/avatar"
             />
 
         <TextView

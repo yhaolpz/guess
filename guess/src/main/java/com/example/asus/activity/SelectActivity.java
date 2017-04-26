@@ -28,10 +28,10 @@ public class SelectActivity extends MySwipeBackActivity {
         mLine1 = (LinearLayout) findViewById(R.id.line1);
         mLine2 = (LinearLayout) findViewById(R.id.line2);
         mode = getIntent().getStringExtra(MODE);
-        loge("onCreate mode=" + mode);
         mLine1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //单人模式
                 Intent intent = new Intent(SelectActivity.this, RankActivity.class);
                 intent.putExtra(MODE, mode);
                 startActivity(intent);
@@ -41,12 +41,14 @@ public class SelectActivity extends MySwipeBackActivity {
         mLine2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //双人模式
                 Intent intent;
                 if (TextUtils.equals(mode, MODE_RANK)) {
-                    intent = new Intent(SelectActivity.this, RankTypeActivity.class);
+                    //双人模式排行榜
+                    intent = new Intent(SelectActivity.this, DoubleRankTypeActivity.class);
                 } else {
-                    //TODO 双人模式本地记录表
-                    intent = new Intent(SelectActivity.this, RankTypeActivity.class);
+                    //双人模式本地记录
+                    intent = new Intent(SelectActivity.this, DoubleRecordTypeActivity.class);
                 }
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);

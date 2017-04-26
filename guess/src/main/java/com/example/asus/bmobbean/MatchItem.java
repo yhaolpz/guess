@@ -15,6 +15,7 @@ public class MatchItem extends BmobObject {
     private String targetUserId;
     private String movieType;
     private String difficult;
+    private String message;
     private List<Integer> skips;
     private List<Integer> scores;
 
@@ -28,9 +29,18 @@ public class MatchItem extends BmobObject {
                 ", targetUserId='" + targetUserId + '\'' +
                 ", movieType='" + movieType + '\'' +
                 ", difficult='" + difficult + '\'' +
+                ", message='" + message + '\'' +
                 ", skips=" + skips +
                 ", scores=" + scores +
                 '}';
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getTargetUserId() {

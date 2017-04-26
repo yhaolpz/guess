@@ -105,6 +105,8 @@
         </activity>
         <activity android:name=".ScoreTypeActivity">
         </activity>
+        <activity android:name=".DoubleRankTypeActivity"/>
+        <activity android:name=".DoubleRecordTypeActivity"/>
     </application>
 
 </manifest>

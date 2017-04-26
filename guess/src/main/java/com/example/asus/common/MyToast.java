@@ -111,6 +111,19 @@ public class MyToast {
         mHandler.postDelayed(r, 3500);
         mToast.show();
     }
+    public void showLongMessage(Context context, String tvString) {
+        if (mToast != null) {
+            return;
+        }
+        mImageView.setBackgroundResource(R.mipmap.message);
+        mText.setText(tvString);
+        mToast = new Toast(context);
+        mToast.setGravity(Gravity.TOP, 0, 0);
+        mToast.setDuration(Toast.LENGTH_LONG);
+        mToast.setView(mToastView);
+        mHandler.postDelayed(r, 3500);
+        mToast.show();
+    }
 
     public void showShortDone(Context context, String tvString) {
         if (mToast != null) {
