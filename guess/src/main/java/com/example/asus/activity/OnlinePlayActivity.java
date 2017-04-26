@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.asus.Image.ImageManager;
+import com.example.asus.bmobbean.DoubleRecord;
 import com.example.asus.bmobbean.MatchItem;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
@@ -44,11 +46,13 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.orhanobut.logger.Logger;
 import com.zhy.changeskin.SkinManager;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,17 +105,18 @@ public class OnlinePlayActivity extends BaseActivity {
     private int mKeyLayoutHeight;
     private int mKeyWidth;
 
-    private List<Integer> myScoreList = new ArrayList<>();
-    private List<Integer> targetScoreList;
+    private List<Integer> myScoreList = new ArrayList<>();//我的分数列表
+    private List<Integer> targetScoreList;//对方分数列表
 
-    private int mRightNum;
-    private int mSumScore;
+    private int jumpScore = -20; //跳过或猜错 -20分
+
     private String mDifficult;
     private String mMovieType;
 
     private String my_objectId;
     private String target_objectId;//监听用,item id
     private String target_userId;//查询用户信息用  user id
+
 
     private BmobRealTimeData rtd;
 
@@ -120,6 +125,9 @@ public class OnlinePlayActivity extends BaseActivity {
     private Button mTargetReadyBt;
     private Button mReadyBt;
     private TextView mCountDownTv;
+
+    private Button mHelp;
+    private Button mJump;
 
     //倒计时
     private int t = 10;
@@ -184,15 +192,24 @@ public class OnlinePlayActivity extends BaseActivity {
         rtd.start(new ValueEventListener() {
             @Override
             public void onDataChange(JSONObject data) {
+                if (data.optString("action").equals("deleteRow")) {
+                    logd("对手提前退出，增加100分");
+                    updateNetScore(100, false);
+                    showPlayDoneDialog("对手提前退出，增加100分");
+                    return;
+                }
                 Gson gson = new Gson();
                 MatchItem item = gson.fromJson(data.optString("data"), MatchItem.class);
-//                logd("onDataChange item ：" + item.toString());
                 //data中数据可能不是最新数据，故重新查询
                 BmobQuery<MatchItem> query = new BmobQuery<MatchItem>();
                 query.getObject(item.getObjectId(), new QueryListener<MatchItem>() {
                     @Override
                     public void done(MatchItem matchItem, BmobException e) {
                         if (checkCommonException(e, OnlinePlayActivity.this)) {
+                            return;
+                        }
+                        if (matchItem.getState().equals("done")) {
+                            showPlayDoneDialog("游戏结束");
                             return;
                         }
                         if (matchItem.getState().equals(MyConstants.READY_STATE)) {
@@ -222,6 +239,7 @@ public class OnlinePlayActivity extends BaseActivity {
             public void onConnectCompleted(Exception ex) {
                 if (rtd.isConnected()) {
                     rtd.subRowUpdate("MatchItem", target_objectId);
+                    rtd.subRowDelete("MatchItem", target_objectId);
                     logd("成功监听： " + target_objectId);
                 }
             }
@@ -231,6 +249,9 @@ public class OnlinePlayActivity extends BaseActivity {
     //双方都已准备，开始游戏
     private void start() {
         logd("start*************************");
+        mHelp.setClickable(true);
+        mJump.setClickable(true);
+        mImageBt.setClickable(true);
         cancel_flag = true;
         MatchItem matchItem = new MatchItem();
         matchItem.setState(MyConstants.PLAYING_STATE);
@@ -238,7 +259,6 @@ public class OnlinePlayActivity extends BaseActivity {
             @Override
             public void done(BmobException e) {
                 if (checkCommonException(e, OnlinePlayActivity.this)) {
-                    return;
                 }
             }
         });
@@ -364,8 +384,6 @@ public class OnlinePlayActivity extends BaseActivity {
             mMscStr = "";
             if (str.equals(mMovieInfo.getMovieName())) {
                 MyToast.getInstance().showBottomShortDone(OnlinePlayActivity.this, "");
-                mRightNum++;
-                mSumScore += Integer.parseInt(mScore.getText().toString());
                 jump(null);
                 return;
             }
@@ -414,6 +432,11 @@ public class OnlinePlayActivity extends BaseActivity {
         mTargetReadyBt = (Button) findViewById(R.id.targetReadyBt);
         mReadyBt = (Button) findViewById(R.id.readyBt);
         mCountDownTv = (TextView) findViewById(R.id.countDownTv);
+        mHelp = (Button) findViewById(R.id.help);
+        mJump = (Button) findViewById(R.id.jump);
+        mHelp.setClickable(false);
+        mJump.setClickable(false);
+        mImageBt.setClickable(false);
         mXfermodeView.setOnScoreListener(new XfermodeViewP.ScoreListener() {
             @Override
             public void onUpdate(final int score) {
@@ -460,33 +483,59 @@ public class OnlinePlayActivity extends BaseActivity {
 
     public void jump(View view) {
         if (view != null) {
-            updateScores(-1);
+            //跳过 -20 分
+            updateScores(jumpScore);
         }
         endCurrentMovie();
         boolean endFlag = initNextMovie();
         if (endFlag) {
-            showPlayDoneDialog();
             if (mCurrentUser != null) {
-                updateScore();
+                //结束游戏
+                MatchItem matchItem = new MatchItem();
+                matchItem.setState("done");
+                matchItem.update(my_objectId, new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (checkCommonException(e, OnlinePlayActivity.this)) {
+                            return;
+                        }
+                        showPlayDoneDialog("游戏结束");
+                        logd("state -->done");
+                    }
+                });
             }
             return;
         }
         showKeyAnim();
     }
 
-    private void showPlayDoneDialog() {
-        View dialogView = View.inflate(this, R.layout.dialog_play_done, null);
+    private void showPlayDoneDialog(String text) {
+        int score = 0;
+        if (text.equals("游戏结束")) {
+            int myScore=0, targetScore=0;
+            for (int s : myScoreList) {
+                myScore += s;
+            }
+            for (int s : targetScoreList) {
+                targetScore += s;
+            }
+            Logger.d(myScoreList);
+            Logger.d(targetScoreList);
+            Logger.d("s1" + myScore / movieNum);
+            Logger.d("s2" + targetScore / movieNum);
+            score = (myScore / movieNum) - (targetScore / movieNum);
+            updateNetScore(score, false);
+            text = "游戏结束，您的得分为：" + score;
+        }
+        rtd.unsubRowDelete("MatchItem", target_objectId);
+        rtd.unsubRowUpdate("MatchItem", target_objectId);
+        View dialogView = View.inflate(this, R.layout.dialog_done_confirm, null);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
         dialog.setView(dialogView, 0, 0, 0, 0);
-        TextView movieType = (TextView) dialogView.findViewById(R.id.movieType);
-        TextView rightNum = (TextView) dialogView.findViewById(R.id.rightNum);
-        TextView sum = (TextView) dialogView.findViewById(R.id.sum);
-        TextView average = (TextView) dialogView.findViewById(R.id.average);
-        movieType.setText(mMovieType);
-        rightNum.setText("正确率：" + mRightNum + "/" + movieNum);
-        sum.setText("总分：" + mSumScore);
-        average.setText("平均分：" + mSumScore / movieNum);
-        dialogView.setOnClickListener(new View.OnClickListener() {
+        TextView mText = (TextView) dialogView.findViewById(R.id.text);
+        TextView mBack = (TextView) dialogView.findViewById(R.id.back);
+        mText.setText(text);
+        mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -496,7 +545,7 @@ public class OnlinePlayActivity extends BaseActivity {
         WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
         chooseDialog.setCanceledOnTouchOutside(false);
         lp.gravity = Gravity.CENTER;
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;//宽高可设置具体大小
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         chooseDialog.getWindow().setAttributes(lp);
         ObjectAnimator.ofFloat(dialogView, "alpha", 0, 1).setDuration(500).start();
@@ -508,7 +557,30 @@ public class OnlinePlayActivity extends BaseActivity {
         keyList.clear();
     }
 
-    private void updateScore() {
+    /**
+     * 更新服务端数据
+     */
+    private void updateNetScore(final int scoreChange, final boolean exit) {
+        if (mDifficult.equals(MyConstants.difficults[0])) {
+            mCurrentUser.setScore1(mCurrentUser.getScore1() + scoreChange);
+        }
+        if (mDifficult.equals(MyConstants.difficults[1])) {
+            mCurrentUser.setScore2(mCurrentUser.getScore2() + scoreChange);
+        }
+        if (mDifficult.equals(MyConstants.difficults[2])) {
+            mCurrentUser.setScore3(mCurrentUser.getScore3() + scoreChange);
+        }
+        mCurrentUser.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (checkCommonException(e, OnlinePlayActivity.this)) {
+                    return;
+                }
+                if (exit) {
+                    finish();
+                }
+            }
+        });
     }
 
     private void showKeyAnim() {
@@ -559,14 +631,12 @@ public class OnlinePlayActivity extends BaseActivity {
                 chooseKeyNum++;
                 if (!String.valueOf(mKeyChar.get(chooseKeyNum)).equals(textView.getText().toString())) {
                     MyToast.getInstance().showBottomShortWrong(OnlinePlayActivity.this, "");
-                    updateScores(-1);
+                    updateScores(jumpScore);
                     jump(null);
                 } else {
                     if (chooseKeyNum == mKeyChar.size() - 1) {
                         MyToast.getInstance().showBottomShortDone(OnlinePlayActivity.this, "");
                         int score = Integer.parseInt(mScore.getText().toString());
-                        mRightNum++;
-                        mSumScore += score;
                         updateScores(score);
                         jump(null);
                     }
@@ -576,6 +646,7 @@ public class OnlinePlayActivity extends BaseActivity {
         return textView;
     }
 
+    // 每猜完电影后更新自己 matchitem 中的 分数,主要为了让对手知道自己的分数
     private void updateScores(int score) {
         MatchItem matchItem = new MatchItem();
         myScoreList.add(score);
@@ -595,8 +666,37 @@ public class OnlinePlayActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             //退出确认框
+            View dialogView = View.inflate(this, R.layout.dialog_exit_confirm, null);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+            dialog.setView(dialogView, 0, 0, 0, 0);
+            TextView mText = (TextView) dialogView.findViewById(R.id.text);
+            TextView mExit = (TextView) dialogView.findViewById(R.id.exit);
+            TextView mCancel = (TextView) dialogView.findViewById(R.id.cancel);
+            mText.setText("提前退出将扣除100分");
+            mExit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //更新本地数据库
 
+                    //更新服务端数据,更新完后退出
+                    updateNetScore(-100, true);
 
+                }
+            });
+            final Dialog chooseDialog = dialog.show();
+            mCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chooseDialog.dismiss();
+                }
+            });
+            WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
+            lp.gravity = Gravity.CENTER;
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            chooseDialog.getWindow().setAttributes(lp);
+            ObjectAnimator.ofFloat(dialogView, "alpha", 0, 1).setDuration(500).start();
+            return true;
         }
         return false;
     }
@@ -605,6 +705,8 @@ public class OnlinePlayActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         SkinManager.getInstance().unregister(this);
+        rtd.unsubRowDelete("MatchItem", target_objectId);
+        rtd.unsubRowUpdate("MatchItem", target_objectId);
         new MatchItem().delete(my_objectId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
