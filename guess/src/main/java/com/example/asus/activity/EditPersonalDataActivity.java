@@ -189,6 +189,20 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
         mLocationClient.start();
     }
 
+    private void updateCity(final String city) {
+        mCurrentUser.setCity(city);
+        mCurrentUser.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                hideProgressbar();
+                if (checkCommonException(e, EditPersonalDataActivity.this)) {
+                    return;
+                }
+                mCity.setText(city);
+            }
+        });
+    }
+
     public void editPassword(View view) {
         Intent intent = new Intent(this, FindPassActivity.class);
         startActivity(intent);
@@ -215,16 +229,15 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
         mLocationClient.registerLocationListener(new BDLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation bdLocation) {
-                hideProgressbar();
                 if (bdLocation.getLocType() == BDLocation.TypeNetWorkLocation) {
                     logd("网络定位");
-                    mCity.setText(bdLocation.getCity());
+                    updateCity(bdLocation.getCity());
                 } else if (bdLocation.getLocType() == BDLocation.TypeOffLineLocation) {
                     logd("离线定位");
-                    mCity.setText(bdLocation.getCity());
+                    updateCity(bdLocation.getCity());
                 } else if (bdLocation.getLocType() == BDLocation.TypeGpsLocation) {
                     logd("GPS定位");
-                    mCity.setText(bdLocation.getCity());
+                    updateCity(bdLocation.getCity());
                 } else {
                     MyToast.getInstance().showShortWarn(EditPersonalDataActivity.this, "定位失败,点击重新定位");
                     loge("定位失败:  ERROR CODE: " + bdLocation.getLocType());

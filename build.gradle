@@ -3,6 +3,8 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
+        maven { url "https://dl.bintray.com/thelasterstar/maven/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
@@ -21,6 +23,10 @@ allprojects {
         maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
 
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+        //新浪
+        mavenCentral()
+        maven { url "https://dl.bintray.com/thelasterstar/maven/" }
 
 
     }

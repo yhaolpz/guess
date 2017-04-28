@@ -17,6 +17,8 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
+import com.sina.weibo.sdk.WbSdk;
+import com.sina.weibo.sdk.auth.AuthInfo;
 import com.zhy.changeskin.SkinManager;
 
 import java.util.LinkedList;
@@ -112,12 +114,17 @@ public class BaseApplication extends Application {
         super.onCreate();
         instances = this;
         initBmob();
+        initWeibo();
         initMsc();
         initSetting();
         initMusic();
         initLogger();
         SkinManager.getInstance().init(this);
         setDatabase();
+    }
+
+    private void initWeibo() {
+        WbSdk.install(this, new AuthInfo(this, MyConstants.WEIBO_APP_KEY, MyConstants.WEIBO_REDIRECT_URL, MyConstants.WEIBO_SCOPE));
     }
 
     private void initLogger() {

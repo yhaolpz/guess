@@ -128,8 +128,7 @@ public class OnlinePlayActivity extends BaseActivity {
     private Button mJump;
 
     private EditText mEditMessage;
-    private String message="";
-
+    private String message = "";
 
 
     //倒计时
@@ -225,7 +224,7 @@ public class OnlinePlayActivity extends BaseActivity {
                             }
                         } else if (!TextUtils.isEmpty(matchItem.getMessage()) && !TextUtils.equals(message, matchItem.getMessage())) {
                             message = matchItem.getMessage();
-                            MyToast.getInstance().showLongMessage(OnlinePlayActivity.this,message);
+                            MyToast.getInstance().showLongMessage(OnlinePlayActivity.this, message);
                         } else {
                             if (matchItem.getScores() != null) {
                                 targetScoreList = matchItem.getScores();
@@ -543,7 +542,7 @@ public class OnlinePlayActivity extends BaseActivity {
     private void showPlayDoneDialog(String text) {
         int score = 0;
         if (text.equals("游戏结束")) {
-            int myScore=0, targetScore=0;
+            int myScore = 0, targetScore = 0;
             for (int s : myScoreList) {
                 myScore += s;
             }
@@ -590,8 +589,8 @@ public class OnlinePlayActivity extends BaseActivity {
 
     /**
      * 更新服务端数据，
-     *
-     *   更新：    直接在此方法更新本地数据库
+     * <p>
+     * 更新：    直接在此方法更新本地数据库
      */
     private void updateNetScore(final int scoreChange, final boolean exit) {
 

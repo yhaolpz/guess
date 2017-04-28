@@ -83,8 +83,8 @@ public class BaseActivity extends FragmentActivity {
     }
 
     public void loge(String s) {
-        Log.e("guess", getClass().getSimpleName() + " : " + s);
-//        Logger.e(s);
+//        Log.e("guess", getClass().getSimpleName() + " : " + s);
+        Logger.e(s);
 
     }
 

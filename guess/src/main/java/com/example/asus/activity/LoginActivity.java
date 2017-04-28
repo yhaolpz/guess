@@ -8,7 +8,6 @@ import android.widget.EditText;
 
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.UserDAO;
-import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MyConstants;
 import com.example.asus.common.MySwipeBackActivity;
@@ -17,9 +16,9 @@ import com.example.asus.common.Openid;
 import com.example.asus.util.SPUtil;
 import com.example.asus.util.ValidateUtil;
 import com.google.gson.Gson;
-import com.sina.weibo.sdk.auth.AuthInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
+import com.sina.weibo.sdk.auth.WbAuthListener;
+import com.sina.weibo.sdk.auth.WbConnectErrorMessage;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.AsyncWeiboRunner;
@@ -58,11 +57,11 @@ public class LoginActivity extends MySwipeBackActivity {
     private UserInfo qqUserInfo;
 
     //weibo
-    private AuthInfo mAuthInfo;
-    private WeiboAuthListener weiboAuthListener;
     private SsoHandler mSsoHandler;
+    private WbAuthListener mWbAuthListener;
     private AsyncWeiboRunner mAsyncWeiboRunner;
     private RequestListener mUserListener;
+
 
     public static int resultCode_login = 2;
 
@@ -80,32 +79,32 @@ public class LoginActivity extends MySwipeBackActivity {
 
 
     private void initWeibo() {
-        mAuthInfo = new AuthInfo(this, MyConstants.WEIBO_APP_KEY, MyConstants.WEIBO_REDIRECT_URL, MyConstants.WEIBO_SCOPE);
-        mAsyncWeiboRunner = new AsyncWeiboRunner(this);
-        mSsoHandler = new SsoHandler(this, mAuthInfo);
-        weiboAuthListener = new WeiboAuthListener() {
+        mSsoHandler = new SsoHandler(this);
+        mAsyncWeiboRunner = new AsyncWeiboRunner(getApplicationContext());
+        mWbAuthListener = new WbAuthListener() {
             @Override
-            public void onComplete(Bundle values) {
-                Oauth2AccessToken mAccessToken = Oauth2AccessToken.parseAccessToken(values);
-                logd(mAccessToken.toString());
+            public void onSuccess(Oauth2AccessToken oauth2AccessToken) {
+                logd(oauth2AccessToken.toString());
                 BmobUser.BmobThirdUserAuth authInfo = new BmobUser.BmobThirdUserAuth(
                         BmobUser.BmobThirdUserAuth.SNS_TYPE_WEIBO,
-                        mAccessToken.getToken(),
-                        mAccessToken.getExpiresTime() + "",
-                        mAccessToken.getUid());
+                        oauth2AccessToken.getToken(),
+                        oauth2AccessToken.getExpiresTime() + "",
+                        oauth2AccessToken.getUid());
                 WeiboParameters params = new WeiboParameters(MyConstants.WEIBO_APP_KEY);
-                params.add("access_token", mAccessToken.getToken());
-                params.add("uid", mAccessToken.getUid());
+                params.put("access_token", oauth2AccessToken.getToken());
+                params.put("uid", oauth2AccessToken.getUid());
+                logd("授权登录成功");
                 loginWithAuth(authInfo, "weibo", params);
             }
 
             @Override
-            public void onWeiboException(WeiboException e) {
-                loge(e.getMessage());
+            public void cancel() {
+
             }
 
             @Override
-            public void onCancel() {
+            public void onFailure(WbConnectErrorMessage wbConnectErrorMessage) {
+                loge(wbConnectErrorMessage.toString());
             }
         };
 
@@ -118,34 +117,31 @@ public class LoginActivity extends MySwipeBackActivity {
                     logd("response:" + response);
                     try {
                         JSONObject jo = new JSONObject(response);
-                        User user = User.getCurrentUser(User.class);
-                        if (TextUtils.isEmpty(user.getName())) {
-                            user.setName(jo.getString("name"));
-                        }
-                        if (TextUtils.isEmpty(user.getSex())) {
+                        final User user = User.getCurrentUser(User.class);
+                        logd(user.toString());
+                        if (user.getScore1() == null) {
+                            //当第一次登录
+                            user.setName(jo.getString("screen_name"));
                             user.setSex(jo.getString("gender").equals("m") ? "男" : "女");
-                        }
-                        if (TextUtils.isEmpty(user.getCity())) {
                             user.setCity(jo.getString("location"));
-                        }
-                        if (user.getAvatar() == null) {
+                            user.setScore1(1000);
+                            user.setScore2(1000);
+                            user.setScore3(1000);
+                            user.setAge(20);
                             user.setAvatar(new BmobFile("avatar.jpg", null, jo.getString("avatar_large")));
+                            user.setType("weibo");
                         }
-                        user.setType("weibo");
                         logd("changed:" + user.toString());
                         user.update(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
-                                if (e == null) {
-                                    logd("bmob账户更新weibo账号相关信息成功");
-                                } else {
-                                    loge("bmob账户更新weibo账号相关信息失败");
-                                    checkCommonException(e, LoginActivity.this);
+                                if (checkCommonException(e, LoginActivity.this)) {
+                                    return;
                                 }
+                                mApplication.setUser(user);
+                                goHome();
                             }
                         });
-                        mApplication.setUser(user);
-                        goHome();
                     } catch (JSONException e) {
                         loge(e.toString());
                     }
@@ -155,9 +151,9 @@ public class LoginActivity extends MySwipeBackActivity {
             @Override
             public void onWeiboException(WeiboException e) {
                 loge(e.toString());
+
             }
         };
-
     }
 
     private void initQQ() {
@@ -210,8 +206,6 @@ public class LoginActivity extends MySwipeBackActivity {
                 try {
                     JSONObject jo = (JSONObject) arg0;
                     final User user = User.getCurrentUser(User.class);//只有object id
-                    logd("getCurrentUser:" + user.toString());
-                    logd("jo:" + jo.toString());
                     if (TextUtils.isEmpty(user.getName())) {
                         user.setName(jo.getString("nickname"));
                     }
@@ -221,23 +215,30 @@ public class LoginActivity extends MySwipeBackActivity {
                     if (TextUtils.isEmpty(user.getCity())) {
                         user.setCity(jo.getString("city"));
                     }
+                    if (null == user.getScore1()) {
+                        user.setScore1(1000);
+                    }
+                    if (null == user.getScore2()) {
+                        user.setScore2(1000);
+                    }
+                    if (null == user.getScore3()) {
+                        user.setScore3(1000);
+                    }
+                    if (null == user.getAge()) {
+                        user.setAge(20);
+                    }
                     if (user.getAvatar() == null) {
                         user.setAvatar(new BmobFile("avatar.jpg", null, jo.getString("figureurl_qq_2")));
                     }
                     user.setType("qq");
-                    logd("changed:" + user.toString());
-                    user.update(user.getObjectId(),new UpdateListener() {
+                    user.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            //回调两次done
-                            if (e == null) {
-                                logd("bmob账户更新qq账号相关信息成功");
-                                mApplication.setUser(user);
-                                goHome();
-                            }else{
-//                                loge("bmob账户更新qq账号相关信息失败");
-//                                checkCommonException(e, LoginActivity.this);
+                            if (checkCommonException(e, LoginActivity.this)) {
+                                return;
                             }
+                            mApplication.setUser(user);
+                            goHome();
                         }
                     });
                 } catch (Exception e) {
@@ -313,8 +314,7 @@ public class LoginActivity extends MySwipeBackActivity {
                         qqUserInfo = new UserInfo(LoginActivity.this, mTencent.getQQToken());
                         qqUserInfo.getUserInfo(userInfoListener);
                     } else if (type.equals("weibo")) {
-                        mAsyncWeiboRunner.requestAsync(MyConstants.WEIBO_USERINFO_URL,
-                                params, "GET", mUserListener);
+                        mAsyncWeiboRunner.requestAsync(MyConstants.WEIBO_USERINFO_URL, params, "GET", mUserListener);
                     }
                 } else {
                     loge("关联登录失败");
@@ -351,7 +351,7 @@ public class LoginActivity extends MySwipeBackActivity {
     public void weiboLogin(View view) {
         showProgressbar();
         initWeibo();
-        mSsoHandler.authorize(weiboAuthListener);
+        mSsoHandler.authorize(mWbAuthListener);
     }
 
 

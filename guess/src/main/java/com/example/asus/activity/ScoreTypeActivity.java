@@ -93,7 +93,6 @@ public class ScoreTypeActivity extends MySwipeBackActivity {
                 .where(SingleRecordDao.Properties.UserId.eq(userId))
                 .where(SingleRecordDao.Properties.Type.eq(mType))
                 .list();
-        loge("list.size" + list.size());
         if (!list.isEmpty()) {
             SingleRecord record = (SingleRecord) list.get(0);
             loge(record.toString());
