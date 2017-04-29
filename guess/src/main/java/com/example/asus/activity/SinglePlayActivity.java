@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimationFactory;
 import com.bumptech.glide.request.target.Target;
+import com.example.asus.Image.LocalCacheUtils;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
 import com.example.asus.bmobbean.record;
@@ -29,8 +31,10 @@ import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.greendao.SingleRecordDao;
 import com.example.asus.greendao.entity.SingleRecord;
+import com.example.asus.util.BitmapUtil;
 import com.example.asus.util.DensityUtils;
 import com.example.asus.util.JsonParser;
+import com.example.asus.util.MD5Util;
 import com.example.asus.util.RandomUtil;
 import com.example.asus.util.ScreenUtil;
 import com.example.asus.view.XfermodeViewP;
@@ -41,8 +45,14 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.tencent.connect.share.QQShare;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 import com.zhy.changeskin.SkinManager;
 
+import java.io.File;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -79,12 +89,16 @@ public class SinglePlayActivity extends BaseActivity {
 
     private BaseApplication mApplication;
     private User mCurrentUser;
-
     // 语音听写
     private SpeechRecognizer mySynthesizer;
     private ImageView mImageBt;
     private TextView mMscTv;
     private String mMscStr = "";
+
+    //截图
+    private PercentRelativeLayout mRelative;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +108,7 @@ public class SinglePlayActivity extends BaseActivity {
         setContentView(R.layout.activity_single_play);
         mApplication = (BaseApplication) getApplication();
         mCurrentUser = mApplication.getUser();
+        mRelative = (PercentRelativeLayout) findViewById(R.id.relative);
         mXfermodeView = (XfermodeViewP) findViewById(R.id.XfermodeView);
         mImageView = (ImageView) findViewById(R.id.image);
         mKeyLayout = (RelativeLayout) findViewById(R.id.key);
@@ -210,8 +225,59 @@ public class SinglePlayActivity extends BaseActivity {
     ;
 
     public void forHelp(View view) {
-        MyToast.getInstance().showCenterShortWarn(this, "求助");
+        String fileName = null;
+        try {
+            fileName = MD5Util.getMD5(mMovieInfo.getImage().getUrl());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        File file = new File(LocalCacheUtils.CACHE_PATH, fileName);
+        BitmapUtil.bitmapToFile(BitmapUtil.getViewBitmap(mRelative),file);
+        Tencent mTencent = mApplication.getTencent();
+        Bundle bundle = new Bundle();
+        bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL,file.getAbsolutePath());
+        bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, "看图猜电影");
+        bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
+        mTencent.shareToQQ(this, bundle, myListener);
+
+//        //分享图文类型
+//        bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+//        //用户点击后跳转页面
+//        bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://blog.csdn.net/yhaolpz");
+//        //标题
+//        bundle.putString(QQShare.SHARE_TO_QQ_TITLE, "看图猜电影");
+//        //摘要
+//        bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, "我在玩看图猜电影");
+//        //图片url
+//        bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, "http://bmob-cdn-8440.b0.upaiyun.com/2017/01/21/081ee53940980b8e8016c724aba1e944.jpg");
+//        //手Q客户端顶部，替换“返回”按钮文字，如果为空，用返回代替
+//        bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, "看图猜电影");
+//        mTencent.shareToQQ(this, bundle, myListener);
     }
+
+    ShareQQListener myListener = new ShareQQListener();
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Tencent.onActivityResultData(requestCode, resultCode, data, myListener);
+    }
+
+    class ShareQQListener implements IUiListener {
+
+        @Override
+        public void onComplete(Object o) {
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+            loge(uiError.errorMessage);
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+    }
+
 
     public void jump(View view) {
         endCurrentMovie();

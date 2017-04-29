@@ -157,7 +157,7 @@ public class LoginActivity extends MySwipeBackActivity {
     }
 
     private void initQQ() {
-        mTencent = Tencent.createInstance(MyConstants.QQ_APPID, this.getApplicationContext());
+        mTencent = mApplication.getTencent();
         scope = "all";
         Openid o = loadOpenid();
         if (o == null || o.getExpires_in_load() <= 0) {

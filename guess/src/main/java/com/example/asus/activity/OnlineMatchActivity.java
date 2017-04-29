@@ -161,7 +161,6 @@ public class OnlineMatchActivity extends BaseActivity {
 
     }
 
-    //TODO 同时开始则两个look   解决：定时检测去匹配
     public void match(View view) {
         if (!showProgressbarWithText("正在匹配...")) {
             return;

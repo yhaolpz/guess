@@ -19,6 +19,7 @@ import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AuthInfo;
+import com.tencent.tauth.Tencent;
 import com.zhy.changeskin.SkinManager;
 
 import java.util.LinkedList;
@@ -39,6 +40,17 @@ public class BaseApplication extends Application {
     private static final String BMOB_APPID = "6651c9bc691b3dd33c7e653179961e28";
 
     private MediaPlayer mediaPlayer;
+
+    //qq   登录界面和游戏界面分享用
+    Tencent mTencent;
+
+    public Tencent getTencent() {
+        if (mTencent == null) {
+            mTencent = Tencent.createInstance(MyConstants.QQ_APPID, this);
+        }
+        return mTencent;
+    }
+
 
     //bmob账号
     private User user = null;

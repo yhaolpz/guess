@@ -3,6 +3,7 @@ package com.example.asus.util;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.View;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -84,7 +85,8 @@ public class BitmapUtil {
     }
 
     /**
-     *  将InputStream转化为字节数组
+     * 将InputStream转化为字节数组
+     *
      * @param inputStream
      * @return
      * @throws IOException
@@ -99,5 +101,34 @@ public class BitmapUtil {
         inputStream.close();
         outputStream.close();
         return outputStream.toByteArray();
+    }
+
+    /**
+     * 根据view来生成bitmap图片，可用于截图功能
+     */
+
+    public static Bitmap getViewBitmap(View v) {
+        v.clearFocus(); //
+        v.setPressed(false); //
+        // 能画缓存就返回false
+        boolean willNotCache = v.willNotCacheDrawing();
+        v.setWillNotCacheDrawing(false);
+        int color = v.getDrawingCacheBackgroundColor();
+        v.setDrawingCacheBackgroundColor(0);
+        if (color != 0) {
+            v.destroyDrawingCache();
+        }
+        v.buildDrawingCache();
+        Bitmap cacheBitmap = v.getDrawingCache();
+        if (cacheBitmap == null) {
+            return null;
+        }
+        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
+        // Restore the view
+        v.destroyDrawingCache();
+        v.setWillNotCacheDrawing(willNotCache);
+        v.setDrawingCacheBackgroundColor(color);
+        return bitmap;
+
     }
 }

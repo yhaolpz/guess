@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -23,6 +24,7 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.asus.Image.LocalCacheUtils;
 import com.example.asus.bmobbean.MatchItem;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
@@ -32,8 +34,10 @@ import com.example.asus.common.MyConstants;
 import com.example.asus.common.MyToast;
 import com.example.asus.greendao.DoubleRecordDao;
 import com.example.asus.greendao.entity.DoubleRecord;
+import com.example.asus.util.BitmapUtil;
 import com.example.asus.util.DensityUtils;
 import com.example.asus.util.JsonParser;
+import com.example.asus.util.MD5Util;
 import com.example.asus.util.RandomUtil;
 import com.example.asus.util.ScreenUtil;
 import com.example.asus.view.CircleImageView;
@@ -47,10 +51,16 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.orhanobut.logger.Logger;
+import com.tencent.connect.share.QQShare;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 import com.zhy.changeskin.SkinManager;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -66,6 +76,9 @@ import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
 
 public class OnlinePlayActivity extends BaseActivity {
+    private PercentRelativeLayout mActivityOnlinePlay;
+
+
 
     private ImageView mOne;
     private ImageView mTwo;
@@ -440,6 +453,7 @@ public class OnlinePlayActivity extends BaseActivity {
     };
 
     private void initView() {
+        mActivityOnlinePlay = (PercentRelativeLayout) findViewById(R.id.activity_online_play);
         mOne = (ImageView) findViewById(R.id.one);
         mTwo = (ImageView) findViewById(R.id.two);
         mThree = (ImageView) findViewById(R.id.three);
@@ -508,7 +522,42 @@ public class OnlinePlayActivity extends BaseActivity {
     }
 
     public void forHelp(View view) {
-        MyToast.getInstance().showCenterShortWarn(this, "求助");
+        String fileName = null;
+        try {
+            fileName = MD5Util.getMD5(mMovieInfo.getImage().getUrl());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        File file = new File(LocalCacheUtils.CACHE_PATH, fileName);
+        BitmapUtil.bitmapToFile(BitmapUtil.getViewBitmap(mActivityOnlinePlay),file);
+        Tencent mTencent = mApplication.getTencent();
+        Bundle bundle = new Bundle();
+        bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL,file.getAbsolutePath());
+        bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, "看图猜电影");
+        bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
+        mTencent.shareToQQ(this, bundle, myListener);
+    }
+    ShareQQListener myListener = new ShareQQListener();
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Tencent.onActivityResultData(requestCode, resultCode, data, myListener);
+    }
+
+    class ShareQQListener implements IUiListener {
+
+        @Override
+        public void onComplete(Object o) {
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+            loge(uiError.errorMessage);
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
     }
 
     public void jump(View view) {

@@ -67,7 +67,7 @@ public class BaseActivity extends FragmentActivity {
             }
             if (getClass().getSimpleName().equals("HomeActivity")
                     ||getClass().getSimpleName().equals("SinglePlayActivity")
-                    //TODO 方便测试
+                    //TODO 主界面/单人游戏界面 添加back确认框
 //                    ||getClass().getSimpleName().equals("OnlinePlayActivity")
                     ) {
                 return true;
