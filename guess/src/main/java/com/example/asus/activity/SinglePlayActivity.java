@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -239,20 +240,6 @@ public class SinglePlayActivity extends BaseActivity {
         bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, "看图猜电影");
         bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
         mTencent.shareToQQ(this, bundle, myListener);
-
-//        //分享图文类型
-//        bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-//        //用户点击后跳转页面
-//        bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://blog.csdn.net/yhaolpz");
-//        //标题
-//        bundle.putString(QQShare.SHARE_TO_QQ_TITLE, "看图猜电影");
-//        //摘要
-//        bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, "我在玩看图猜电影");
-//        //图片url
-//        bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, "http://bmob-cdn-8440.b0.upaiyun.com/2017/01/21/081ee53940980b8e8016c724aba1e944.jpg");
-//        //手Q客户端顶部，替换“返回”按钮文字，如果为空，用返回代替
-//        bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, "看图猜电影");
-//        mTencent.shareToQQ(this, bundle, myListener);
     }
 
     ShareQQListener myListener = new ShareQQListener();
@@ -522,6 +509,43 @@ public class SinglePlayActivity extends BaseActivity {
             }
         });
         return textView;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //退出确认框
+            View dialogView = View.inflate(this, R.layout.dialog_exit_confirm, null);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+            dialog.setView(dialogView, 0, 0, 0, 0);
+            TextView mText = (TextView) dialogView.findViewById(R.id.text);
+            TextView mExit = (TextView) dialogView.findViewById(R.id.exit);
+            TextView mCancel = (TextView) dialogView.findViewById(R.id.cancel);
+            mText.setText("提前退出将无法记录本局分数");
+            mExit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //更新服务端数据,更新完后退出
+                    finish();
+
+                }
+            });
+            final Dialog chooseDialog = dialog.show();
+            mCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chooseDialog.dismiss();
+                }
+            });
+            WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
+            lp.gravity = Gravity.CENTER;
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            chooseDialog.getWindow().setAttributes(lp);
+            ObjectAnimator.ofFloat(dialogView, "alpha", 0, 1).setDuration(500).start();
+            return true;
+        }
+        return false;
     }
 
 

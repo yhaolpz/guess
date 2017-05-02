@@ -35,7 +35,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     private TextView mAge;
     private TextView mCity;
     private TextView mUsername;
-
+//TODO 城市三级联动
 
     private BaseApplication mApplication;
     private User mCurrentUser;
@@ -246,6 +246,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
             }
         });
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

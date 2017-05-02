@@ -1,37 +1,22 @@
 package com.example.asus.common;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.example.asus.activity.LoginActivity;
 import com.example.asus.activity.R;
-import com.example.asus.bmobbean.User;
 import com.orhanobut.logger.Logger;
 
-import java.util.Arrays;
-
 import cn.bmob.v3.exception.BmobException;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-import static android.R.attr.permission;
-import static cn.bmob.v3.Bmob.getApplicationContext;
 
 /**
  * Created by yinghao on 2016/12/29.
@@ -63,13 +48,6 @@ public class BaseActivity extends FragmentActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (waitViewDisplaying) {
                 hideProgressbar();
-                return true;
-            }
-            if (getClass().getSimpleName().equals("HomeActivity")
-                    ||getClass().getSimpleName().equals("SinglePlayActivity")
-                    //TODO 主界面/单人游戏界面 添加back确认框
-//                    ||getClass().getSimpleName().equals("OnlinePlayActivity")
-                    ) {
                 return true;
             }
             finish();
