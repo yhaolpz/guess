@@ -35,7 +35,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     private TextView mAge;
     private TextView mCity;
     private TextView mUsername;
-//TODO 城市三级联动
+//TODO 城市三级联动   修改昵称和邮箱
 
     private BaseApplication mApplication;
     private User mCurrentUser;
