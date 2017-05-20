@@ -111,7 +111,6 @@ public class LoginActivity extends MySwipeBackActivity {
         mUserListener = new RequestListener() {
             @Override
             public void onComplete(String response) {
-                hideProgressbar();
                 if (!TextUtils.isEmpty(response)) {
                     // 调用 User#parse 将JSON串解析成User对象
                     logd("response:" + response);
@@ -199,7 +198,6 @@ public class LoginActivity extends MySwipeBackActivity {
 
             @Override
             public void onComplete(Object arg0) {
-                hideProgressbar();
                 if (arg0 == null) {
                     return;
                 }
@@ -285,11 +283,9 @@ public class LoginActivity extends MySwipeBackActivity {
             User user = new User();
             user.setUsername(mUsername.getText().toString());
             user.setPassword(mPassword.getText().toString());
-            showProgressbar();
             user.login(new SaveListener<User>() {
                 @Override
                 public void done(User user, BmobException e) {
-                    hideProgressbar();
                     mApplication.setUser(user);
                     if (e == null) {
                         goHome();
@@ -337,26 +333,22 @@ public class LoginActivity extends MySwipeBackActivity {
 
         if (requestCode == Constants.REQUEST_LOGIN) {
             if (resultCode == Constants.ACTIVITY_OK) {
-                showProgressbar();
                 Tencent.handleResultData(data, loginListener);
             }
             super.onActivityResult(requestCode, resultCode, data);
         }
         if (mSsoHandler != null) {
-            showProgressbar();
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     }
 
     public void weiboLogin(View view) {
-        showProgressbar();
         initWeibo();
         mSsoHandler.authorize(mWbAuthListener);
     }
 
 
     public void qqLogin(View view) {
-        showProgressbar();
         initQQ();
         mTencent.login(this, scope, loginListener);
     }

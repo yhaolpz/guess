@@ -9,6 +9,10 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -19,10 +23,12 @@ import com.example.asus.bmobbean.User;
 import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
+import com.example.asus.listener.PickerListener;
 import com.example.asus.view.PickerView;
 import com.zhy.changeskin.SkinManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cn.bmob.v3.exception.BmobException;
@@ -35,7 +41,12 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     private TextView mAge;
     private TextView mCity;
     private TextView mUsername;
-//TODO 城市三级联动   修改昵称和邮箱
+    //TODO   修改昵称
+
+    private PickerView mProvincePickerView;
+    private PickerView mCityPickerView;
+    private PickerListener mPickerListener;
+    private String mSelectCity = "房山"; //初始值
 
     private BaseApplication mApplication;
     private User mCurrentUser;
@@ -122,12 +133,10 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 if (!TextUtils.equals(editSex, mSex.getText())) {
-                    showProgressbarWithText("正在更新");
                     mCurrentUser.setSex(editSex);
                     mCurrentUser.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            hideProgressbar();
                             if (checkCommonException(e, EditPersonalDataActivity.this)) {
                                 return;
                             }
@@ -167,12 +176,10 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 if (!TextUtils.equals(editAge, mAge.getText())) {
-                    showProgressbarWithText("正在更新");
                     mCurrentUser.setAge(Integer.valueOf(editAge));
                     mCurrentUser.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
-                            hideProgressbar();
                             if (checkCommonException(e, EditPersonalDataActivity.this)) {
                                 return;
                             }
@@ -185,8 +192,42 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     }
 
     public void editCity(View view) {
-        showProgressbarWithText("正在定位");
-        mLocationClient.start();
+        View dialogView = View.inflate(this, R.layout.dialog_choose_city, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+        dialog.setView(dialogView, 10, 0, 10, 0);
+        mProvincePickerView = (PickerView) dialogView.findViewById(R.id.sp_province);
+        mCityPickerView = (PickerView) dialogView.findViewById(R.id.sp_city);
+        final Dialog chooseDialog = dialog.show();
+        dialogView.findViewById(R.id.bt_select).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateCity(mSelectCity);
+                chooseDialog.dismiss();
+
+            }
+        });
+        dialogView.findViewById(R.id.bt_auto).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLocationClient.start();
+                chooseDialog.dismiss();
+            }
+        });
+        WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
+        lp.gravity = Gravity.BOTTOM;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        chooseDialog.getWindow().setAttributes(lp);
+        mProvincePickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.province))));
+        mProvincePickerView.setOnSelectListener(mPickerListener == null ? mPickerListener = new PickerListener(this,mCityPickerView) : mPickerListener);
+        mProvincePickerView.setSelected("北京");
+        mCityPickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.北京))));
+        mCityPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                mSelectCity = text;
+            }
+        });
     }
 
     private void updateCity(final String city) {
@@ -194,7 +235,6 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
         mCurrentUser.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
-                hideProgressbar();
                 if (checkCommonException(e, EditPersonalDataActivity.this)) {
                     return;
                 }
@@ -211,8 +251,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
 
     private void initLocation() {
         LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
-        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
         int span = 0;
         option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
@@ -239,7 +278,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
                     logd("GPS定位");
                     updateCity(bdLocation.getCity());
                 } else {
-                    MyToast.getInstance().showShortWarn(EditPersonalDataActivity.this, "定位失败,点击重新定位");
+                    MyToast.getInstance().showShortWarn(EditPersonalDataActivity.this, "定位失败");
                     loge("定位失败:  ERROR CODE: " + bdLocation.getLocType());
                 }
                 mLocationClient.stop();

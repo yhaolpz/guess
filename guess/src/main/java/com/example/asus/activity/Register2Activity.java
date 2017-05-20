@@ -19,10 +19,12 @@ import com.example.asus.bmobbean.User;
 import com.example.asus.common.BaseActivity;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
+import com.example.asus.listener.PickerListener;
 import com.example.asus.view.PickerView;
 import com.zhy.changeskin.SkinManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cn.bmob.v3.exception.BmobException;
@@ -38,6 +40,11 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
 
     private List<String> ageItemList;
     private List<String> sexItemList;
+
+    private PickerView mProvincePickerView;
+    private PickerView mCityPickerView;
+    private PickerListener mPickerListener;
+    private String mSelectCity = "房山"; //初始值
 
 
     public LocationClient mLocationClient = null;
@@ -65,7 +72,6 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
         mLocationClient = new LocationClient(getApplicationContext()); //声明LocationClient类
         mLocationClient.registerLocationListener(this);//注册监听函数
         initLocation();
-        mLocationClient.start();
     }
 
     public void selectSex(View view) {
@@ -121,7 +127,41 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
     }
 
     public void location(View view) {
-        mLocationClient.start();
+        View dialogView = View.inflate(this, R.layout.dialog_choose_city, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+        dialog.setView(dialogView, 10, 0, 10, 0);
+        mProvincePickerView = (PickerView) dialogView.findViewById(R.id.sp_province);
+        mCityPickerView = (PickerView) dialogView.findViewById(R.id.sp_city);
+        final Dialog chooseDialog = dialog.show();
+        dialogView.findViewById(R.id.bt_select).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCity.setText(mSelectCity);
+                chooseDialog.dismiss();
+            }
+        });
+        dialogView.findViewById(R.id.bt_auto).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLocationClient.start();
+                chooseDialog.dismiss();
+            }
+        });
+        WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
+        lp.gravity = Gravity.BOTTOM;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        chooseDialog.getWindow().setAttributes(lp);
+        mProvincePickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.province))));
+        mProvincePickerView.setOnSelectListener(mPickerListener == null ? mPickerListener = new PickerListener(this,mCityPickerView) : mPickerListener);
+        mProvincePickerView.setSelected("北京");
+        mCityPickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.北京))));
+        mCityPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+            @Override
+            public void onSelect(String text) {
+                mSelectCity = text;
+            }
+        });
     }
 
 
@@ -137,11 +177,9 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
             mUser.setAge(Integer.parseInt(mAge.getText().toString()));
             mUser.setCity(mCity.getText().toString());
             mUser.setType("bmob");
-            showProgressbar();
             mUser.signUp(new SaveListener<User>() {
                 @Override
                 public void done(User user, BmobException e) {
-                    hideProgressbar();
                     if (e == null) {
                         MyToast.getInstance().showShortDone(Register2Activity.this, "注册成功");
                         Intent intent = new Intent();
