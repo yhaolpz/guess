@@ -55,7 +55,7 @@ dependencies {
     compile 'cn.bmob.android:bmob-sdk:3.5.0'
     compile 'cn.bmob.android:bmob-push:0.8'
     compile 'cn.bmob.android:bmob-im:2.0.5@aar'
-    compile 'cn.bmob.android:bmob-sms:1.0.1'
+//    compile 'cn.bmob.android:bmob-sms:1.0.1'
     compile 'cn.bmob.android:http-legacy:1.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
@@ -65,7 +65,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'org.greenrobot:greendao:3.2.2'
-    compile 'com.orhanobut:logger:1.15'
     compile 'com.sina.weibo.sdk:core:2.0.2:openDefaultRelease@aar'
     testCompile 'junit:junit:4.12'
 }

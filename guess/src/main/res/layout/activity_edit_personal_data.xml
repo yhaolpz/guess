@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="skin:skin_img:background"
     android:background="@drawable/skin_img_default"
     android:orientation="vertical"
     android:paddingTop="45dp"
+    android:tag="skin:skin_img:background"
     tools:context="com.example.asus.activity.EditPersonalDataActivity">
 
     <LinearLayout
@@ -68,11 +68,11 @@
             android:padding="8dp"
             />
 
-        <!--<ImageView-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:src="@mipmap/go"-->
-            <!--/>-->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/go"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -104,10 +104,10 @@
             />
 
         <!--<ImageView-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:src="@mipmap/go"-->
-            <!--/>-->
+        <!--android:layout_width="20dp"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:src="@mipmap/go"-->
+        <!--/>-->
     </LinearLayout>
 
     <LinearLayout

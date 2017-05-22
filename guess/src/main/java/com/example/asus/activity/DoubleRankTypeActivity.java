@@ -179,8 +179,7 @@ public class DoubleRankTypeActivity extends MySwipeBackActivity {
             }
             viewHolder.mIndex.setText("" + (position + 1));
             Glide.with(DoubleRankTypeActivity.this)
-                    .load(mUserList.get(position).getAvatar().getUrl())
-                    .placeholder(R.mipmap.avatar)
+                    .load(mUserList.get(position).getAvatar() == null ? R.mipmap.avatar : mUserList.get(position).getAvatar().getUrl())
                     .into(viewHolder.mAvatar);
             viewHolder.mName.setText(mUserList.get(position).getName());
             String rightStr = "分数:";
@@ -193,9 +192,7 @@ public class DoubleRankTypeActivity extends MySwipeBackActivity {
                     break;
                 case 2:
                     rightStr += mUserList.get(position).getScore3();
-
                     break;
-
             }
             viewHolder.mScore.setText(rightStr);
             return convertView;

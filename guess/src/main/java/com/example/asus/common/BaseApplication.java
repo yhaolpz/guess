@@ -15,8 +15,6 @@ import com.example.asus.greendao.DaoSession;
 import com.example.asus.util.SPUtil;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.orhanobut.logger.LogLevel;
-import com.orhanobut.logger.Logger;
 import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.tauth.Tencent;
@@ -130,7 +128,6 @@ public class BaseApplication extends Application {
         initMsc();
         initSetting();
         initMusic();
-        initLogger();
         SkinManager.getInstance().init(this);
         setDatabase();
     }
@@ -139,13 +136,6 @@ public class BaseApplication extends Application {
         WbSdk.install(this, new AuthInfo(this, MyConstants.WEIBO_APP_KEY, MyConstants.WEIBO_REDIRECT_URL, MyConstants.WEIBO_SCOPE));
     }
 
-    private void initLogger() {
-        Logger
-                .init("guess")                 // default PRETTYLOGGER or use just init()
-                .methodCount(3)                 // default 2
-                .hideThreadInfo()               // default shown
-                .methodOffset(2);             // default 0
-    }
 
     private void initMusic() {
         int m = (int) SPUtil.get(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);

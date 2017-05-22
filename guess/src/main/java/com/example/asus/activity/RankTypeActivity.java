@@ -189,7 +189,7 @@ public class RankTypeActivity extends MySwipeBackActivity {
             }
             viewHolder.mIndex.setText("" + (position + 1));
             Glide.with(RankTypeActivity.this)
-                    .load(mRecordList.get(position).getUser().getAvatar().getUrl())
+                    .load(mRecordList.get(position).getUser().getAvatar() == null ? R.mipmap.avatar : mRecordList.get(position).getUser().getAvatar().getUrl())
                     .placeholder(R.mipmap.avatar)
                     .into(viewHolder.mAvatar);
             viewHolder.mName.setText(mRecordList.get(position).getUser().getName());

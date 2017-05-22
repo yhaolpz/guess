@@ -86,7 +86,14 @@ public class PersonalDataActivity extends MySwipeBackActivity {
         mAge = (TextView) findViewById(R.id.age);
         mCity = (TextView) findViewById(R.id.city);
         mEmail = (TextView) findViewById(R.id.email);
-        Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
+        Glide.with(this).load(mCurrentUser.getAvatar() == null ? R.mipmap.avatar : mCurrentUser.getAvatar().getUrl()).into(mAvatar);
+    }
+
+    //从 editPersonalDataActivity 返回后更新一下界面
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCurrentUser = mApplication.getUser();
         mName.setText(mCurrentUser.getName());
         mCity.setText(mCurrentUser.getCity());
         mAge.setText(mCurrentUser.getAge() == null ? "" : mCurrentUser.getAge() + "岁");
@@ -97,10 +104,9 @@ public class PersonalDataActivity extends MySwipeBackActivity {
         } else {
             mSexIcon.setBackgroundResource(R.mipmap.girl);
             mSexDataLayout.setBackgroundResource(R.drawable.gril_data_shape);
-
         }
-
     }
+
 
     public void editData(View view) {
         Intent intent = new Intent(this, EditPersonalDataActivity.class);
@@ -171,11 +177,9 @@ public class PersonalDataActivity extends MySwipeBackActivity {
                 final User user = new User();
                 BmobFile bmobFile = new BmobFile(tempAvatarFile);
                 user.setAvatar(bmobFile);
-                showProgressbar();
                 bmobFile.uploadblock(new UploadFileListener() {
                     @Override
                     public void done(BmobException e) {
-                        hideProgressbar();
                         if (e == null) {
                             updateUser(user);
                         } else {
@@ -243,40 +247,10 @@ public class PersonalDataActivity extends MySwipeBackActivity {
         startActivityForResult(intent, reqCode_cropPhoto);
     }
 
-
-    @Override
-    protected void onStart() {
-        logd("onStart");
-        super.onStart();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         SkinManager.getInstance().unregister(this);
     }
 
-    @Override
-    protected void onRestart() {
-        logd("onRestart");
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        logd("onResume");
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        logd("onStop");
-        super.onStop();
-    }
-
-    @Override
-    protected void onPause() {
-        logd("onPause");
-        super.onPause();
-    }
 }

@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
-import com.orhanobut.logger.Logger;
 
 
 public class BlurUtil {
@@ -32,7 +31,6 @@ public class BlurUtil {
         try {
             blurBitmap = doBlur(overlay, (int) radius, true);
         } catch (Exception e) {
-            Logger.e("doBlur exception " + e.getMessage());
         }
         float scaleWidth = ((float) bitmap.getWidth()) / blurBitmap.getWidth();
         float scaleHeight = ((float) bitmap.getHeight()) / blurBitmap.getHeight();
@@ -64,7 +62,7 @@ public class BlurUtil {
         try {
             blurBitmap = doBlur(overlay, (int) radius, true);
         } catch (Exception e) {
-            Logger.e("doBlur exception " + e.getMessage());
+            Log.e("guess","doBlur exception " + e.getMessage());
         }
         float scaleWidth = ((float) width) / blurBitmap.getWidth();
         float scaleHeight = ((float) height) / blurBitmap.getHeight();

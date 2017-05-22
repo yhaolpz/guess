@@ -73,8 +73,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == requestCode_login && resultCode == LoginActivity.resultCode_login) {
             mCurrentUser = mApplication.getUser();
-            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
-            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
+            if (mCurrentUser.getAvatar() != null) {
+                Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
+                Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
+            }
             mName.setText(mCurrentUser.getName());
             mLogoutBt.setText("退出");
         }
@@ -99,10 +101,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
+        mCurrentUser = mApplication.getUser();
+        if (mCurrentUser != null) {
+            mName.setText(mCurrentUser.getName());
+        }
         logd("IS_UPDATE_AVATAR_FLAG:" + IS_UPDATE_AVATAR_FLAG);
         if (IS_UPDATE_AVATAR_FLAG) {
-            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
-            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
+            Glide.with(this).load(mCurrentUser.getAvatar() == null ?
+                    R.mipmap.avatar : mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
+            Glide.with(this).load(mCurrentUser.getAvatar() == null ?
+                    R.mipmap.avatar : mCurrentUser.getAvatar().getUrl()).into(mAvatar);
             IS_UPDATE_AVATAR_FLAG = false;
         }
     }
@@ -138,8 +146,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mLogoutBt = (Button) findViewById(R.id.logoutBt);
         mName.setOnClickListener(this);
         if (mCurrentUser != null) {
-            Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
             mName.setText(mCurrentUser.getName());
+            Glide.with(this).load(mCurrentUser.getAvatar() == null ?
+                    R.mipmap.avatar : mCurrentUser.getAvatar().getUrl()).into(mAvatarBigger);
         } else {
             Glide.with(this).load(R.mipmap.avatar).into(mAvatarBigger);
             mName.setText("未登录");
@@ -162,7 +171,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         mContentLayout.setOnClickListener(this);
         mSlidingMenu.setOnTouchListener(this);
         mSlidingMenu.setOnMenuToggleListener(this);
-        if (mCurrentUser != null) {
+        if (mCurrentUser != null && mCurrentUser.getAvatar() != null) {
             Glide.with(this).load(mCurrentUser.getAvatar().getUrl()).into(mAvatar);
         } else {
             Glide.with(this).load(R.mipmap.avatar).into(mAvatar);
@@ -193,6 +202,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         startActivity(intent);
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
+
     public void my_score(View view) {
         Intent intent = new Intent(this, SelectActivity.class);
         intent.putExtra(SelectActivity.MODE, SelectActivity.MODE_SCORE);
@@ -207,7 +217,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         }
     }
-
 
 
     public void setting(View view) {

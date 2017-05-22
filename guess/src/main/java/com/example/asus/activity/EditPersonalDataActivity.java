@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,7 +42,6 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     private TextView mAge;
     private TextView mCity;
     private TextView mUsername;
-    //TODO   修改昵称
 
     private PickerView mProvincePickerView;
     private PickerView mCityPickerView;
@@ -97,6 +97,36 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     }
 
     public void editName(View view) {
+        final View dialogView = View.inflate(this, R.layout.dialog_edit_name, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+        dialog.setView(dialogView, 10, 0, 10, 0);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.edit_name);
+        editText.setText(mCurrentUser.getName());
+        final Dialog chooseDialog = dialog.show();
+        WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
+        lp.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        chooseDialog.getWindow().setAttributes(lp);
+        dialogView.findViewById(R.id.bt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String editName = editText.getText().toString();
+                if (!editName.equals(mCurrentUser.getName())) {
+                    mCurrentUser.setName(editName);
+                    mCurrentUser.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (checkCommonException(e, EditPersonalDataActivity.this)) {
+                                return;
+                            }
+                            mName.setText(editName);
+                            chooseDialog.dismiss();
+                        }
+                    });
+                }
+            }
+        });
 
     }
 
@@ -219,7 +249,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         chooseDialog.getWindow().setAttributes(lp);
         mProvincePickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.province))));
-        mProvincePickerView.setOnSelectListener(mPickerListener == null ? mPickerListener = new PickerListener(this,mCityPickerView) : mPickerListener);
+        mProvincePickerView.setOnSelectListener(mPickerListener == null ? mPickerListener = new PickerListener(this, mCityPickerView) : mPickerListener);
         mProvincePickerView.setSelected("北京");
         mCityPickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.北京))));
         mCityPickerView.setOnSelectListener(new PickerView.onSelectListener() {
@@ -292,4 +322,10 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
         SkinManager.getInstance().unregister(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 把本界面更改后的信息更新一下
+        mApplication.setUser(mCurrentUser);
+    }
 }

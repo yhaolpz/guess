@@ -62,8 +62,8 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
         mSex = (EditText) findViewById(R.id.sex);
         mAge = (EditText) findViewById(R.id.age);
         mCity = (EditText) findViewById(R.id.city);
-        ageItemList = new ArrayList<String>();
-        sexItemList = new ArrayList<String>();
+        ageItemList = new ArrayList<>();
+        sexItemList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             ageItemList.add("" + i);
         }
@@ -177,6 +177,9 @@ public class Register2Activity extends MySwipeBackActivity implements BDLocation
             mUser.setAge(Integer.parseInt(mAge.getText().toString()));
             mUser.setCity(mCity.getText().toString());
             mUser.setType("bmob");
+            mUser.setScore1(1000);
+            mUser.setScore2(1000);
+            mUser.setScore3(1000);
             mUser.signUp(new SaveListener<User>() {
                 @Override
                 public void done(User user, BmobException e) {

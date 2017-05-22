@@ -3,15 +3,10 @@ package com.example.asus.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.asus.bmobbean.User;
-import com.example.asus.common.BaseActivity;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.util.ValidateUtil;
@@ -22,9 +17,6 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
-import me.imid.swipebacklayout.lib.SwipeBackLayout;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 public class RegisterActivity extends MySwipeBackActivity implements View.OnClickListener {
 
@@ -34,8 +26,6 @@ public class RegisterActivity extends MySwipeBackActivity implements View.OnClic
 
     public static RegisterActivity registerActivity = null;
 
-    private SwipeBackLayout mSwipeBackLayout;
-    private RadioGroup mTrackingModeGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +52,9 @@ public class RegisterActivity extends MySwipeBackActivity implements View.OnClic
         } else {
             BmobQuery<User> query = new BmobQuery<User>();
             query.addWhereEqualTo("username", mUsername.getText().toString());
-            showProgressbar();
             query.findObjects(new FindListener<User>() {
                 @Override
                 public void done(List<User> list, BmobException e) {
-                    hideProgressbar();
                     if (e == null) {
                         if (list.size() > 0) {
                             MyToast.getInstance().showShortWarn(RegisterActivity.this, "该邮箱已经注册");

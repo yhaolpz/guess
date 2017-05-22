@@ -50,7 +50,6 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
-import com.orhanobut.logger.Logger;
 import com.tencent.connect.share.QQShare;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -598,10 +597,6 @@ public class OnlinePlayActivity extends BaseActivity {
             for (int s : targetScoreList) {
                 targetScore += s;
             }
-            Logger.d(myScoreList);
-            Logger.d(targetScoreList);
-            Logger.d("s1" + myScore / movieNum);
-            Logger.d("s2" + targetScore / movieNum);
             score = (myScore / movieNum) - (targetScore / movieNum);
             updateNetScore(score, false);
             text = "游戏结束，您的得分为：" + score;

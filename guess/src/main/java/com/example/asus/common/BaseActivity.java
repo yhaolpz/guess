@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.asus.activity.R;
-import com.orhanobut.logger.Logger;
 
 import cn.bmob.v3.exception.BmobException;
 
@@ -62,7 +61,6 @@ public class BaseActivity extends FragmentActivity {
 
     public void loge(String s) {
 //        Log.e("guess", getClass().getSimpleName() + " : " + s);
-        Logger.e(s);
 
     }
 

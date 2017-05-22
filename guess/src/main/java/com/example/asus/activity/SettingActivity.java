@@ -18,6 +18,7 @@ import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MyConstants;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
+import com.example.asus.util.GlideCacheUtil;
 import com.example.asus.util.SPUtil;
 import com.example.asus.view.PickerView;
 import com.zhy.changeskin.SkinManager;
@@ -34,6 +35,7 @@ public class SettingActivity extends MySwipeBackActivity {
     private TextView mMusic;
     private TextView mSkin;
     private TextView mMovieNum;
+    private TextView mCache;
 
     private String editMusic;
     private String editSkin;
@@ -44,7 +46,8 @@ public class SettingActivity extends MySwipeBackActivity {
     private List<String> numItemList;
 
     private BaseApplication mApplication;
-    private User mCurrentUser;
+
+    private GlideCacheUtil mGlideCacheUtil = new GlideCacheUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +62,18 @@ public class SettingActivity extends MySwipeBackActivity {
         mMusic = (TextView) findViewById(R.id.music);
         mSkin = (TextView) findViewById(R.id.skin);
         mMovieNum = (TextView) findViewById(R.id.movieNum);
+        mCache = (TextView) findViewById(R.id.cacheSize);
         int m = (int) SPUtil.get(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);
         String n = (String) SPUtil.get(this, MyConstants.SKIN_SET_SP_KEY, MyConstants.skins[0]);
         int num = (int) SPUtil.get(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3);
         mMusic.setText(MyConstants.musics[m]);
         mSkin.setText(n);
         mMovieNum.setText(num + "");
+        mCache.setText(mGlideCacheUtil.getCacheSize(this));
     }
 
     private void initData() {
         mApplication = (BaseApplication) getApplication();
-        mCurrentUser = mApplication.getUser();
         musicItemList = new ArrayList<>();
         skinItemList = new ArrayList<>();
         numItemList = new ArrayList<>();
@@ -168,6 +172,21 @@ public class SettingActivity extends MySwipeBackActivity {
                     mApplication.changeNum(editNum);
                     mMovieNum.setText(editNum);
                 }
+            }
+        });
+    }
+
+
+    public void cleanCache(View view) {
+        mGlideCacheUtil.clearImageDiskCache(this, new GlideCacheUtil.clearListener() {
+            @Override
+            public void done() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCache.setText(mGlideCacheUtil.getCacheSize(SettingActivity.this));
+                    }
+                });
             }
         });
     }
