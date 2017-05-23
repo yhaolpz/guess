@@ -270,12 +270,12 @@ public class SinglePlayActivity extends BaseActivity {
         endCurrentMovie();
         boolean endFlag = initNextMovie();
         if (endFlag) {
-            showPlayDoneDialog();
             if (mCurrentUser != null) {
-                updateScore();
                 updateLocalScore(mCurrentUser.getObjectId());
+                updateScore();
             } else {
                 updateLocalScore("0");
+                showPlayDoneDialog();
             }
             return;
         }
@@ -341,6 +341,7 @@ public class SinglePlayActivity extends BaseActivity {
                             }
                         });
                     }
+                    showPlayDoneDialog();
                 } else {
                     checkCommonException(e, SinglePlayActivity.this);
                 }
