@@ -178,17 +178,18 @@ public class SettingActivity extends MySwipeBackActivity {
 
 
     public void cleanCache(View view) {
-        mGlideCacheUtil.clearImageDiskCache(this, new GlideCacheUtil.clearListener() {
-            @Override
-            public void done() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCache.setText(mGlideCacheUtil.getCacheSize(SettingActivity.this));
-                    }
-                });
-            }
-        });
+//        mGlideCacheUtil.clearImageDiskCache(this, new GlideCacheUtil.clearListener() {
+//            @Override
+//            public void done() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mCache.setText(mGlideCacheUtil.getCacheSize(SettingActivity.this));
+//                    }
+//                });
+//            }
+//        });
+        mGlideCacheUtil.clearImageMemoryCache(this);
     }
 
 

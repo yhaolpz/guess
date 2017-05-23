@@ -392,6 +392,7 @@ public class SinglePlayActivity extends BaseActivity {
         Collections.shuffle(keyList);
         List<Integer> list = RandomUtil.getRepeatRandomNums(10, yList.size());
         for (int i = 0; i < keyList.size(); i++) {
+            //key必须小于8，否则下标越界异常
             ObjectAnimator.ofFloat(keyList.get(i), "translationX", 0F, xList.get(i)).setDuration(1000).start();
             ObjectAnimator.ofFloat(keyList.get(i), "translationY", 0F, yList.get(list.get(i))).setDuration(10000).start();
         }

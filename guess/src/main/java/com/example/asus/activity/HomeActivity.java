@@ -46,6 +46,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private int requestCode_login = 1;
     private Button mLogoutBt;
 
+    //TODO 内存泄漏
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
