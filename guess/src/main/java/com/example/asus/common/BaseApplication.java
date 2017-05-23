@@ -206,18 +206,5 @@ public class BaseApplication extends Application {
     }
 
 
-    private List<AppCompatActivity> activityList = new LinkedList<AppCompatActivity>();
-
-    public void addActivity(AppCompatActivity activity) {
-        activityList.add(activity);
-    }
-
-    public void finishActivity() {
-        for (AppCompatActivity activity : activityList) {
-            activityList.remove(activity);
-            activity.finish();
-        }
-    }
-
 
 }

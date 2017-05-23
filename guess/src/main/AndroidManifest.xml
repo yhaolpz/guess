@@ -47,7 +47,7 @@
             android:enabled="true"
             android:process=":remote"/>
 
-        <activity android:name=".HomeActivity">
+        <activity android:name=".HomeActivity" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

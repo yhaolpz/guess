@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -21,6 +22,7 @@ import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.UserDAO;
 import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
+import com.example.asus.common.MyToast;
 import com.example.asus.util.AnimUtil;
 import com.example.asus.view.CircleImageView;
 import com.example.asus.view.SlidingMenu;
@@ -262,41 +264,62 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            //退出确认框
+//            View dialogView = View.inflate(this, R.layout.dialog_exit_confirm, null);
+//            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+//            dialog.setView(dialogView, 0, 0, 0, 0);
+//            TextView mText = (TextView) dialogView.findViewById(R.id.text);
+//            TextView mExit = (TextView) dialogView.findViewById(R.id.exit);
+//            TextView mCancel = (TextView) dialogView.findViewById(R.id.cancel);
+//            mText.setText("确定退出游戏吗");
+//            mExit.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //更新服务端数据,更新完后退出
+//                    HomeActivity.this.finish();
+//
+//                }
+//            });
+//            final Dialog chooseDialog = dialog.show();
+//            mCancel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    chooseDialog.dismiss();
+//                }
+//            });
+//            WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
+//            lp.gravity = Gravity.CENTER;
+//            lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//            chooseDialog.getWindow().setAttributes(lp);
+//            ObjectAnimator.ofFloat(dialogView, "alpha", 0, 1).setDuration(500).start();
+//            return true;
+//        }
+//        return false;
+//    }
+
+    private boolean mIsExit;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //退出确认框
-            View dialogView = View.inflate(this, R.layout.dialog_exit_confirm, null);
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
-            dialog.setView(dialogView, 0, 0, 0, 0);
-            TextView mText = (TextView) dialogView.findViewById(R.id.text);
-            TextView mExit = (TextView) dialogView.findViewById(R.id.exit);
-            TextView mCancel = (TextView) dialogView.findViewById(R.id.cancel);
-            mText.setText("确定退出游戏吗");
-            mExit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //更新服务端数据,更新完后退出
-                    finish();
-
-                }
-            });
-            final Dialog chooseDialog = dialog.show();
-            mCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    chooseDialog.dismiss();
-                }
-            });
-            WindowManager.LayoutParams lp = chooseDialog.getWindow().getAttributes();
-            lp.gravity = Gravity.CENTER;
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            chooseDialog.getWindow().setAttributes(lp);
-            ObjectAnimator.ofFloat(dialogView, "alpha", 0, 1).setDuration(500).start();
+            if (mIsExit) {
+                this.finish();
+            } else {
+                MyToast.getInstance().showCenterShortWarn(this,"再按一次退出");
+                mIsExit = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mIsExit = false;
+                    }
+                }, 2000);
+            }
             return true;
         }
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
 }
