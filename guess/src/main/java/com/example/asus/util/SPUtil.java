@@ -65,27 +65,6 @@ public class SPUtil {
         return null;
     }
 
-    /**
-     * 移除某个key值已经对应的值
-     */
-    public static void remove(Context context, String key) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.remove(key);
-        SharedPreferencesCompat.apply(editor);
-    }
-
-    /**
-     * 清除所有数据
-     */
-    public static void clear(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.clear();
-        SharedPreferencesCompat.apply(editor);
-    }
 
     /**
      * 查询某个key是否已经存在
@@ -96,14 +75,7 @@ public class SPUtil {
         return sp.contains(key);
     }
 
-    /**
-     * 返回所有的键值对
-     */
-    public static Map<String, ?> getAll(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(FILE_NAME,
-                Context.MODE_PRIVATE);
-        return sp.getAll();
-    }
+
 
     /**
      * 创建一个解决SharedPreferencesCompat.apply方法的一个兼容类

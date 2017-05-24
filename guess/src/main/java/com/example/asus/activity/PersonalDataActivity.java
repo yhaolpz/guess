@@ -1,46 +1,30 @@
 package com.example.asus.activity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.asus.Image.ImageManager;
-import com.example.asus.Image.LocalCacheUtils;
 import com.example.asus.bmobbean.User;
-import com.example.asus.bmobbean.UserDAO;
-import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
+import com.example.asus.common.MyConstants;
 import com.example.asus.common.MySwipeBackActivity;
-import com.example.asus.common.MyToast;
 import com.example.asus.util.BitmapUtil;
 import com.example.asus.view.CircleImageView;
 import com.zhy.changeskin.SkinManager;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.a.a.This;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
@@ -132,7 +116,7 @@ public class PersonalDataActivity extends MySwipeBackActivity {
             public void onClick(View v) {
                 chooseDialog.dismiss();
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                tempPhotoFile = new File(LocalCacheUtils.CACHE_PATH, PHOTO_FILE_NAME);
+                tempPhotoFile = new File(MyConstants.CACHE_PATH, PHOTO_FILE_NAME);
                 Uri uri = Uri.fromFile(tempPhotoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(intent, reqCode_takePhoto);
@@ -172,7 +156,7 @@ public class PersonalDataActivity extends MySwipeBackActivity {
         } else if (requestCode == reqCode_cropPhoto) {
             if (data != null) {
                 Bitmap bitmap = data.getParcelableExtra("data");
-                tempAvatarFile = new File(LocalCacheUtils.CACHE_PATH, AVATAR_FILE_NAME);
+                tempAvatarFile = new File(MyConstants.CACHE_PATH, AVATAR_FILE_NAME);
                 BitmapUtil.bitmapToFile(bitmap, tempAvatarFile);
                 final User user = new User();
                 BmobFile bmobFile = new BmobFile(tempAvatarFile);
@@ -203,22 +187,17 @@ public class PersonalDataActivity extends MySwipeBackActivity {
         user.update(mCurrentUser.getObjectId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
-                if (e == null) {
-                    ImageManager.getInstance().disPlay(mAvatar, user.getAvatar());
-                } else {
-                    checkCommonException(e, PersonalDataActivity.this);
+                if (checkCommonException(e, PersonalDataActivity.this)) {
+                    return;
                 }
+                Glide.with(PersonalDataActivity.this).load(user.getAvatar() == null ? R.mipmap.avatar : user.getAvatar().getUrl()).into(mAvatar);
             }
         });
         if (mCurrentUser.getAvatar() != null) {
             mCurrentUser.getAvatar().delete(new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
-                    if (e == null) {
-                        logd("删除原头像成功");
-                    } else {
-                        checkCommonException(e, PersonalDataActivity.this);
-                    }
+                    checkCommonException(e, PersonalDataActivity.this);
                 }
             });
         }

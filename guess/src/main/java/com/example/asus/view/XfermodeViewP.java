@@ -10,14 +10,13 @@ import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
 import com.example.asus.util.BlurUtil;
 
 /**
  * Created by Ahab on 2016/10/18.
  */
-public class XfermodeViewP extends ImageView {
+public class XfermodeViewP extends android.support.v7.widget.AppCompatImageView {
     private Bitmap mFgBitmap;
     private Paint mPaint;
     private Canvas mCanvas;

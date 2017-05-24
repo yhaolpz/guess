@@ -35,7 +35,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/personal_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -64,7 +63,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/my_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -92,7 +90,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -120,7 +117,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

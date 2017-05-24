@@ -9,14 +9,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.asus.bmobbean.User;
-import com.example.asus.common.BaseActivity;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.listener.PickerListener;

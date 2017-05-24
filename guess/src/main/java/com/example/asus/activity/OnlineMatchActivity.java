@@ -13,16 +13,13 @@ import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MyConstants;
 import com.example.asus.common.MyToast;
 import com.example.asus.util.RandomUtil;
-import com.example.asus.util.SPUtil;
 import com.example.asus.view.PickerView;
 import com.google.gson.Gson;
 import com.zhy.changeskin.SkinManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,8 +79,8 @@ public class OnlineMatchActivity extends BaseActivity {
     private String target_objectId;
     private String target_userId;
     final int num = 3;
-    List<Integer> mSkips = new ArrayList<Integer>();
-    List<movieInfo> mMovieInfoList = new ArrayList<movieInfo>();
+    List<Integer> mSkips = new ArrayList<>();
+    List<movieInfo> mMovieInfoList = new ArrayList<>();
     private boolean cancelFlag = false;//能否取消匹配
 
 
@@ -142,7 +139,7 @@ public class OnlineMatchActivity extends BaseActivity {
     private void initView() {
         PickerView movieTypePicker = (PickerView) findViewById(R.id.movieTypePicker);
         PickerView movieDifficultPicker = (PickerView) findViewById(R.id.movieDifficultPicker);
-        movieTypePicker.setData(new ArrayList<String>(Arrays.asList(MyConstants.movieTypes)));
+        movieTypePicker.setData(new ArrayList<>(Arrays.asList(MyConstants.movieTypes)));
         movieTypePicker.setSelected(MyConstants.movieTypes[0]);
         movieTypePicker.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
@@ -150,7 +147,7 @@ public class OnlineMatchActivity extends BaseActivity {
                 mMovieType = text;
             }
         });
-        movieDifficultPicker.setData(new ArrayList<String>(Arrays.asList(MyConstants.difficults)));
+        movieDifficultPicker.setData(new ArrayList<>(Arrays.asList(MyConstants.difficults)));
         movieDifficultPicker.setSelected(MyConstants.movieTypes[1]);
         movieDifficultPicker.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
@@ -165,7 +162,7 @@ public class OnlineMatchActivity extends BaseActivity {
         if (!showProgressbarWithText("正在匹配...")) {
             return;
         }
-        BmobQuery<MatchItem> query = new BmobQuery<MatchItem>();
+        BmobQuery<MatchItem> query = new BmobQuery<>();
         query.addWhereEqualTo("state", MyConstants.LOOK_STATE);
         query.addWhereEqualTo("movieType", mMovieType);
         query.addWhereEqualTo("difficult", mDifficult);
@@ -234,7 +231,7 @@ public class OnlineMatchActivity extends BaseActivity {
         final int[] index = {0};
         for (int i = 0; i < mSkips.size(); i++) {
             mMovieInfoList.add(i, new movieInfo());
-            BmobQuery<movieInfo> query = new BmobQuery<movieInfo>();
+            BmobQuery<movieInfo> query = new BmobQuery<>();
             query.setLimit(1);
             query.setSkip(mSkips.get(i));
             query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);

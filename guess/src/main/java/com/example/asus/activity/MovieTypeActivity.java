@@ -44,7 +44,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
     private void initView() {
         mMovieTypePicker = (PickerView) findViewById(R.id.movieTypePicker);
         mMovieDifficultPicker = (PickerView) findViewById(R.id.movieDifficultPicker);
-        mMovieTypePicker.setData(new ArrayList<String>(Arrays.asList(MyConstants.movieTypes)));
+        mMovieTypePicker.setData(new ArrayList<>(Arrays.asList(MyConstants.movieTypes)));
         mMovieTypePicker.setSelected(MyConstants.movieTypes[0]);
         mMovieTypePicker.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
@@ -52,7 +52,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
                 mMovieType = text;
             }
         });
-        mMovieDifficultPicker.setData(new ArrayList<String>(Arrays.asList(MyConstants.difficults)));
+        mMovieDifficultPicker.setData(new ArrayList<>(Arrays.asList(MyConstants.difficults)));
         mMovieDifficultPicker.setSelected(MyConstants.movieTypes[1]);
         mMovieDifficultPicker.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
@@ -68,7 +68,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
             return;
         }
         final int num = (int) SPUtil.get(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3);
-        BmobQuery<movieInfo> query = new BmobQuery<movieInfo>();
+        BmobQuery<movieInfo> query = new BmobQuery<>();
         if (mMovieType.equals("随意")) {
             query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
             query.setMaxCacheAge(TimeUnit.MINUTES.toMillis(30));
@@ -81,7 +81,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
                     final List<Integer> skipNums = RandomUtil.getRandomNums(num, count);
                     final List<movieInfo> chooseMovies = new ArrayList<>();
                     for (int skipNum : skipNums) {
-                        BmobQuery<movieInfo> query = new BmobQuery<movieInfo>();
+                        BmobQuery<movieInfo> query = new BmobQuery<>();
                         query.setLimit(1);
                         query.setSkip(skipNum);
                         query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);

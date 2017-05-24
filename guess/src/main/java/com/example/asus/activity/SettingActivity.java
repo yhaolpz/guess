@@ -2,22 +2,17 @@ package com.example.asus.activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.example.asus.bmobbean.User;
-import com.example.asus.bmobbean.movieInfo;
-import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MyConstants;
 import com.example.asus.common.MySwipeBackActivity;
-import com.example.asus.common.MyToast;
 import com.example.asus.util.GlideCacheUtil;
 import com.example.asus.util.SPUtil;
 import com.example.asus.view.PickerView;
@@ -26,10 +21,6 @@ import com.zhy.changeskin.SkinManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 
 public class SettingActivity extends MySwipeBackActivity {
     private TextView mMusic;
@@ -178,17 +169,17 @@ public class SettingActivity extends MySwipeBackActivity {
 
 
     public void cleanCache(View view) {
-//        mGlideCacheUtil.clearImageDiskCache(this, new GlideCacheUtil.clearListener() {
-//            @Override
-//            public void done() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mCache.setText(mGlideCacheUtil.getCacheSize(SettingActivity.this));
-//                    }
-//                });
-//            }
-//        });
+        mGlideCacheUtil.clearImageDiskCache(this, new GlideCacheUtil.clearListener() {
+            @Override
+            public void done() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCache.setText(mGlideCacheUtil.getCacheSize(SettingActivity.this));
+                    }
+                });
+            }
+        });
         mGlideCacheUtil.clearImageMemoryCache(this);
     }
 

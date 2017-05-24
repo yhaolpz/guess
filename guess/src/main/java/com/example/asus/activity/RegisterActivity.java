@@ -50,7 +50,7 @@ public class RegisterActivity extends MySwipeBackActivity implements View.OnClic
         } else if (mPassword.getText().toString().length() < 6) {
             MyToast.getInstance().showShortWarn(this, "密码最少为六位");
         } else {
-            BmobQuery<User> query = new BmobQuery<User>();
+            BmobQuery<User> query = new BmobQuery<>();
             query.addWhereEqualTo("username", mUsername.getText().toString());
             query.findObjects(new FindListener<User>() {
                 @Override

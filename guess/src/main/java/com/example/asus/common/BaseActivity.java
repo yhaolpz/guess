@@ -27,8 +27,6 @@ public class BaseActivity extends FragmentActivity {
 
     //bmob错误码
     public static final int ERROR_CODE_USERNAME_OR_PASSWORD_ERROR = 101;
-    public static final int ERROR_CODE_OLD_PASS_INCORRECT = 201;
-    public static final int ERROR_CODE_USERNAME_ALREADY_TAKEN = 202;
     public static final int ERROR_CODE_NO_USER_FOUND = 205;
     public static final int ERROR_CODE_NETWORK_TIME_OUT = 9010;
     public static final int ERROR_CODE_UNKNOW_ERROR = 9015; //连接未认证wifi时出现
@@ -56,11 +54,10 @@ public class BaseActivity extends FragmentActivity {
 
     public void logd(String s) {
         Log.d("guess", getClass().getSimpleName() + " : " + s);
-//        Logger.d(s);
     }
 
     public void loge(String s) {
-//        Log.e("guess", getClass().getSimpleName() + " : " + s);
+        Log.e("guess", getClass().getSimpleName() + " : " + s);
 
     }
 
@@ -135,13 +132,6 @@ public class BaseActivity extends FragmentActivity {
         return true;
     }
 
-//    public void addActivity(AppCompatActivity activity) {
-//        ((BaseApplication) getApplication()).addActivity(activity);
-//    }
-//
-//    public void finishActivity() {
-//        ((BaseApplication) getApplication()).finishActivity();
-//    }
 
     @Override
     protected void onStop() {

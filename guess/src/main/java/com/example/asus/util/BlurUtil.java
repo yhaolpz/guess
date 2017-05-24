@@ -13,9 +13,6 @@ public class BlurUtil {
     /**
      * 先将bitmap缩小scaleFactor倍，大幅增快模糊处理，然后放大还原
      *
-     * @param bitmap
-     * @param radius
-     * @return
      */
     public static Bitmap getBlurBitmap(Bitmap bitmap, float radius) {
         long startMs = System.currentTimeMillis();

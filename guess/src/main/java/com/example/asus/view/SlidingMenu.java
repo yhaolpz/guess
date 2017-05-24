@@ -27,8 +27,8 @@ public class SlidingMenu extends HorizontalScrollView {
 
     private OnMenuToggleListener mListener = null;
     public interface OnMenuToggleListener{
-        public void onOpen();
-        public void onClose();
+        void onOpen();
+        void onClose();
     }
 
     public void setOnMenuToggleListener(OnMenuToggleListener listener) {

@@ -18,9 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimationFactory;
 import com.bumptech.glide.request.target.Target;
-import com.example.asus.Image.LocalCacheUtils;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
 import com.example.asus.bmobbean.record;
@@ -28,12 +26,10 @@ import com.example.asus.bmobbean.recordDAO;
 import com.example.asus.common.BaseActivity;
 import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MyConstants;
-import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.greendao.SingleRecordDao;
 import com.example.asus.greendao.entity.SingleRecord;
 import com.example.asus.util.BitmapUtil;
-import com.example.asus.util.DensityUtils;
 import com.example.asus.util.JsonParser;
 import com.example.asus.util.MD5Util;
 import com.example.asus.util.RandomUtil;
@@ -76,7 +72,7 @@ public class SinglePlayActivity extends BaseActivity {
     private int mMovieNum; //此局电影数
     private movieInfo mMovieInfo;
     private int blurRadius;
-    private List<View> keyList = new ArrayList<View>();
+    private List<View> keyList = new ArrayList<>();
     private boolean onceFocus = true;
     private static final int SCALE_KEY_SCREEN = 10; //屏幕宽度与球宽度的比例
     private static final int KEY_MARGIN_TOP = 2; //球随机分发区域距所处容器顶部之间间隔的球数
@@ -223,8 +219,6 @@ public class SinglePlayActivity extends BaseActivity {
         mySynthesizer.startListening(mRecognizerDialogListener);
     }
 
-    ;
-
     public void forHelp(View view) {
         String fileName = null;
         try {
@@ -232,7 +226,7 @@ public class SinglePlayActivity extends BaseActivity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        File file = new File(LocalCacheUtils.CACHE_PATH, fileName);
+        File file = new File(MyConstants.CACHE_PATH, fileName);
         BitmapUtil.bitmapToFile(BitmapUtil.getViewBitmap(mRelative),file);
         Tencent mTencent = mApplication.getTencent();
         Bundle bundle = new Bundle();
@@ -307,7 +301,7 @@ public class SinglePlayActivity extends BaseActivity {
 
 
     private void updateScore() {
-        BmobQuery<record> query = new BmobQuery<record>();
+        BmobQuery<record> query = new BmobQuery<>();
         query.addWhereEqualTo("username", mCurrentUser.getUsername());
         query.addWhereEqualTo("type", mMovieType);
         query.findObjects(new FindListener<record>() {
@@ -372,7 +366,7 @@ public class SinglePlayActivity extends BaseActivity {
         int keyWidth = keyLayoutWidth / SCALE_KEY_SCREEN;
         logd("mKeyLayoutWidth=" + keyLayoutWidth + " mKeyLayoutHeight=" + keyLayoutHeight);
         int xListSize = keyLayoutWidth / keyWidth;
-        List<Integer> xList = new ArrayList<Integer>();
+        List<Integer> xList = new ArrayList<>();
         xList.add(0, keyWidth / 2);
         for (int i = 1; i < xListSize / 2; i++) {
             xList.add(i, xList.get(0) + keyWidth * i);
@@ -382,7 +376,7 @@ public class SinglePlayActivity extends BaseActivity {
             xList.add(i, -xList.get(i - 5));
         }
         int yListSize = (keyLayoutHeight - KEY_MARGIN_TOP * keyWidth) / keyWidth;
-        List<Integer> yList = new ArrayList<Integer>();
+        List<Integer> yList = new ArrayList<>();
         yList.add(0, keyWidth * KEY_MARGIN_TOP);
         for (int i = 1; i < yListSize; i++) {
             yList.add(i, yList.get(0) + keyWidth * i);
@@ -486,7 +480,7 @@ public class SinglePlayActivity extends BaseActivity {
     private TextView creatKeyTextView(char c, int keyTextViewWidth) {
         final TextView textView = new TextView(this);
         textView.setText(c + "");
-        textView.setTextSize(DensityUtils.px2sp(this, keyTextViewWidth / 2));
+        textView.setTextSize(keyTextViewWidth / 2 / getResources().getDisplayMetrics().scaledDensity);
         textView.setWidth(keyTextViewWidth);
         textView.setHeight(keyTextViewWidth);
         textView.setGravity(Gravity.CENTER);

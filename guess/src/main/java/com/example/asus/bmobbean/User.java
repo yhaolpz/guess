@@ -1,9 +1,6 @@
 package com.example.asus.bmobbean;
 
-import java.util.Date;
-
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
 
 /**

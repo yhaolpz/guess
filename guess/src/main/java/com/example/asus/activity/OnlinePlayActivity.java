@@ -24,7 +24,6 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.asus.Image.LocalCacheUtils;
 import com.example.asus.bmobbean.MatchItem;
 import com.example.asus.bmobbean.User;
 import com.example.asus.bmobbean.movieInfo;
@@ -35,7 +34,6 @@ import com.example.asus.common.MyToast;
 import com.example.asus.greendao.DoubleRecordDao;
 import com.example.asus.greendao.entity.DoubleRecord;
 import com.example.asus.util.BitmapUtil;
-import com.example.asus.util.DensityUtils;
 import com.example.asus.util.JsonParser;
 import com.example.asus.util.MD5Util;
 import com.example.asus.util.RandomUtil;
@@ -106,7 +104,7 @@ public class OnlinePlayActivity extends BaseActivity {
     private int movieNum; //此局电影数
     private movieInfo mMovieInfo;
     private int blurRadius;
-    private List<View> keyList = new ArrayList<View>();
+    private List<View> keyList = new ArrayList<>();
     private static final int SCALE_KEY_SCREEN = 10; //屏幕宽度与球宽度的比例
     private static final int KEY_MARGIN_TOP = 1; //球随机分发区域距所处容器顶部之间间隔的球数
     private List<Character> mKeyChar = new ArrayList<>();
@@ -215,7 +213,7 @@ public class OnlinePlayActivity extends BaseActivity {
                 Gson gson = new Gson();
                 MatchItem item = gson.fromJson(data.optString("data"), MatchItem.class);
                 //data中数据可能不是最新数据，故重新查询
-                BmobQuery<MatchItem> query = new BmobQuery<MatchItem>();
+                BmobQuery<MatchItem> query = new BmobQuery<>();
                 query.getObject(item.getObjectId(), new QueryListener<MatchItem>() {
                     @Override
                     public void done(MatchItem matchItem, BmobException e) {
@@ -316,7 +314,7 @@ public class OnlinePlayActivity extends BaseActivity {
                 mCurrentUser.getSex().equals("女") ? Color.parseColor("#ea665c") : Color.parseColor("#fafafa");
         mMyAvatar.setBorderColor(borderColor);
         mMyAvatar.setBorderWidth(2);
-        BmobQuery<User> query = new BmobQuery<User>();
+        BmobQuery<User> query = new BmobQuery<>();
         query.getObject(target_userId, new QueryListener<User>() {
             @Override
             public void done(User user, BmobException e) {
@@ -527,7 +525,7 @@ public class OnlinePlayActivity extends BaseActivity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        File file = new File(LocalCacheUtils.CACHE_PATH, fileName);
+        File file = new File(MyConstants.CACHE_PATH, fileName);
         BitmapUtil.bitmapToFile(BitmapUtil.getViewBitmap(mActivityOnlinePlay),file);
         Tencent mTencent = mApplication.getTencent();
         Bundle bundle = new Bundle();
@@ -588,7 +586,7 @@ public class OnlinePlayActivity extends BaseActivity {
     }
 
     private void showPlayDoneDialog(String text) {
-        int score = 0;
+        int score;
         if (text.equals("游戏结束")) {
             int myScore = 0, targetScore = 0;
             for (int s : myScoreList) {
@@ -692,7 +690,7 @@ public class OnlinePlayActivity extends BaseActivity {
         mKeyWidth = mKeyLayoutWidth / SCALE_KEY_SCREEN;
         logd("mKeyLayoutWidth=" + mKeyLayoutWidth + " mKeyLayoutHeight=" + mKeyLayoutHeight);
         int xListSize = mKeyLayoutWidth / mKeyWidth;
-        List<Integer> xList = new ArrayList<Integer>();
+        List<Integer> xList = new ArrayList<>();
         xList.add(0, mKeyWidth / 2);
         for (int i = 1; i < xListSize / 2; i++) {
             xList.add(i, xList.get(0) + mKeyWidth * i);
@@ -702,7 +700,7 @@ public class OnlinePlayActivity extends BaseActivity {
             xList.add(i, -xList.get(i - 5));
         }
         int yListSize = (mKeyLayoutHeight - KEY_MARGIN_TOP * mKeyWidth) / mKeyWidth;
-        List<Integer> yList = new ArrayList<Integer>();
+        List<Integer> yList = new ArrayList<>();
         yList.add(0, mKeyWidth * KEY_MARGIN_TOP);
         for (int i = 1; i < yListSize; i++) {
             yList.add(i, yList.get(0) + mKeyWidth * i);
@@ -720,7 +718,7 @@ public class OnlinePlayActivity extends BaseActivity {
     private TextView creatKeyTextView(char c, int keyTextViewWidth) {
         final TextView textView = new TextView(this);
         textView.setText(c + "");
-        textView.setTextSize(DensityUtils.px2sp(this, keyTextViewWidth / 2));
+        textView.setTextSize(keyTextViewWidth / 2 / getResources().getDisplayMetrics().scaledDensity);
         textView.setWidth(keyTextViewWidth);
         textView.setHeight(keyTextViewWidth);
         textView.setGravity(Gravity.CENTER);

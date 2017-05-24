@@ -1,6 +1,5 @@
 package com.example.asus.bmobbean;
 
-import java.io.File;
 import java.util.List;
 
 import cn.bmob.v3.BmobObject;

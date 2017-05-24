@@ -2,11 +2,9 @@ package com.example.asus.common;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,48 +67,6 @@ public class MyToast {
         mToast.show();
     }
 
-    public void showCenterShortWarn(Context context, String tvString) {
-        if (mToast != null) {
-            return;
-        }
-        mImageView.setBackgroundResource(R.mipmap.warn);
-        mText.setText(tvString);
-        mToast = new Toast(context);
-        mToast.setGravity(Gravity.CENTER, 0, 0);
-        mToast.setDuration(Toast.LENGTH_SHORT);
-        mToast.setView(mToastView);
-        mHandler.postDelayed(r, 2000);
-        mToast.show();
-    }
-
-    public void showBottomShortWarn(Context context, String tvString) {
-        if (mToast != null) {
-            return;
-        }
-        mImageView.setBackgroundResource(R.mipmap.warn);
-        mText.setText(tvString);
-        mToast = new Toast(context);
-        mToast.setGravity(Gravity.BOTTOM, 0, 0);
-        mToast.setDuration(Toast.LENGTH_SHORT);
-        mToast.setView(mToastView);
-        mHandler.postDelayed(r, 2000);
-        mToast.show();
-    }
-
-
-    public void showLongWarn(Context context, String tvString) {
-        if (mToast != null) {
-            return;
-        }
-        mImageView.setBackgroundResource(R.mipmap.warn);
-        mText.setText(tvString);
-        mToast = new Toast(context);
-        mToast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-        mToast.setDuration(Toast.LENGTH_LONG);
-        mToast.setView(mToastView);
-        mHandler.postDelayed(r, 3500);
-        mToast.show();
-    }
     public void showLongMessage(Context context, String tvString) {
         if (mToast != null) {
             return;
@@ -139,19 +95,6 @@ public class MyToast {
         mToast.show();
     }
 
-    public void showCenterShortDone(Context context, String tvString) {
-        if (mToast != null) {
-            return;
-        }
-        mImageView.setBackgroundResource(R.mipmap.done);
-        mText.setText(tvString);
-        mToast = new Toast(context);
-        mToast.setGravity(Gravity.CENTER, 0, 0);
-        mToast.setDuration(Toast.LENGTH_SHORT);
-        mToast.setView(mToastView);
-        mHandler.postDelayed(r, 2000);
-        mToast.show();
-    }
 
     public void showBottomShortDone(Context context, String tvString) {
         if (mToast != null) {
@@ -194,8 +137,5 @@ public class MyToast {
         mHandler.postDelayed(r, 2000);
         mToast.show();
     }
-
-
-
 
 }

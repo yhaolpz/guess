@@ -175,7 +175,7 @@ public class PickerView extends View {
 
     private void init() {
         timer = new Timer();
-        mDataList = new ArrayList<String>();
+        mDataList = new ArrayList<>();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setTextAlign(Paint.Align.CENTER);
@@ -221,8 +221,8 @@ public class PickerView extends View {
      * @param type     1表示向下绘制，-1表示向上绘制
      */
     private void drawOtherText(Canvas canvas, int position, int type) {
-        float d = (float) (MARGIN_ALPHA * mMinTextSize * position + type
-                * mMoveLen);
+        float d = MARGIN_ALPHA * mMinTextSize * position + type
+                * mMoveLen;
         float scale = parabola(mViewHeight / 4.0f, d);
         float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
         mPaint.setTextSize(size);

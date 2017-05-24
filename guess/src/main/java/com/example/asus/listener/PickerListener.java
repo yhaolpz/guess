@@ -27,74 +27,109 @@ public class PickerListener implements PickerView.onSelectListener {
     @Override
     public void onSelect(String text) {
         List cityList = null;
-        if (text.equals("北京")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.北京)));
-        } else if (text.equals("天津")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.天津)));
-        } else if (text.equals("河北")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.河北)));
-        } else if (text.equals("山西")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.山西)));
-        } else if (text.equals("内蒙古")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.内蒙古)));
-        } else if (text.equals("辽宁")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.辽宁)));
-        } else if (text.equals("吉林")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.吉林)));
-        } else if (text.equals("黑龙江")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.黑龙江)));
-        } else if (text.equals("上海")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.上海)));
-        } else if (text.equals("江苏")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.江苏)));
-        } else if (text.equals("浙江")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.浙江)));
-        } else if (text.equals("安徽")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.安徽)));
-        } else if (text.equals("福建")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.福建)));
-        } else if (text.equals("江西")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.江西)));
-        } else if (text.equals("山东")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.山东)));
-        } else if (text.equals("河南")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.河南)));
-        } else if (text.equals("湖北")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.湖北)));
-        } else if (text.equals("湖南")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.湖南)));
-        } else if (text.equals("广东")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.广东)));
-        } else if (text.equals("广西")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.广西)));
-        } else if (text.equals("海南")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.海南)));
-        } else if (text.equals("重庆")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.重庆)));
-        } else if (text.equals("四川")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.四川)));
-        } else if (text.equals("贵州")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.贵州)));
-        } else if (text.equals("云南")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.云南)));
-        } else if (text.equals("西藏")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.西藏)));
-        } else if (text.equals("陕西")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.陕西)));
-        } else if (text.equals("甘肃")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.甘肃)));
-        } else if (text.equals("青海")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.青海)));
-        } else if (text.equals("宁夏")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.宁夏)));
-        } else if (text.equals("新疆")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.新疆)));
-        } else if (text.equals("台湾")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.台湾)));
-        } else if (text.equals("香港")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.香港)));
-        } else if (text.equals("澳门")) {
-            cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.澳门)));
+        switch (text) {
+            case "北京":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.北京)));
+                break;
+            case "天津":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.天津)));
+                break;
+            case "河北":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.河北)));
+                break;
+            case "山西":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.山西)));
+                break;
+            case "内蒙古":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.内蒙古)));
+                break;
+            case "辽宁":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.辽宁)));
+                break;
+            case "吉林":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.吉林)));
+                break;
+            case "黑龙江":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.黑龙江)));
+                break;
+            case "上海":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.上海)));
+                break;
+            case "江苏":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.江苏)));
+                break;
+            case "浙江":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.浙江)));
+                break;
+            case "安徽":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.安徽)));
+                break;
+            case "福建":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.福建)));
+                break;
+            case "江西":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.江西)));
+                break;
+            case "山东":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.山东)));
+                break;
+            case "河南":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.河南)));
+                break;
+            case "湖北":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.湖北)));
+                break;
+            case "湖南":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.湖南)));
+                break;
+            case "广东":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.广东)));
+                break;
+            case "广西":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.广西)));
+                break;
+            case "海南":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.海南)));
+                break;
+            case "重庆":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.重庆)));
+                break;
+            case "四川":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.四川)));
+                break;
+            case "贵州":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.贵州)));
+                break;
+            case "云南":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.云南)));
+                break;
+            case "西藏":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.西藏)));
+                break;
+            case "陕西":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.陕西)));
+                break;
+            case "甘肃":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.甘肃)));
+                break;
+            case "青海":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.青海)));
+                break;
+            case "宁夏":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.宁夏)));
+                break;
+            case "新疆":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.新疆)));
+                break;
+            case "台湾":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.台湾)));
+                break;
+            case "香港":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.香港)));
+                break;
+            case "澳门":
+                cityList = new ArrayList(Arrays.asList(mRes.getStringArray(R.array.澳门)));
+                break;
         }
         mCityPickerView.setData(cityList);
     }

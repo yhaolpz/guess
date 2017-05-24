@@ -43,7 +43,6 @@
                 />
 
             <ImageButton
-                android:id="@+id/singleBt"
                 android:layout_width="110dp"
                 android:layout_height="30dp"
                 android:layout_above="@+id/onLine"

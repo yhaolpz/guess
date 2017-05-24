@@ -5,9 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.asus.common.BaseActivity;
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
 import com.example.asus.util.TimeUtil;

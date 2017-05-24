@@ -3,7 +3,6 @@ package com.example.asus.common;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,9 +19,6 @@ import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.tauth.Tencent;
 import com.zhy.changeskin.SkinManager;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.datatype.BmobFile;
@@ -32,10 +28,6 @@ import cn.bmob.v3.datatype.BmobFile;
  */
 
 public class BaseApplication extends Application {
-
-    private static final String TAG = "BaseApplication";
-
-    private static final String BMOB_APPID = "6651c9bc691b3dd33c7e653179961e28";
 
     private MediaPlayer mediaPlayer;
 
@@ -59,7 +51,6 @@ public class BaseApplication extends Application {
 
     public void setUser(User user) {
         this.user = user;
-        Log.i(TAG, "setUser: " + user.toString());
         UserDAO.saveUserToSP(this, user);
     }
 
@@ -84,7 +75,7 @@ public class BaseApplication extends Application {
             mediaPlayer.stop();
         }
         if (TextUtils.equals(music, "关闭")) {
-            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 3);
+            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 2);
             return;
         }
         if (TextUtils.equals(music, "喜剧之王")) {
@@ -94,10 +85,6 @@ public class BaseApplication extends Application {
         if (TextUtils.equals(music, "权利的游戏")) {
             mediaPlayer = MediaPlayer.create(this, R.raw.main_titles);
             SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);
-        }
-        if (TextUtils.equals(music, "电锯惊魂")) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.hello_zepp);
-            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 2);
         }
         mediaPlayer.setLooping(true);
     }
@@ -120,7 +107,6 @@ public class BaseApplication extends Application {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "onCreate: ");
         super.onCreate();
         instances = this;
         initBmob();
@@ -156,14 +142,9 @@ public class BaseApplication extends Application {
         }
     }
 
-    @Override
-    public void onTerminate() {
-        Log.d(TAG, "onTerminate: ");
-        super.onTerminate();
-    }
-
 
     private void initBmob() {
+        String BMOB_APPID = "6651c9bc691b3dd33c7e653179961e28";
         BmobConfig config = new BmobConfig.Builder(this)
                 .setApplicationId(BMOB_APPID)
                 //请求超时时间（单位为秒）：默认15s
@@ -186,13 +167,8 @@ public class BaseApplication extends Application {
     private DaoSession mDaoSession;
 
     private void setDatabase() {
-        // 通过 DaoMaster 的内部类 DevOpenHelper，你可以得到一个便利的 SQLiteOpenHelper 对象。
-        // 可能你已经注意到了，你并不需要去编写「CREATE TABLE」这样的 SQL 语句，因为 greenDAO 已经帮你做了。
-        // 注意：默认的 DaoMaster.DevOpenHelper 会在数据库升级时，删除所有的表，意味着这将导致数据的丢失。
-        // 所以，在正式的项目中，你还应该做一层封装，来实现数据库的安全升级。
         mHelper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
         db = mHelper.getWritableDatabase();
-        // 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。
         mDaoMaster = new DaoMaster(db);
         mDaoSession = mDaoMaster.newSession();
     }
@@ -200,11 +176,5 @@ public class BaseApplication extends Application {
     public DaoSession getDaoSession() {
         return mDaoSession;
     }
-
-    public SQLiteDatabase getDb() {
-        return db;
-    }
-
-
 
 }

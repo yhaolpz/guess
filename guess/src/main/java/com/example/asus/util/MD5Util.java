@@ -17,9 +17,9 @@ public class MD5Util {
     }
 
     private static String getString(byte[] b){
-        StringBuffer sb = new StringBuffer();
-        for(int i=0; i<b.length; i++){
-            sb.append(b[i]);
+        StringBuilder sb = new StringBuilder();
+        for (byte aB : b) {
+            sb.append(aB);
         }
         return sb.toString();
     }

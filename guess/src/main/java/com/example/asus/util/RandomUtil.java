@@ -12,7 +12,7 @@ public class RandomUtil {
     //获取n个不重复的随机数，范围为0~M 不包括M
     public static List<Integer> getRandomNums(int n, int m) {
         Random random = new Random();
-        List<Integer> randomNums = new ArrayList<Integer>();
+        List<Integer> randomNums = new ArrayList<>();
         for (; randomNums.size() < n; ) {
             int temp = random.nextInt(m);
             if (!randomNums.contains(temp)) {
@@ -25,7 +25,7 @@ public class RandomUtil {
     //获取n个可以重复的随机数，范围为0~M 不包括M
     public static List<Integer> getRepeatRandomNums(int n, int m) {
         Random random = new Random();
-        List<Integer> randomNums = new ArrayList<Integer>();
+        List<Integer> randomNums = new ArrayList<>();
         for (; randomNums.size() < n; ) {
             int temp = random.nextInt(m);
             randomNums.add(temp);
@@ -39,19 +39,6 @@ public class RandomUtil {
     }
 
 
-    //获取三个不重复的随机数，其中包括n
-    public static List<Integer> get3randomIndexs(int n) {
-        Random random = new Random();
-        List<Integer> randomNums = new ArrayList<Integer>();
-        randomNums.add(n);
-        for (; randomNums.size() < 3; ) {
-            int temp = random.nextInt(26);
-            if (!randomNums.contains(temp)) {
-                randomNums.add(temp);
-            }
-        }
-        return randomNums;
-    }
 
     /**
      * 对key集合填充一个或两个key中不存在的字符
