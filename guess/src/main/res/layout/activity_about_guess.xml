@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:tag="skin:skin_img:background"
+    android:background="@drawable/skin_img_default"
+    android:orientation="vertical"
+    android:paddingTop="45dp"
+    tools:context="com.example.asus.activity.SettingActivity">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/guess"/>
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/version_tv"
+        android:padding="8dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#ad352a22"
+        android:gravity="center_vertical"
+        android:onClick="feedBack"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:padding="8dp"
+            android:text="反馈"/>
+
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:gravity="right"
+            android:src="@mipmap/go"
+            />
+    </LinearLayout>
+
+</LinearLayout>

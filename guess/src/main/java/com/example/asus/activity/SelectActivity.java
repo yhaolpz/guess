@@ -6,7 +6,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.asus.common.BaseApplication;
 import com.example.asus.common.MySwipeBackActivity;
+import com.example.asus.common.MyToast;
 import com.zhy.changeskin.SkinManager;
 
 public class SelectActivity extends MySwipeBackActivity {
@@ -46,6 +48,10 @@ public class SelectActivity extends MySwipeBackActivity {
                     intent = new Intent(SelectActivity.this, DoubleRankTypeActivity.class);
                 } else {
                     //双人模式本地记录
+                    if (((BaseApplication) getApplication()).getUser() == null) {
+                        MyToast.getInstance().showShortWarn(SelectActivity.this,"请先登录");
+                        return;
+                    }
                     intent = new Intent(SelectActivity.this, DoubleRecordTypeActivity.class);
                 }
                 startActivity(intent);

@@ -55,12 +55,14 @@ dependencies {
     compile files('libs/mta-sdk-1.6.2.jar')
     compile files('libs/Msc.jar')
     // add library
+    //    compile 'cn.bmob.android:bmob-sms:1.0.1'
+    compile 'com.sina.weibo.sdk:core:2.0.2:openDefaultRelease@aar'
+
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:design:25.3.0'
     compile 'cn.bmob.android:bmob-sdk:3.5.0'
     compile 'cn.bmob.android:bmob-push:0.8'
     compile 'cn.bmob.android:bmob-im:2.0.5@aar'
-//    compile 'cn.bmob.android:bmob-sms:1.0.1'
     compile 'cn.bmob.android:http-legacy:1.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
@@ -70,12 +72,10 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'org.greenrobot:greendao:3.2.2'
-    compile 'com.sina.weibo.sdk:core:2.0.2:openDefaultRelease@aar'
     testCompile 'junit:junit:4.12'
-
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 }
 
 greendao {

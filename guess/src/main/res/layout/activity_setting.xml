@@ -150,4 +150,32 @@
             />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#ad352a22"
+        android:gravity="center_vertical"
+        android:onClick="aboutGuess"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:padding="8dp"
+            android:text="关于guess与帮助"/>
+
+
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:gravity="right"
+            android:src="@mipmap/go"
+            />
+    </LinearLayout>
+
 </LinearLayout>

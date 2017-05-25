@@ -2,6 +2,7 @@ package com.example.asus.activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -183,6 +184,12 @@ public class SettingActivity extends MySwipeBackActivity {
         mGlideCacheUtil.clearImageMemoryCache(this);
     }
 
+
+    public void aboutGuess(View view) {
+        Intent intent = new Intent(this, AboutGuessActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
 
     @Override
     protected void onDestroy() {
