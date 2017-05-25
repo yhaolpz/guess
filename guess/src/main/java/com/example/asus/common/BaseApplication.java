@@ -4,7 +4,6 @@ import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.example.asus.activity.R;
 import com.example.asus.bmobbean.User;
@@ -16,6 +15,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.sina.weibo.sdk.WbSdk;
 import com.sina.weibo.sdk.auth.AuthInfo;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.tauth.Tencent;
 import com.zhy.changeskin.SkinManager;
 
@@ -29,6 +29,20 @@ import cn.bmob.v3.datatype.BmobFile;
 
 public class BaseApplication extends Application {
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instances = this;
+        initBmob();
+        initWeibo();
+        initMsc();
+        initSetting();
+        initMusic();
+        SkinManager.getInstance().init(this);
+        setDatabase();
+        initLeakCanary();
+    }
+
     private MediaPlayer mediaPlayer;
 
     //qq   登录界面和游戏界面分享用
@@ -40,7 +54,6 @@ public class BaseApplication extends Application {
         }
         return mTencent;
     }
-
 
     //bmob账号
     private User user = null;
@@ -105,17 +118,14 @@ public class BaseApplication extends Application {
         return instances;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        instances = this;
-        initBmob();
-        initWeibo();
-        initMsc();
-        initSetting();
-        initMusic();
-        SkinManager.getInstance().init(this);
-        setDatabase();
+
+    private void initLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     private void initWeibo() {
@@ -158,19 +168,16 @@ public class BaseApplication extends Application {
     }
 
 
-    /**
-     * 设置greenDao
-     */
-    private DaoMaster.DevOpenHelper mHelper;
-    private SQLiteDatabase db;
-    private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
 
     private void setDatabase() {
-        mHelper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
-        db = mHelper.getWritableDatabase();
-        mDaoMaster = new DaoMaster(db);
-        mDaoSession = mDaoMaster.newSession();
+        /*
+      设置greenDao
+     */
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        mDaoSession = daoMaster.newSession();
     }
 
     public DaoSession getDaoSession() {

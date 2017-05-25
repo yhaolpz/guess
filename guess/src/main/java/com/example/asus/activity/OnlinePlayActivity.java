@@ -76,10 +76,6 @@ public class OnlinePlayActivity extends BaseActivity {
     private PercentRelativeLayout mActivityOnlinePlay;
 
 
-
-    private ImageView mOne;
-    private ImageView mTwo;
-    private ImageView mThree;
     private List<ImageView> mTargetScoreViewList = new ArrayList<>();
     private CircleImageView mTargetAvatar;
     private CircleImageView mMyAvatar;
@@ -109,9 +105,6 @@ public class OnlinePlayActivity extends BaseActivity {
     private static final int KEY_MARGIN_TOP = 1; //球随机分发区域距所处容器顶部之间间隔的球数
     private List<Character> mKeyChar = new ArrayList<>();
     private int chooseKeyNum;//点击key的次数-1
-    private int mKeyLayoutWidth;
-    private int mKeyLayoutHeight;
-    private int mKeyWidth;
 
     private List<Integer> myScoreList = new ArrayList<>();//我的分数列表
     private List<Integer> targetScoreList;//对方分数列表
@@ -119,7 +112,6 @@ public class OnlinePlayActivity extends BaseActivity {
     private int jumpScore = -20; //跳过或猜错 -20分
 
     private String mDifficult;
-    private String mMovieType;
 
     private String my_objectId;
     private String target_objectId;//监听用,item id
@@ -183,7 +175,7 @@ public class OnlinePlayActivity extends BaseActivity {
         movieNum = list.size();
         mMovieList.addAll(list);
         mDifficult = intent.getStringExtra("DIFFICULT");
-        mMovieType = intent.getStringExtra("TYPE");
+        String movieType = intent.getStringExtra("TYPE");
         target_objectId = intent.getStringExtra("TARGET_ID");
         my_objectId = intent.getStringExtra("MY_ID");
         target_userId = intent.getStringExtra("TARGET_USEID");
@@ -451,12 +443,12 @@ public class OnlinePlayActivity extends BaseActivity {
 
     private void initView() {
         mActivityOnlinePlay = (PercentRelativeLayout) findViewById(R.id.activity_online_play);
-        mOne = (ImageView) findViewById(R.id.one);
-        mTwo = (ImageView) findViewById(R.id.two);
-        mThree = (ImageView) findViewById(R.id.three);
-        mTargetScoreViewList.add(0, mOne);
-        mTargetScoreViewList.add(1, mTwo);
-        mTargetScoreViewList.add(2, mThree);
+        ImageView one = (ImageView) findViewById(R.id.one);
+        ImageView two = (ImageView) findViewById(R.id.two);
+        ImageView three = (ImageView) findViewById(R.id.three);
+        mTargetScoreViewList.add(0, one);
+        mTargetScoreViewList.add(1, two);
+        mTargetScoreViewList.add(2, three);
         mTargetAvatar = (CircleImageView) findViewById(R.id.targetAvatar);
         mXfermodeView = (XfermodeViewP) findViewById(R.id.XfermodeView);
         mImageView = (ImageView) findViewById(R.id.image);
@@ -685,25 +677,25 @@ public class OnlinePlayActivity extends BaseActivity {
 
     private void showKeyAnim() {
         chooseKeyNum = -1;
-        mKeyLayoutWidth = mKeyLayout.getMeasuredWidth();
-        mKeyLayoutHeight = mKeyLayout.getMeasuredHeight();
-        mKeyWidth = mKeyLayoutWidth / SCALE_KEY_SCREEN;
-        logd("mKeyLayoutWidth=" + mKeyLayoutWidth + " mKeyLayoutHeight=" + mKeyLayoutHeight);
-        int xListSize = mKeyLayoutWidth / mKeyWidth;
+        int keyLayoutWidth = mKeyLayout.getMeasuredWidth();
+        int keyLayoutHeight = mKeyLayout.getMeasuredHeight();
+        int keyWidth = keyLayoutWidth / SCALE_KEY_SCREEN;
+        logd("mKeyLayoutWidth=" + keyLayoutWidth + " mKeyLayoutHeight=" + keyLayoutHeight);
+        int xListSize = keyLayoutWidth / keyWidth;
         List<Integer> xList = new ArrayList<>();
-        xList.add(0, mKeyWidth / 2);
+        xList.add(0, keyWidth / 2);
         for (int i = 1; i < xListSize / 2; i++) {
-            xList.add(i, xList.get(0) + mKeyWidth * i);
+            xList.add(i, xList.get(0) + keyWidth * i);
         }
         xList.add(xListSize / 2, -xList.get(0));
         for (int i = xListSize / 2 + 1; i < xListSize; i++) {
             xList.add(i, -xList.get(i - 5));
         }
-        int yListSize = (mKeyLayoutHeight - KEY_MARGIN_TOP * mKeyWidth) / mKeyWidth;
+        int yListSize = (keyLayoutHeight - KEY_MARGIN_TOP * keyWidth) / keyWidth;
         List<Integer> yList = new ArrayList<>();
-        yList.add(0, mKeyWidth * KEY_MARGIN_TOP);
+        yList.add(0, keyWidth * KEY_MARGIN_TOP);
         for (int i = 1; i < yListSize; i++) {
-            yList.add(i, yList.get(0) + mKeyWidth * i);
+            yList.add(i, yList.get(0) + keyWidth * i);
         }
         Collections.shuffle(xList);
         Collections.shuffle(yList);

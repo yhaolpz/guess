@@ -27,13 +27,10 @@ import java.util.List;
 
 public class DoubleRecordTypeActivity extends MySwipeBackActivity {
 
-    private ImageView mTopImg;
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private List<View> mListViewList;
     private List<TextView> mTipList;
     private List<List<DoubleRecord>> mListRankList;
     private List<RankAdapter> mAdapterList;
@@ -97,11 +94,11 @@ public class DoubleRecordTypeActivity extends MySwipeBackActivity {
 
 
     private void initView() {
-        mTopImg = (ImageView) findViewById(R.id.topImg);
+        ImageView topImg = (ImageView) findViewById(R.id.topImg);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        Glide.with(this).load(R.drawable.placeholder).into(mTopImg);
-        mListViewList = new ArrayList<>();
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        Glide.with(this).load(R.drawable.placeholder).into(topImg);
+        List<View> listViewList = new ArrayList<>();
         mListRankList = new ArrayList<>();
         mAdapterList = new ArrayList<>();
         mTipList = new ArrayList<>();
@@ -111,13 +108,13 @@ public class DoubleRecordTypeActivity extends MySwipeBackActivity {
             List<DoubleRecord> records = new ArrayList<>();
             RankAdapter adapter = new RankAdapter(records);
             listView.setAdapter(adapter);
-            mListViewList.add(i, frameLayout);
+            listViewList.add(i, frameLayout);
             mListRankList.add(i, records);
             mAdapterList.add(i, adapter);
             mTipList.add(i, (TextView) frameLayout.findViewById(R.id.tips));
         }
-        mViewPager.setAdapter(new RankPageAdapter(mListViewList));
-        mTabLayout.setupWithViewPager(mViewPager);
+        viewPager.setAdapter(new RankPageAdapter(listViewList));
+        mTabLayout.setupWithViewPager(viewPager);
         //加载第一屏
         loadRank(0);
     }

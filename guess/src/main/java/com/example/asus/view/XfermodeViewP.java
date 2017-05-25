@@ -21,12 +21,11 @@ public class XfermodeViewP extends android.support.v7.widget.AppCompatImageView 
     private Paint mPaint;
     private Canvas mCanvas;
     private Path mPath;
-    private Context mContext;
     private int mBlurRadius = -1;
 
     public XfermodeViewP(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
+        Context context1 = context;
         init();
     }
 

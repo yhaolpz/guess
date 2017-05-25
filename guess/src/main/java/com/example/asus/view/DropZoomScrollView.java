@@ -46,11 +46,7 @@ public class DropZoomScrollView extends ScrollView implements View.OnTouchListen
         init();
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-    }
 
     private void init() {
         setOverScrollMode(OVER_SCROLL_NEVER);

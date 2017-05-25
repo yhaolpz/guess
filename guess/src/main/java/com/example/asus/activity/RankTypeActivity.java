@@ -32,12 +32,9 @@ import cn.bmob.v3.listener.FindListener;
 public class RankTypeActivity extends MySwipeBackActivity {
 
     private String mType;
-    private ImageView mTopImg;
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
 
 
-    private List<View> mListViewList;
     private List<TextView> mTipList;
     private List<List<record>> mListRankList;
     private List<RankAdapter> mAdapterList;
@@ -109,15 +106,15 @@ public class RankTypeActivity extends MySwipeBackActivity {
 
 
     private void initView() {
-        mTopImg = (ImageView) findViewById(R.id.topImg);
+        ImageView topImg = (ImageView) findViewById(R.id.topImg);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         for (int i = 0; i < MyConstants.movieTypes.length; i++) {
             if (TextUtils.equals(MyConstants.movieTypes[i], mType)) {
-                Glide.with(this).load(MyConstants.movieTypesImg[i]).placeholder(R.drawable.placeholder).into(mTopImg);
+                Glide.with(this).load(MyConstants.movieTypesImg[i]).placeholder(R.drawable.placeholder).into(topImg);
             }
         }
-        mListViewList = new ArrayList<>();
+        List<View> listViewList = new ArrayList<>();
         mListRankList = new ArrayList<>();
         mAdapterList = new ArrayList<>();
         mTipList = new ArrayList<>();
@@ -127,13 +124,13 @@ public class RankTypeActivity extends MySwipeBackActivity {
             List<record> rankItems = new ArrayList<>();
             RankAdapter adapter = new RankAdapter(i, rankItems);
             listView.setAdapter(adapter);
-            mListViewList.add(i, frameLayout);
+            listViewList.add(i, frameLayout);
             mListRankList.add(i, rankItems);
             mAdapterList.add(i, adapter);
             mTipList.add(i, (TextView) frameLayout.findViewById(R.id.tips));
         }
-        mViewPager.setAdapter(new RankPageAdapter(mListViewList));
-        mTabLayout.setupWithViewPager(mViewPager);
+        viewPager.setAdapter(new RankPageAdapter(listViewList));
+        mTabLayout.setupWithViewPager(viewPager);
         //加载第一屏
         loadRank(0);
     }

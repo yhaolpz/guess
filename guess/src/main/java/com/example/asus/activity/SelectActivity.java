@@ -10,8 +10,6 @@ import com.example.asus.common.MySwipeBackActivity;
 import com.zhy.changeskin.SkinManager;
 
 public class SelectActivity extends MySwipeBackActivity {
-    private LinearLayout mLine1;
-    private LinearLayout mLine2;
 
     public static final String MODE_RANK = "rank";
     public static final String MODE_SCORE = "score";
@@ -25,10 +23,10 @@ public class SelectActivity extends MySwipeBackActivity {
         super.onCreate(savedInstanceState);
         SkinManager.getInstance().register(this);
         setContentView(R.layout.activity_select);
-        mLine1 = (LinearLayout) findViewById(R.id.line1);
-        mLine2 = (LinearLayout) findViewById(R.id.line2);
+        LinearLayout line1 = (LinearLayout) findViewById(R.id.line1);
+        LinearLayout line2 = (LinearLayout) findViewById(R.id.line2);
         mode = getIntent().getStringExtra(MODE);
-        mLine1.setOnClickListener(new View.OnClickListener() {
+        line1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //单人模式
@@ -38,7 +36,7 @@ public class SelectActivity extends MySwipeBackActivity {
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
-        mLine2.setOnClickListener(new View.OnClickListener() {
+        line2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //双人模式

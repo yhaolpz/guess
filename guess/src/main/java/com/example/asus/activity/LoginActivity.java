@@ -53,7 +53,6 @@ public class LoginActivity extends MySwipeBackActivity {
     private Tencent mTencent;//QQ主要操作对象
     private IUiListener loginListener;//授权登录回调监听器
     private IUiListener userInfoListener; //获取用户信息监听器
-    private String scope;//应用需要获得哪些API的权限
     private UserInfo qqUserInfo;
 
     //weibo
@@ -157,7 +156,6 @@ public class LoginActivity extends MySwipeBackActivity {
 
     private void initQQ() {
         mTencent = mApplication.getTencent();
-        scope = "all";
         Openid o = loadOpenid();
         if (o == null || o.getExpires_in_load() <= 0) {
             //第一次登录或登录过期
@@ -350,7 +348,7 @@ public class LoginActivity extends MySwipeBackActivity {
 
     public void qqLogin(View view) {
         initQQ();
-        mTencent.login(this, scope, loginListener);
+        mTencent.login(this, "all", loginListener);
     }
 
     private Openid loadOpenid() {
@@ -375,6 +373,11 @@ public class LoginActivity extends MySwipeBackActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mTencent != null) { //处理内存泄漏
+            mTencent = null;
+            loginListener = null;
+            userInfoListener = null;
+        }
         SkinManager.getInstance().unregister(this);
     }
 

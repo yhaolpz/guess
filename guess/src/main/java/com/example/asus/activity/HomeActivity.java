@@ -45,6 +45,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private Button mLogoutBt;
 
     //TODO 内存泄漏  启动引导页   设置界面添加应用版本信息
+    //TODO 收费开通 sexy类别
 
 
     @Override

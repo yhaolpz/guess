@@ -26,8 +26,6 @@ import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
 
 public class MovieTypeActivity extends MySwipeBackActivity {
-    private PickerView mMovieTypePicker;
-    private PickerView mMovieDifficultPicker;
 
     private String mMovieType = "随意";
     private String mDifficult = "一般";
@@ -42,19 +40,19 @@ public class MovieTypeActivity extends MySwipeBackActivity {
     }
 
     private void initView() {
-        mMovieTypePicker = (PickerView) findViewById(R.id.movieTypePicker);
-        mMovieDifficultPicker = (PickerView) findViewById(R.id.movieDifficultPicker);
-        mMovieTypePicker.setData(new ArrayList<>(Arrays.asList(MyConstants.movieTypes)));
-        mMovieTypePicker.setSelected(MyConstants.movieTypes[0]);
-        mMovieTypePicker.setOnSelectListener(new PickerView.onSelectListener() {
+        PickerView movieTypePicker = (PickerView) findViewById(R.id.movieTypePicker);
+        PickerView movieDifficultPicker = (PickerView) findViewById(R.id.movieDifficultPicker);
+        movieTypePicker.setData(new ArrayList<>(Arrays.asList(MyConstants.movieTypes)));
+        movieTypePicker.setSelected(MyConstants.movieTypes[0]);
+        movieTypePicker.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
                 mMovieType = text;
             }
         });
-        mMovieDifficultPicker.setData(new ArrayList<>(Arrays.asList(MyConstants.difficults)));
-        mMovieDifficultPicker.setSelected(MyConstants.movieTypes[1]);
-        mMovieDifficultPicker.setOnSelectListener(new PickerView.onSelectListener() {
+        movieDifficultPicker.setData(new ArrayList<>(Arrays.asList(MyConstants.difficults)));
+        movieDifficultPicker.setSelected(MyConstants.movieTypes[1]);
+        movieDifficultPicker.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
                 mDifficult = text;

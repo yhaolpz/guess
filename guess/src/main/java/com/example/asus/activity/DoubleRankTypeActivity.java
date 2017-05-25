@@ -28,12 +28,9 @@ import cn.bmob.v3.listener.FindListener;
 
 public class DoubleRankTypeActivity extends MySwipeBackActivity {
 
-    private ImageView mTopImg;
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
 
 
-    private List<View> mListViewList;
     private List<TextView> mTipList;
     private List<List<User>> mListRankList;
     private List<RankAdapter> mAdapterList;
@@ -101,11 +98,11 @@ public class DoubleRankTypeActivity extends MySwipeBackActivity {
 
 
     private void initView() {
-        mTopImg = (ImageView) findViewById(R.id.topImg);
+        ImageView topImg = (ImageView) findViewById(R.id.topImg);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        Glide.with(this).load(R.drawable.placeholder).into(mTopImg);
-        mListViewList = new ArrayList<>();
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        Glide.with(this).load(R.drawable.placeholder).into(topImg);
+        List<View> listViewList = new ArrayList<>();
         mListRankList = new ArrayList<>();
         mAdapterList = new ArrayList<>();
         mTipList = new ArrayList<>();
@@ -115,13 +112,13 @@ public class DoubleRankTypeActivity extends MySwipeBackActivity {
             List<User> userList = new ArrayList<>();
             RankAdapter adapter = new RankAdapter(i, userList);
             listView.setAdapter(adapter);
-            mListViewList.add(i, frameLayout);
+            listViewList.add(i, frameLayout);
             mListRankList.add(i, userList);
             mAdapterList.add(i, adapter);
             mTipList.add(i, (TextView) frameLayout.findViewById(R.id.tips));
         }
-        mViewPager.setAdapter(new RankPageAdapter(mListViewList));
-        mTabLayout.setupWithViewPager(mViewPager);
+        viewPager.setAdapter(new RankPageAdapter(listViewList));
+        mTabLayout.setupWithViewPager(viewPager);
         //加载第一屏
         loadRank(0);
     }

@@ -22,7 +22,6 @@ public class MyToast {
 
     private static MyToast instance;
     private Toast mToast = null;
-
     private View mToastView;
     private TextView mText;
     private ImageView mImageView;
@@ -59,7 +58,7 @@ public class MyToast {
         }
         mImageView.setBackgroundResource(R.mipmap.warn);
         mText.setText(tvString);
-        mToast = new Toast(context);
+        mToast = new Toast(context.getApplicationContext());
         mToast.setGravity(Gravity.TOP, 0, 0);
         mToast.setDuration(Toast.LENGTH_SHORT);
         mToast.setView(mToastView);
@@ -73,7 +72,7 @@ public class MyToast {
         }
         mImageView.setBackgroundResource(R.mipmap.message);
         mText.setText(tvString);
-        mToast = new Toast(context);
+        mToast = new Toast(context.getApplicationContext());
         mToast.setGravity(Gravity.TOP, 0, 0);
         mToast.setDuration(Toast.LENGTH_LONG);
         mToast.setView(mToastView);
@@ -87,7 +86,7 @@ public class MyToast {
         }
         mImageView.setBackgroundResource(R.mipmap.done);
         mText.setText(tvString);
-        mToast = new Toast(context);
+        mToast = new Toast(context.getApplicationContext());
         mToast.setGravity(Gravity.TOP, 0, 0);
         mToast.setDuration(Toast.LENGTH_SHORT);
         mToast.setView(mToastView);
@@ -102,7 +101,7 @@ public class MyToast {
         }
         mImageView.setBackgroundResource(R.mipmap.done);
         mText.setText(tvString);
-        mToast = new Toast(context);
+        mToast = new Toast(context.getApplicationContext());
         mToast.setGravity(Gravity.BOTTOM, 0, 0);
         mToast.setDuration(Toast.LENGTH_SHORT);
         mToast.setView(mToastView);
@@ -116,7 +115,7 @@ public class MyToast {
         }
         mImageView.setBackgroundResource(R.mipmap.done);
         mText.setText(tvString);
-        mToast = new Toast(context);
+        mToast = new Toast(context.getApplicationContext());
         mToast.setGravity(Gravity.TOP, 0, 0);
         mToast.setDuration(Toast.LENGTH_LONG);
         mToast.setView(mToastView);
@@ -130,7 +129,7 @@ public class MyToast {
         }
         mImageView.setBackgroundResource(R.mipmap.wrong);
         mText.setText(tvString);
-        mToast = new Toast(context);
+        mToast = new Toast(context.getApplicationContext());
         mToast.setGravity(Gravity.BOTTOM, 0, 0);
         mToast.setDuration(Toast.LENGTH_LONG);
         mToast.setView(mToastView);

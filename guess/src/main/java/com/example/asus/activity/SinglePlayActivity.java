@@ -88,13 +88,14 @@ public class SinglePlayActivity extends BaseActivity {
     private User mCurrentUser;
     // 语音听写
     private SpeechRecognizer mySynthesizer;
+    private RecognizerListener mRecognizerDialogListener;
     private ImageView mImageBt;
     private TextView mMscTv;
     private String mMscStr = "";
+    private boolean isInitMsc;
 
     //截图
     private PercentRelativeLayout mRelative;
-
 
 
     @Override
@@ -137,85 +138,85 @@ public class SinglePlayActivity extends BaseActivity {
         });
         initNextMovie();
         initMsc();
-
     }
 
     private void initMsc() {
+        isInitMsc = true;
         //处理语音合成关键类
-        mySynthesizer = SpeechRecognizer.createRecognizer(this, mInitListener);
+        mySynthesizer = SpeechRecognizer.createRecognizer(this, new InitListener() {
+            @Override
+            public void onInit(int code) {
+                // * 初始化监听器。
+                logd("SpeechRecognizer init() code = " + code);
+                if (code != ErrorCode.SUCCESS) {
+                    loge("初始化失败，错误码：" + code);
+                }
+            }
+        });
         mySynthesizer.setParameter(SpeechConstant.DOMAIN, "iat");
         mySynthesizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         mySynthesizer.setParameter(SpeechConstant.ACCENT, "mandarin ");
+
+        mRecognizerDialogListener = new RecognizerListener() {
+            @Override
+            public void onVolumeChanged(int i, byte[] bytes) {
+
+            }
+
+            //开始录音
+            @Override
+            public void onBeginOfSpeech() {
+                mImageBt.setImageResource(R.mipmap.msc2);
+                mMscTv.setText("");
+            }
+
+            //结束录音
+            @Override
+            public void onEndOfSpeech() {
+                mImageBt.setImageResource(R.mipmap.msc1);
+                String str = mMscStr.replaceAll("[\\p{Punct}\\s]+", "");
+                mMscStr = "";
+                if (str.equals(mMovieInfo.getMovieName())) {
+                    MyToast.getInstance().showBottomShortDone(SinglePlayActivity.this, "");
+                    mRightNum++;
+                    mSumScore += Integer.parseInt(mScore.getText().toString());
+                    jump(null);
+                    return;
+                }
+                mMscTv.setText(str);
+            }
+
+            //听写结果回调接口(返回Json格式结果，用户可参见附录13.1)；
+            // 一般情况下会通过onResults接口多次返回结果，完整的识别内容是多次结果的累加；
+            // 关于解析Json的代码可参见Demo中JsonParser类；
+            // isLast等于true时会话结束
+            public void onResult(RecognizerResult results, boolean isLast) {
+                mMscStr += JsonParser.parseIatResult(results.getResultString());
+            }
+
+
+            public void onError(SpeechError error) {
+                loge(error.getPlainDescription(true));
+            }
+
+            //扩展用接口
+            @Override
+            public void onEvent(int i, int i1, int i2, Bundle bundle) {
+
+            }
+
+        };
     }
 
-    /**
-     * 初始化监听器。
-     */
-    private InitListener mInitListener = new InitListener() {
-
-        @Override
-        public void onInit(int code) {
-            logd("SpeechRecognizer init() code = " + code);
-            if (code != ErrorCode.SUCCESS) {
-                loge("初始化失败，错误码：" + code);
-            }
-        }
-    };
 
     /**
      * 听写UI监听器
      */
-    private RecognizerListener mRecognizerDialogListener = new RecognizerListener() {
-        @Override
-        public void onVolumeChanged(int i, byte[] bytes) {
-
-        }
-
-        //开始录音
-        @Override
-        public void onBeginOfSpeech() {
-            mImageBt.setImageResource(R.mipmap.msc2);
-            mMscTv.setText("");
-        }
-
-        //结束录音
-        @Override
-        public void onEndOfSpeech() {
-            mImageBt.setImageResource(R.mipmap.msc1);
-            String str = mMscStr.replaceAll("[\\p{Punct}\\s]+", "");
-            mMscStr = "";
-            if (str.equals(mMovieInfo.getMovieName())) {
-                MyToast.getInstance().showBottomShortDone(SinglePlayActivity.this, "");
-                mRightNum++;
-                mSumScore += Integer.parseInt(mScore.getText().toString());
-                jump(null);
-                return;
-            }
-            mMscTv.setText(str);
-        }
-
-        //听写结果回调接口(返回Json格式结果，用户可参见附录13.1)；
-        // 一般情况下会通过onResults接口多次返回结果，完整的识别内容是多次结果的累加；
-        // 关于解析Json的代码可参见Demo中JsonParser类；
-        // isLast等于true时会话结束
-        public void onResult(RecognizerResult results, boolean isLast) {
-            mMscStr += JsonParser.parseIatResult(results.getResultString());
-        }
-
-
-        public void onError(SpeechError error) {
-            loge(error.getPlainDescription(true));
-        }
-
-        //扩展用接口
-        @Override
-        public void onEvent(int i, int i1, int i2, Bundle bundle) {
-
-        }
-
-    };
 
     public void voice(View view) {
+        if (!isInitMsc) {
+            initMsc();
+        }
         mySynthesizer.startListening(mRecognizerDialogListener);
     }
 
@@ -227,10 +228,10 @@ public class SinglePlayActivity extends BaseActivity {
             e.printStackTrace();
         }
         File file = new File(MyConstants.CACHE_PATH, fileName);
-        BitmapUtil.bitmapToFile(BitmapUtil.getViewBitmap(mRelative),file);
+        BitmapUtil.bitmapToFile(BitmapUtil.getViewBitmap(mRelative), file);
         Tencent mTencent = mApplication.getTencent();
         Bundle bundle = new Bundle();
-        bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL,file.getAbsolutePath());
+        bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, file.getAbsolutePath());
         bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, "看图猜电影");
         bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
         mTencent.shareToQQ(this, bundle, myListener);
@@ -548,6 +549,9 @@ public class SinglePlayActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mySynthesizer != null) {
+            mySynthesizer.destroy();
+        }
         SkinManager.getInstance().unregister(this);
     }
 }

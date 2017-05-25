@@ -44,7 +44,6 @@ public class PickerView extends View {
     //xml中可配置
     private float mMaxTextSize;
     private float mMinTextSize;
-    private boolean loop_display;        //  loop_display控制是否循环显示
 
     private static final int DEFAULT_MAX_TEXT_SIZE = 50;
     private static final int DEFAULT_MIN_TEXT_SIZE = 25;
@@ -95,7 +94,7 @@ public class PickerView extends View {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PickerView);
         mMaxTextSize = ta.getDimensionPixelSize(R.styleable.PickerView_max_textSize, DEFAULT_MAX_TEXT_SIZE);
         mMinTextSize = ta.getDimensionPixelSize(R.styleable.PickerView_min_textSize, DEFAULT_MIN_TEXT_SIZE);
-        loop_display = ta.getBoolean(R.styleable.PickerView_loop_display, DEFAULT_LOOP_DISPLAY);
+        boolean loop_display = ta.getBoolean(R.styleable.PickerView_loop_display, DEFAULT_LOOP_DISPLAY);
         ta.recycle();
         init();
     }
@@ -166,9 +165,6 @@ public class PickerView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mViewHeight = getMeasuredHeight();
         mViewWidth = getMeasuredWidth();
-        // 按照View的高度计算字体大小
-//        mMaxTextSize = mViewHeight / 4.0f;
-//        mMinTextSize = mMaxTextSize / 2f;
         isInit = true;
         invalidate();
     }
@@ -186,33 +182,25 @@ public class PickerView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // 根据index绘制view
+        // draw 中避免创建对象
         if (isInit)
             drawData(canvas);
     }
 
     private void drawData(Canvas canvas) {
-        // 先绘制选中的text再往上往下绘制其余的text
         float scale = parabola(mViewHeight / 4.0f, mMoveLen);
-        float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
-        mPaint.setTextSize(size);
+        mPaint.setTextSize((mMaxTextSize - mMinTextSize) * scale + mMinTextSize);
         mPaint.setColor(this.getResources().getColor(android.R.color.white));
         mPaint.setAlpha((int) ((mMaxTextAlpha - mMinTextAlpha) * scale + mMinTextAlpha));
-        // text居中绘制，注意baseline的计算才能达到居中，y值是text中心坐标
-        float x = (float) (mViewWidth / 2.0);
-        float y = (float) (mViewHeight / 2.0 + mMoveLen);
         Paint.FontMetricsInt fmi = mPaint.getFontMetricsInt();
-        float baseline = (float) (y - (fmi.bottom / 2.0 + fmi.top / 2.0));
-
-        canvas.drawText(mDataList.get(mCurrentSelected), x, baseline, mPaint);
-        // 绘制上方data
+        float baseline = (float) ((float) (mViewHeight / 2.0 + mMoveLen) - (fmi.bottom / 2.0 + fmi.top / 2.0));
+        canvas.drawText(mDataList.get(mCurrentSelected), (float)(mViewWidth / 2.0), baseline, mPaint);
         for (int i = 1; (mCurrentSelected - i) >= 0; i++) {
             drawOtherText(canvas, i, -1);
         }
-        // 绘制下方data
         for (int i = 1; (mCurrentSelected + i) < mDataList.size(); i++) {
             drawOtherText(canvas, i, 1);
         }
-
     }
 
     /**
@@ -221,17 +209,13 @@ public class PickerView extends View {
      * @param type     1表示向下绘制，-1表示向上绘制
      */
     private void drawOtherText(Canvas canvas, int position, int type) {
-        float d = MARGIN_ALPHA * mMinTextSize * position + type
-                * mMoveLen;
+        float d = MARGIN_ALPHA * mMinTextSize * position + type* mMoveLen;
         float scale = parabola(mViewHeight / 4.0f, d);
-        float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
-        mPaint.setTextSize(size);
+        mPaint.setTextSize((mMaxTextSize - mMinTextSize) * scale + mMinTextSize);
         mPaint.setAlpha((int) ((mMaxTextAlpha - mMinTextAlpha) * scale + mMinTextAlpha));
-        float y = (float) (mViewHeight / 2.0 + type * d);
         Paint.FontMetricsInt fmi = mPaint.getFontMetricsInt();
-        float baseline = (float) (y - (fmi.bottom / 2.0 + fmi.top / 2.0));
-        canvas.drawText(mDataList.get(mCurrentSelected + type * position),
-                (float) (mViewWidth / 2.0), baseline, mPaint);
+        float baseline = (float) ((float) (mViewHeight / 2.0 + type * d) - (fmi.bottom / 2.0 + fmi.top / 2.0));
+        canvas.drawText(mDataList.get(mCurrentSelected + type * position), (float) (mViewWidth / 2.0), baseline, mPaint);
     }
 
     /**

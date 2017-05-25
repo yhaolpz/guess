@@ -33,14 +33,10 @@ import cn.bmob.v3.listener.UpdateListener;
 
 public class EditPersonalDataActivity extends MySwipeBackActivity {
     private TextView mName;
-    private TextView mEmail;
     private TextView mSex;
     private TextView mAge;
     private TextView mCity;
-    private TextView mUsername;
 
-    private PickerView mProvincePickerView;
-    private PickerView mCityPickerView;
     private PickerListener mPickerListener;
     private String mSelectCity = "房山"; //初始值
 
@@ -78,18 +74,18 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
     }
 
     private void initView() {
-        mUsername = (TextView) findViewById(R.id.username);
+        TextView username = (TextView) findViewById(R.id.username);
         mName = (TextView) findViewById(R.id.name);
-        mEmail = (TextView) findViewById(R.id.email);
+        TextView email = (TextView) findViewById(R.id.email);
         mSex = (TextView) findViewById(R.id.sex);
         mAge = (TextView) findViewById(R.id.age);
         mCity = (TextView) findViewById(R.id.city);
         mName.setText(mCurrentUser.getName());
         mCity.setText(mCurrentUser.getCity());
         mAge.setText(mCurrentUser.getAge() == null ? "" : mCurrentUser.getAge() + "");
-        mEmail.setText(mCurrentUser.getEmail());
+        email.setText(mCurrentUser.getEmail());
         mSex.setText(mCurrentUser.getSex());
-        mUsername.setText(mCurrentUser.getUsername());
+        username.setText(mCurrentUser.getUsername());
     }
 
     public void editName(View view) {
@@ -126,9 +122,7 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
 
     }
 
-    public void editEmail(View view) {
 
-    }
 
 
     public void editSex(View view) {
@@ -221,8 +215,8 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
         View dialogView = View.inflate(this, R.layout.dialog_choose_city, null);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
         dialog.setView(dialogView, 10, 0, 10, 0);
-        mProvincePickerView = (PickerView) dialogView.findViewById(R.id.sp_province);
-        mCityPickerView = (PickerView) dialogView.findViewById(R.id.sp_city);
+        PickerView provincePickerView = (PickerView) dialogView.findViewById(R.id.sp_province);
+        PickerView cityPickerView = (PickerView) dialogView.findViewById(R.id.sp_city);
         final Dialog chooseDialog = dialog.show();
         dialogView.findViewById(R.id.bt_select).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,11 +238,11 @@ public class EditPersonalDataActivity extends MySwipeBackActivity {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         chooseDialog.getWindow().setAttributes(lp);
-        mProvincePickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.province))));
-        mProvincePickerView.setOnSelectListener(mPickerListener == null ? mPickerListener = new PickerListener(this, mCityPickerView) : mPickerListener);
-        mProvincePickerView.setSelected("北京");
-        mCityPickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.北京))));
-        mCityPickerView.setOnSelectListener(new PickerView.onSelectListener() {
+        provincePickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.province))));
+        provincePickerView.setOnSelectListener(mPickerListener == null ? mPickerListener = new PickerListener(this, cityPickerView) : mPickerListener);
+        provincePickerView.setSelected("北京");
+        cityPickerView.setData(new ArrayList(Arrays.asList(getResources().getStringArray(R.array.北京))));
+        cityPickerView.setOnSelectListener(new PickerView.onSelectListener() {
             @Override
             public void onSelect(String text) {
                 mSelectCity = text;

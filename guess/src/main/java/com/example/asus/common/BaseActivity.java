@@ -35,10 +35,7 @@ public class BaseActivity extends FragmentActivity {
 
     public static boolean waitViewDisplaying;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

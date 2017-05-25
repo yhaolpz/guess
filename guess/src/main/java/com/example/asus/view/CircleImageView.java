@@ -167,10 +167,6 @@ public class CircleImageView extends android.support.v7.widget.AppCompatImageVie
         setBorderColor(getContext().getResources().getColor(borderColorRes));
     }
 
-    public int getBorderWidth() {
-        return mBorderWidth;
-    }
-
     public void setBorderWidth(int borderWidth) {
         if (borderWidth == mBorderWidth) {
             return;

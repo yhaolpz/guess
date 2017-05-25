@@ -15,12 +15,7 @@ public class DoubleRecord extends BmobObject {
     private int score2; //一般
     private int score3; //困难
 
-    public DoubleRecord(User user, int score1, int score2, int score3) {
-        this.user = user;
-        this.score1 = score1;
-        this.score2 = score2;
-        this.score3 = score3;
-    }
+
 
     @Override
     public String toString() {

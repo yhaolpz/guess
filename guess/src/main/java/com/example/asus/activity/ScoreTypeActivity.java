@@ -26,10 +26,7 @@ import java.util.List;
 
 public class ScoreTypeActivity extends MySwipeBackActivity {
     private String mType;
-    private ImageView mTopImg;
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
-    private List<View> mListViewList;
 
     private List<TextView> mSumList;
     private List<TextView> mRsumList;
@@ -54,22 +51,22 @@ public class ScoreTypeActivity extends MySwipeBackActivity {
     }
 
     private void initView() {
-        mTopImg = (ImageView) findViewById(R.id.topImg);
+        ImageView topImg = (ImageView) findViewById(R.id.topImg);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         for (int i = 0; i < MyConstants.movieTypes.length; i++) {
             if (TextUtils.equals(MyConstants.movieTypes[i], mType)) {
-                Glide.with(this).load(MyConstants.movieTypesImg[i]).placeholder(R.drawable.placeholder).into(mTopImg);
+                Glide.with(this).load(MyConstants.movieTypesImg[i]).placeholder(R.drawable.placeholder).into(topImg);
             }
         }
-        mListViewList = new ArrayList<>();
+        List<View> listViewList = new ArrayList<>();
         mSumList = new ArrayList<>();
         mRsumList = new ArrayList<>();
         mSumScoreList = new ArrayList<>();
         mAverageList = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             RelativeLayout frameLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.score_single, null);
-            mListViewList.add(i, frameLayout);
+            listViewList.add(i, frameLayout);
             TextView sum = (TextView) frameLayout.findViewById(R.id.sum);
             TextView rsum = (TextView) frameLayout.findViewById(R.id.rsum);
             TextView sumScore = (TextView) frameLayout.findViewById(R.id.sumScore);
@@ -79,8 +76,8 @@ public class ScoreTypeActivity extends MySwipeBackActivity {
             mSumScoreList.add(sumScore);
             mAverageList.add(average);
         }
-        mViewPager.setAdapter(new RankPageAdapter(mListViewList));
-        mTabLayout.setupWithViewPager(mViewPager);
+        viewPager.setAdapter(new RankPageAdapter(listViewList));
+        mTabLayout.setupWithViewPager(viewPager);
         loadScore();
     }
 

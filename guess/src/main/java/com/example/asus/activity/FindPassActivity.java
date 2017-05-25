@@ -8,7 +8,6 @@ import android.widget.EditText;
 
 import com.example.asus.common.MySwipeBackActivity;
 import com.example.asus.common.MyToast;
-import com.example.asus.util.TimeUtil;
 import com.example.asus.util.ValidateUtil;
 import com.zhy.changeskin.SkinManager;
 
@@ -36,14 +35,12 @@ public class FindPassActivity extends MySwipeBackActivity {
             MyToast.getInstance().showShortWarn(this, "邮箱格式错误");
         } else {
             final String email = mUsername.getText().toString();
-            showProgressbar();
             BmobUser.resetPasswordByEmail(email, new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
-                    hideProgressbar();
                     if (e == null) {
-                        MyToast.getInstance().showLongDone(FindPassActivity.this, "请到邮箱进行密码重置操作");
-                        new TimeUtil(mSendButton, mSendButton.getText().toString()).RunTimer();
+                        MyToast.getInstance().showLongDone(FindPassActivity.this, "请到邮箱继续密码重置操作");
+                        FindPassActivity.this.finish();
                     } else if (e.getErrorCode() == ERROR_CODE_NO_USER_FOUND) {
                         MyToast.getInstance().showShortWarn(FindPassActivity.this, "此用户未注册");
                     } else {
