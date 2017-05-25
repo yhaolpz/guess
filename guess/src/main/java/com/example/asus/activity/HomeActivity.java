@@ -44,9 +44,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private int requestCode_login = 1;
     private Button mLogoutBt;
 
-    //TODO 内存泄漏  启动引导页   设置界面添加应用版本信息
+    //TODO 内存泄漏
+    //TODO 启动引导页
+    //TODO 设置界面添加应用版本信息,帮助，反馈
     //TODO 收费开通 sexy类别
-
+    //TODO 删掉系统级progressBar，换一个体验友好的进度条
+    //TODO 所有出错地方都及时给提示，不要杳无音信~
+    //TODO bgm是不是有点吵？
+    //TODO bug :MovieTypeActivity : errorCode:10076,errorMsg:Qps beyond the limit: 10.%!(EXTRA int=11, string=111.143.57.41)
+    //TODO bug :E/guess: OnlinePlayActivity : errorCode:502,errorMsg:
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
