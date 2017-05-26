@@ -134,7 +134,7 @@ public class BaseApplication extends Application {
 
 
     private void initMusic() {
-        int m = (int) SPUtil.get(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);
+        int m = (int) SPUtil.get(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 2);
         changeMusic(MyConstants.musics[m]);
     }
 
@@ -147,7 +147,7 @@ public class BaseApplication extends Application {
         if (firstIn) {
             SPUtil.put(this, MyConstants.IS_FIRST_IN_APP_SET_SP_KEY, false);
             SPUtil.put(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3); //默认单人关卡题数 3
-            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 1);//默认权利的游戏
+            SPUtil.put(this, MyConstants.PLAY_MUSIC_SET_SP_KEY, 2);//默认关闭
             SPUtil.put(this, MyConstants.SKIN_SET_SP_KEY, MyConstants.skins[0]);//默认 defalt 背景
         }
     }

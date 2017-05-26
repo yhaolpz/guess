@@ -155,6 +155,7 @@ public class PersonalDataActivity extends MySwipeBackActivity {
             crop(Uri.fromFile(tempPhotoFile));
         } else if (requestCode == reqCode_cropPhoto) {
             if (data != null) {
+                showProgressbarWithText("更新中");
                 Bitmap bitmap = data.getParcelableExtra("data");
                 tempAvatarFile = new File(MyConstants.CACHE_PATH, AVATAR_FILE_NAME);
                 BitmapUtil.bitmapToFile(bitmap, tempAvatarFile);

@@ -1,21 +1,24 @@
 package com.example.asus.common;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.example.asus.activity.R;
 
+import java.io.IOException;
+
 import cn.bmob.v3.exception.BmobException;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created by yinghao on 2016/12/29.
@@ -33,14 +36,10 @@ public class BaseActivity extends FragmentActivity {
     public static final int ERROR_CODE_NETWORK_NOT_AVAILABLE = 9016;
 
 
-    public static boolean waitViewDisplaying;
-
-
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (waitViewDisplaying) {
+            if (progressShowing()) {
                 hideProgressbar();
                 return true;
             }
@@ -58,57 +57,57 @@ public class BaseActivity extends FragmentActivity {
 
     }
 
-    public boolean showProgressbar() {
-        if (checkDrawOverlayPermission()) {
-            waitViewDisplaying = MyProgressbar.getInstance().show();
-            hideSoftInput();
-            return true;
-        } else {
-            return false;
+    private void initProgressDialogAndShow() {
+        View dialogView = View.inflate(this, R.layout.gifview_wait, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.Translucent_NoTitle);
+        dialog.setView(dialogView, 0, 0, 0, 0);
+        progressText = (TextView) dialogView.findViewById(R.id.text);
+        GifImageView mGifView = (GifImageView) dialogView.findViewById(R.id.gifView);
+        try {
+            GifDrawable gifDrawable = new GifDrawable(getApplicationContext().getResources(), R.drawable.loading2);
+            mGifView.setImageDrawable(gifDrawable);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        progressDialog = dialog.show();
+        WindowManager.LayoutParams lp = progressDialog.getWindow().getAttributes();
+        progressDialog.setCanceledOnTouchOutside(false);
+        lp.gravity = Gravity.CENTER;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;//宽高可设置具体大小
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        progressDialog.getWindow().setAttributes(lp);
     }
 
+    Dialog progressDialog;
+    TextView progressText;
 
-    public boolean showProgressbarWithText(String text) {
-        if (checkDrawOverlayPermission()) {
-            waitViewDisplaying = MyProgressbar.getInstance().showWithText(text);
-            hideSoftInput();
-            return true;
+    public void showProgressbar() {
+        if (progressDialog == null) {
+            initProgressDialogAndShow();
         } else {
-            return false;
+            progressDialog.show();
         }
+        hideSoftInput();
+    }
+
+    public void showProgressbarWithText(String text) {
+        if (progressDialog == null) {
+            initProgressDialogAndShow();
+        } else {
+            progressDialog.show();
+        }
+        progressText.setText(text);
+        hideSoftInput();
     }
 
     public void hideProgressbar() {
-        waitViewDisplaying = MyProgressbar.getInstance().hide();
-    }
-
-    public final static int REQUEST_CODE = 1;
-
-    public boolean checkDrawOverlayPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, REQUEST_CODE);
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
+        if (progressShowing()) {
+            progressDialog.hide();
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.canDrawOverlays(this)) {
-
-                }
-            }
-        }
+    public boolean progressShowing() {
+        return progressDialog != null && progressDialog.isShowing();
     }
 
 
@@ -129,12 +128,6 @@ public class BaseActivity extends FragmentActivity {
         return true;
     }
 
-
-    @Override
-    protected void onStop() {
-        hideProgressbar();
-        super.onStop();
-    }
 
     @Override
     public void finish() {

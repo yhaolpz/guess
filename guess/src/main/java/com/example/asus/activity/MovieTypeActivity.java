@@ -62,9 +62,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
     }
 
     public void match(View view) {
-        if (!showProgressbar()) {
-            return;
-        }
+        showProgressbarWithText("加载中");
         final int num = (int) SPUtil.get(this, MyConstants.MOVIE_NUM_SET_SP_KEY, 3);
         BmobQuery<movieInfo> query = new BmobQuery<>();
         if (mMovieType.equals("随意")) {
@@ -97,7 +95,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
                                 if (chooseMovies.size() == skipNums.size()) {
                                     play(chooseMovies);
                                 }
-                                hideProgressbar();
+
                             }
                         });
                     }
@@ -121,7 +119,6 @@ public class MovieTypeActivity extends MySwipeBackActivity {
                     } else {
                         MyToast.getInstance().showShortWarn(MovieTypeActivity.this, "没有此类型的电影");
                     }
-                    hideProgressbar();
                 }
             });
         }
@@ -137,6 +134,7 @@ public class MovieTypeActivity extends MySwipeBackActivity {
     }
 
     private void play(List<movieInfo> chooseMovies) {
+        hideProgressbar();
         Intent intent = new Intent(MovieTypeActivity.this, SinglePlayActivity.class);
         intent.putExtra("LIST", (Serializable) chooseMovies);
         intent.putExtra("DIFFICULT", mDifficult);

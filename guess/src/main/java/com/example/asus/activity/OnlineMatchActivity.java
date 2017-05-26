@@ -159,9 +159,10 @@ public class OnlineMatchActivity extends BaseActivity {
     }
 
     public void match(View view) {
-        if (!showProgressbarWithText("正在匹配...")) {
+        if (progressShowing()) {
             return;
         }
+        showProgressbarWithText("正在匹配");
         BmobQuery<MatchItem> query = new BmobQuery<>();
         query.addWhereEqualTo("state", MyConstants.LOOK_STATE);
         query.addWhereEqualTo("movieType", mMovieType);
@@ -387,8 +388,7 @@ public class OnlineMatchActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            logd("waitViewDisplaying=" + waitViewDisplaying + " cancelFlag=" + cancelFlag);
-            if (waitViewDisplaying) {
+            if (progressShowing()) {
                 if (cancelFlag) {
                     showProgressbarWithText("正在取消...");
                     deleteMyLookItem();

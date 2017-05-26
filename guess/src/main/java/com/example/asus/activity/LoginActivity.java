@@ -111,8 +111,6 @@ public class LoginActivity extends MySwipeBackActivity {
             @Override
             public void onComplete(String response) {
                 if (!TextUtils.isEmpty(response)) {
-                    // 调用 User#parse 将JSON串解析成User对象
-                    logd("response:" + response);
                     try {
                         JSONObject jo = new JSONObject(response);
                         final User user = User.getCurrentUser(User.class);
@@ -129,10 +127,10 @@ public class LoginActivity extends MySwipeBackActivity {
                             user.setAvatar(new BmobFile("avatar.jpg", null, jo.getString("avatar_large")));
                             user.setType("weibo");
                         }
-                        logd("changed:" + user.toString());
                         user.update(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
+                                hideProgressbar();
                                 if (checkCommonException(e, LoginActivity.this)) {
                                     return;
                                 }
@@ -230,6 +228,7 @@ public class LoginActivity extends MySwipeBackActivity {
                     user.update(new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
+                            hideProgressbar();
                             if (checkCommonException(e, LoginActivity.this)) {
                                 return;
                             }
@@ -239,6 +238,8 @@ public class LoginActivity extends MySwipeBackActivity {
                     });
                 } catch (Exception e) {
                     loge(e.getMessage());
+                }finally {
+                    hideProgressbar();
                 }
             }
 
@@ -255,7 +256,6 @@ public class LoginActivity extends MySwipeBackActivity {
     }
 
     public void goHome() {
-        logd("go home");
         setResult(resultCode_login);
         finish();
     }
@@ -278,12 +278,14 @@ public class LoginActivity extends MySwipeBackActivity {
         } else if (mPassword.getText().toString().length() < 6) {
             MyToast.getInstance().showShortWarn(LoginActivity.this, "密码最少为六位");
         } else {
+            showProgressbarWithText("正在登录");
             User user = new User();
             user.setUsername(mUsername.getText().toString());
             user.setPassword(mPassword.getText().toString());
             user.login(new SaveListener<User>() {
                 @Override
                 public void done(User user, BmobException e) {
+                    hideProgressbar();
                     mApplication.setUser(user);
                     if (e == null) {
                         goHome();
@@ -303,7 +305,6 @@ public class LoginActivity extends MySwipeBackActivity {
             @Override
             public void done(JSONObject jsonObject, BmobException e) {
                 if (e == null) {
-                    logd("关联成功登录 type:" + type);
                     if (type.equals("qq")) {
                         qqUserInfo = new UserInfo(LoginActivity.this, mTencent.getQQToken());
                         qqUserInfo.getUserInfo(userInfoListener);
@@ -311,8 +312,8 @@ public class LoginActivity extends MySwipeBackActivity {
                         mAsyncWeiboRunner.requestAsync(MyConstants.WEIBO_USERINFO_URL, params, "GET", mUserListener);
                     }
                 } else {
-                    loge("关联登录失败");
-                    loge(e.toString());
+                    loge("loginWithAuth 关联登录失败");
+                    hideProgressbar();
                 }
             }
         });
@@ -341,12 +342,14 @@ public class LoginActivity extends MySwipeBackActivity {
     }
 
     public void weiboLogin(View view) {
+        showProgressbarWithText("请稍等");
         initWeibo();
         mSsoHandler.authorize(mWbAuthListener);
     }
 
 
     public void qqLogin(View view) {
+        showProgressbarWithText("请稍等");
         initQQ();
         mTencent.login(this, "all", loginListener);
     }
